@@ -1,0 +1,8 @@
+prefix=/home/paul/Yumi_WS/src/cmake-build-debug/devel
+
+Name: abb_libegm_samples
+Description: Description of abb_libegm_samples
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib 
+Requires: roscpp abb_libegm

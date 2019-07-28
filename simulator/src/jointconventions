@@ -1,0 +1,21 @@
+right 1
+right 2
+right 7
+right 3
+right 4
+right 5
+right 6
+gripper_r_joint
+gripper_r_joint_m (left finger?)
+
+left 1
+left 2
+left 7
+left 3
+left 4
+left 5
+left 6
+
+gripper_l_joint
+gripper_l_joint_m (left finger?)
+

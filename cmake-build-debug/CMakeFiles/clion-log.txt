@@ -1,0 +1,50 @@
+/opt/clion-2019.1.4/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/paul/Yumi_WS/src
+-- Using CATKIN_DEVEL_PREFIX: /home/paul/Yumi_WS/src/cmake-build-debug/devel
+-- Using CMAKE_PREFIX_PATH: /home/paul/Yumi_WS/devel;/home/paul/ROS_WS/devel;/opt/ros/kinetic
+-- This workspace overlays: /home/paul/Yumi_WS/devel;/home/paul/ROS_WS/devel;/opt/ros/kinetic
+-- Using PYTHON_EXECUTABLE: /usr/bin/python
+-- Using Debian Python package layout
+-- Using empy: /usr/bin/empy
+-- Using CATKIN_ENABLE_TESTING: ON
+-- Call enable_testing()
+-- Using CATKIN_TEST_RESULTS_DIR: /home/paul/Yumi_WS/src/cmake-build-debug/test_results
+-- Found gmock sources under '/usr/src/gmock': gmock will be built
+-- Found gtest sources under '/usr/src/gmock': gtests will be built
+-- Using Python nosetests: /usr/bin/nosetests-2.7
+-- catkin 0.7.18
+-- BUILD_SHARED_LIBS is on
+-- BUILD_SHARED_LIBS is on
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~  traversing 6 packages in topological order:
+-- ~~  - abb_libegm
+-- ~~  - simulator
+-- ~~  - state_server
+-- ~~  - velocity_control
+-- ~~  - yumi_description
+-- ~~  - yumi_launch
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- +++ processing catkin package: 'abb_libegm'
+-- ==> add_subdirectory(abb_libegm)
+-- Boost version: 1.58.0
+-- Found the following Boost libraries:
+--   system
+--   thread
+--   chrono
+--   date_time
+--   atomic
+-- Generating protobuf C++ for: proto/egm.proto;proto/egm_wrapper.proto;proto/egm_wrapper_trajectory.proto
+-- +++ processing catkin package: 'simulator'
+-- ==> add_subdirectory(simulator)
+-- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+-- simulator: 0 messages, 1 services
+-- +++ processing catkin package: 'state_server'
+-- ==> add_subdirectory(state_server)
+-- +++ processing catkin package: 'velocity_control'
+-- ==> add_subdirectory(velocity_control)
+-- +++ processing catkin package: 'yumi_description'
+-- ==> add_subdirectory(yumi_description)
+-- +++ processing catkin package: 'yumi_launch'
+-- ==> add_subdirectory(yumi_launch)
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/paul/Yumi_WS/src/cmake-build-debug

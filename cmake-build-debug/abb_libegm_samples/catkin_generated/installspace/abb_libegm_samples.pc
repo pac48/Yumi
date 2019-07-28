@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: abb_libegm_samples
+Description: Description of abb_libegm_samples
+Version: 0.0.0
+Cflags: 
+Libs: -L/usr/local/lib 
+Requires: roscpp abb_libegm
