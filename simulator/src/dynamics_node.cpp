@@ -42,7 +42,6 @@ rl::mdl::Model* loadModel(std::shared_ptr<rl::mdl::Model>& model,std::string urd
     }
     rl::mdl::UrdfFactory urdf;
     urdf.load(urdf_file_name, model.get());
-
 }
 
 struct jointConfig {
@@ -90,20 +89,33 @@ bool getStaticTorques(simulator::getStaticTorques::Request  &req, simulator::get
 }
 
 
-void updateJoints(const std_msgs::Float32MultiArray::ConstPtr& msg){
+//void updateJoints(const std_msgs::Float32MultiArray::ConstPtr& msg){
+template<typename T>
+void updateJoints(const std_msgs::Float32MultiArray::ConstPtr& msg,T pubs){
     std::vector<float> data = msg->data;
     for (int i=0;i<data.size();i++) {
         JCReal.q[i] = data[i];
     }
     dynamicsReal->setPosition(JCReal.q);
     dynamicsReal->forwardPosition();
+    std_msgs::Float32MultiArray msgL;
+    std_msgs::Float32MultiArray msgR;
+    OCRealR.x = dynamicsReal->getOperationalPosition(0);
+    OCRealL.x = dynamicsReal->getOperationalPosition(1);
+    for (int i=0;i<3;i++) {
+        msgR.data.push_back(OCRealR.x(i, 3));
+        msgL.data.push_back(OCRealL.x(i, 3));
+    }
+    pubs[0].publish(msgR);
+    pubs[1].publish(msgL);
 }
 rl::math::Matrix J(6*2, 14);
 rl::math::Matrix JL(6, 7);
 rl::math::Matrix JR(6, 7);
 rl::math::Matrix invJL(7, 6);
 rl::math::Matrix invJR(7, 6);
-void sendJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& msg,std::vector <ros::Publisher> JointVelPubs){
+template<typename T>
+void sendJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& msg,T JointVelPubs){
     std::vector<float> data = msg->data;
     rl::math::Vector xdR(6);
     rl::math::Vector xdL(6);
@@ -122,8 +134,8 @@ void sendJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& msg,std::v
             JL(i,j) = J(i+6,j+7);
         }
     }
-    dynamicsReal->calculateJacobianInverse(JR,invJR,0.0001f,true);
-    dynamicsReal->calculateJacobianInverse(JL,invJL,0.0001f,true);
+    dynamicsReal->calculateJacobianInverse(JR,invJR,0.1f,true);
+    dynamicsReal->calculateJacobianInverse(JL,invJL,0.1f,true);
     rl::math::Vector jdR = invJR*xdR;
     rl::math::Vector jdL = invJL*xdL;
     std_msgs::Float32MultiArray msgL;
@@ -149,9 +161,6 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<mdl::Model> modelSRV =(std::shared_ptr<mdl::Model>) new mdl::Model();
     loadModel(modelSRV,urdf_file_name);
     dynamicsSRV =  static_cast<mdl::Dynamic*>(modelSRV.get());
-
-    //dynamicsReal->setPosition(*q);dynamicsReal->setVelocity(*qd);dynamicsReal->setAcceleration(*qdd);
-    //dynamicsReal->forwardPosition();dynamicsReal->forwardVelocity();dynamicsReal->forwardDynamics();
     JCSRV.q=dynamicsReal->getPosition();
     JCSRV.qd=dynamicsReal->getVelocity();
     JCSRV.qdd=dynamicsReal->getAcceleration();
@@ -177,13 +186,19 @@ int main(int argc, char *argv[]) {
     OCRealL.xdd = dynamicsReal->getOperationalAcceleration(0);
     OCRealL.f = dynamicsReal->getOperationalForce(0);
     ros::ServiceServer getStaticJointTorqueService = n.advertiseService("getStaticJointTorques", getStaticTorques);
-    ros::Subscriber jointStateSubscriber = n.subscribe("joint_states",1,updateJoints);
-    ros::Publisher JointVelPubL = n.advertise<std_msgs::Float32MultiArray>("joint_velocity_command_L",1);
-    ros::Publisher JointVelPubR = n.advertise<std_msgs::Float32MultiArray>("joint_velocity_command_R",1);
-    std::vector <ros::Publisher> JointVelPubs;
-    JointVelPubs.push_back(JointVelPubR);JointVelPubs.push_back(JointVelPubL);
-    boost::function<void (const std_msgs::Float32MultiArray::ConstPtr&)> lambda = [=](const std_msgs::Float32MultiArray::ConstPtr& msg) {sendJointVelocities(msg,JointVelPubs);};
-    ros::Subscriber operationalVelocityCommandSubscriber = n.subscribe("operational_velocity_command",1,lambda);
+    ros::Publisher operationalPosPubL = n.advertise<std_msgs::Float32MultiArray>("operational_position_L",1);
+    ros::Publisher operationalPosPubR = n.advertise<std_msgs::Float32MultiArray>("operational_position_R",1);
+    std::vector <ros::Publisher> operationalPosPubs;
+    operationalPosPubs.push_back(operationalPosPubR);operationalPosPubs.push_back(operationalPosPubL);
+    boost::function<void (const std_msgs::Float32MultiArray::ConstPtr&)> updateJointsLambda = [=](const std_msgs::Float32MultiArray::ConstPtr& msg) {updateJoints(msg,operationalPosPubs);};
+    ros::Subscriber jointStateSubscriber = n.subscribe("joint_states",1,updateJointsLambda);
+    ros::Publisher jointVelPubL = n.advertise<std_msgs::Float32MultiArray>("joint_velocity_command_L",1);
+    ros::Publisher jointVelPubR = n.advertise<std_msgs::Float32MultiArray>("joint_velocity_command_R",1);
+
+    std::vector <ros::Publisher> jointVelPubs;
+    jointVelPubs.push_back(jointVelPubR);jointVelPubs.push_back(jointVelPubL);
+    boost::function<void (const std_msgs::Float32MultiArray::ConstPtr&)> sendJointVelocitiesLambda = [=](const std_msgs::Float32MultiArray::ConstPtr& msg) {sendJointVelocities(msg,jointVelPubs);};
+    ros::Subscriber operationalVelocityCommandSubscriber = n.subscribe("operational_velocity_command",1,sendJointVelocitiesLambda);
     ros::Rate loop_rate(250);
     while (ros::ok()) {
         ros::spin();

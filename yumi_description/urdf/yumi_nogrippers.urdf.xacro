@@ -17,4 +17,10 @@
     <origin xyz="0 0 0.1" rpy="0 0 0" />
   </xacro:yumi>
 
+  <gazebo>
+    <plugin name="gazebo_ros_controller" filename="libgazebo_ros_control.so">
+      <robotNamespace>/yumi</robotNamespace>
+    </plugin>
+  </gazebo>
+
 </robot>

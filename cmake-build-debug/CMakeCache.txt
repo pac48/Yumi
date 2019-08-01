@@ -14,6 +14,9 @@
 # EXTERNAL cache entries
 ########################
 
+//The directory containing a CMake configuration file for BOOST.
+BOOST_DIR:PATH=BOOST_DIR-NOTFOUND
+
 //Build shared libraries (DLLs).
 BUILD_SHARED_LIBS:BOOL=ON
 
@@ -977,6 +980,12 @@ RL_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/rl-0.7.0
 //Path to a library.
 RT_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/librt.so
 
+//The directory containing a CMake configuration file for Robot.h.
+Robot.h_DIR:PATH=Robot.h_DIR-NOTFOUND
+
+//Dependencies for the target
+Robot_LIB_DEPENDS:STATIC=general;rl::kin;general;rl::mdl;general;rl::hal;general;rl::sg;general;rl::plan;
+
 //Enable debian style python package layout
 SETUPTOOLS_DEB_LAYOUT:BOOL=ON
 
@@ -1018,6 +1027,9 @@ abb_libegm_samples_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/ve
 
 //Value Computed by CMake
 abb_libegm_samples_SOURCE_DIR:STATIC=/home/paul/Yumi_WS/src/velocity_control
+
+//The directory containing a CMake configuration file for boost.
+boost_DIR:PATH=boost_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for catkin.
 catkin_DIR:PATH=/opt/ros/kinetic/share/catkin/cmake

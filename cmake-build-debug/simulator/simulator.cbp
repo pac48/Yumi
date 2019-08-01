@@ -372,7 +372,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/paul/Yumi_WS/src/simulator/src/dynamics_node.cpp">
+		<Unit filename="/home/paul/Yumi_WS/src/simulator/src/dynamics_node2.cpp">
 			<Option target="dynamics_node"/>
 		</Unit>
 		<Unit filename="/home/paul/Yumi_WS/src/CMakeLists.txt">

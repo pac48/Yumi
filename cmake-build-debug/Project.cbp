@@ -928,7 +928,7 @@
 		<Unit filename="/home/paul/Yumi_WS/src/cmake-build-debug/abb_libegm/egm_wrapper_trajectory.pb.h.rule">
 			<Option target="abb_libegm"/>
 		</Unit>
-		<Unit filename="/home/paul/Yumi_WS/src/simulator/src/dynamics_node.cpp">
+		<Unit filename="/home/paul/Yumi_WS/src/simulator/src/dynamics_node2.cpp">
 			<Option target="dynamics_node"/>
 		</Unit>
 		<Unit filename="/home/paul/Yumi_WS/src/state_server/src/client_node.cpp">

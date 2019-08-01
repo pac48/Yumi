@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.o"
+  "CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o"
   "../devel/lib/simulator/dynamics_node.pdb"
   "../devel/lib/simulator/dynamics_node"
 )

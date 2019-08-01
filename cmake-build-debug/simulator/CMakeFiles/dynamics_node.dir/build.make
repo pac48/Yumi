@@ -57,27 +57,27 @@ include simulator/CMakeFiles/dynamics_node.dir/progress.make
 # Include the compile flags for this target's objects.
 include simulator/CMakeFiles/dynamics_node.dir/flags.make
 
-simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.o: simulator/CMakeFiles/dynamics_node.dir/flags.make
-simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.o: ../simulator/src/dynamics_node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/paul/Yumi_WS/src/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.o"
-	cd /home/paul/Yumi_WS/src/cmake-build-debug/simulator && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.o -c /home/paul/Yumi_WS/src/simulator/src/dynamics_node.cpp
+simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: simulator/CMakeFiles/dynamics_node.dir/flags.make
+simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: ../simulator/src/dynamics_node2.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/paul/Yumi_WS/src/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o"
+	cd /home/paul/Yumi_WS/src/cmake-build-debug/simulator && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o -c /home/paul/Yumi_WS/src/simulator/src/dynamics_node2.cpp
 
-simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.i"
-	cd /home/paul/Yumi_WS/src/cmake-build-debug/simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/paul/Yumi_WS/src/simulator/src/dynamics_node.cpp > CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.i
+simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.i"
+	cd /home/paul/Yumi_WS/src/cmake-build-debug/simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/paul/Yumi_WS/src/simulator/src/dynamics_node2.cpp > CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.i
 
-simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.s"
-	cd /home/paul/Yumi_WS/src/cmake-build-debug/simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/paul/Yumi_WS/src/simulator/src/dynamics_node.cpp -o CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.s
+simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.s"
+	cd /home/paul/Yumi_WS/src/cmake-build-debug/simulator && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/paul/Yumi_WS/src/simulator/src/dynamics_node2.cpp -o CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.s
 
 # Object files for target dynamics_node
 dynamics_node_OBJECTS = \
-"CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.o"
+"CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o"
 
 # External object files for target dynamics_node
 dynamics_node_EXTERNAL_OBJECTS =
 
-devel/lib/simulator/dynamics_node: simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.o
+devel/lib/simulator/dynamics_node: simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o
 devel/lib/simulator/dynamics_node: simulator/CMakeFiles/dynamics_node.dir/build.make
 devel/lib/simulator/dynamics_node: /usr/lib/x86_64-linux-gnu/librlhal.so.0.7.0
 devel/lib/simulator/dynamics_node: /usr/lib/x86_64-linux-gnu/librlplan.so.0.7.0

@@ -6,9 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/paul/Yumi_WS/src/simulator/src/dynamics_node.cpp
-iostream
--
+/home/paul/Yumi_WS/src/simulator/src/Robot.h
 rl/math/Transform.h
 -
 rl/math/Vector.h
@@ -17,28 +15,40 @@ rl/math/Matrix.h
 -
 rl/math/Unit.h
 -
-rl/mdl/Kinematic.h
--
 rl/mdl/Dynamic.h
 -
 rl/mdl/Model.h
 -
 fstream
 -
+cstdio
+-
+iostream
+-
 string
 -
 rl/mdl/UrdfFactory.h
 /home/paul/Yumi_WS/src/simulator/src/rl/mdl/UrdfFactory.h
 ros/ros.h
-/home/paul/Yumi_WS/src/simulator/src/ros/ros.h
+-
+std_msgs/Float32.h
+/home/paul/Yumi_WS/src/simulator/src/std_msgs/Float32.h
 rl/mdl/Joint.h
 /home/paul/Yumi_WS/src/simulator/src/rl/mdl/Joint.h
+boost/function.hpp
+-
+
+/home/paul/Yumi_WS/src/simulator/src/dynamics_node2.cpp
+iostream
+-
+ros/ros.h
+/home/paul/Yumi_WS/src/simulator/src/ros/ros.h
 simulator/getStaticTorques.h
 /home/paul/Yumi_WS/src/simulator/src/simulator/getStaticTorques.h
 std_msgs/Float32MultiArray.h
 /home/paul/Yumi_WS/src/simulator/src/std_msgs/Float32MultiArray.h
-Eigen/QR
--
+Robot.h
+/home/paul/Yumi_WS/src/simulator/src/Robot.h
 
 /opt/ros/kinetic/include/ros/advertise_options.h
 ros/forwards.h
@@ -685,6 +695,22 @@ ros/forwards.h
 /opt/ros/kinetic/include/ros/ros/forwards.h
 
 /opt/ros/kinetic/include/rosconsole/macros_generated.h
+
+/opt/ros/kinetic/include/std_msgs/Float32.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
 
 /opt/ros/kinetic/include/std_msgs/Float32MultiArray.h
 string

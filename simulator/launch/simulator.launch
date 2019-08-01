@@ -2,7 +2,7 @@
 <launch>
 
 
-    <node pkg="simulator" type="dynamics_node" name="dynamics_node" output="screen" >
+    <node pkg="simulator" type="dynamics_node" name="dynamics_node2" output="screen" >
     </node>
 
 

@@ -587,32 +587,32 @@ std_msgs_generate_messages_py/fast:
 	cd /home/paul/Yumi_WS/src/cmake-build-debug && $(MAKE) -f simulator/CMakeFiles/std_msgs_generate_messages_py.dir/build.make simulator/CMakeFiles/std_msgs_generate_messages_py.dir/build
 .PHONY : std_msgs_generate_messages_py/fast
 
-src/dynamics_node.o: src/dynamics_node.cpp.o
+src/dynamics_node2.o: src/dynamics_node2.cpp.o
 
-.PHONY : src/dynamics_node.o
+.PHONY : src/dynamics_node2.o
 
 # target to build an object file
-src/dynamics_node.cpp.o:
-	cd /home/paul/Yumi_WS/src/cmake-build-debug && $(MAKE) -f simulator/CMakeFiles/dynamics_node.dir/build.make simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.o
-.PHONY : src/dynamics_node.cpp.o
+src/dynamics_node2.cpp.o:
+	cd /home/paul/Yumi_WS/src/cmake-build-debug && $(MAKE) -f simulator/CMakeFiles/dynamics_node.dir/build.make simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o
+.PHONY : src/dynamics_node2.cpp.o
 
-src/dynamics_node.i: src/dynamics_node.cpp.i
+src/dynamics_node2.i: src/dynamics_node2.cpp.i
 
-.PHONY : src/dynamics_node.i
+.PHONY : src/dynamics_node2.i
 
 # target to preprocess a source file
-src/dynamics_node.cpp.i:
-	cd /home/paul/Yumi_WS/src/cmake-build-debug && $(MAKE) -f simulator/CMakeFiles/dynamics_node.dir/build.make simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.i
-.PHONY : src/dynamics_node.cpp.i
+src/dynamics_node2.cpp.i:
+	cd /home/paul/Yumi_WS/src/cmake-build-debug && $(MAKE) -f simulator/CMakeFiles/dynamics_node.dir/build.make simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.i
+.PHONY : src/dynamics_node2.cpp.i
 
-src/dynamics_node.s: src/dynamics_node.cpp.s
+src/dynamics_node2.s: src/dynamics_node2.cpp.s
 
-.PHONY : src/dynamics_node.s
+.PHONY : src/dynamics_node2.s
 
 # target to generate assembly for a file
-src/dynamics_node.cpp.s:
-	cd /home/paul/Yumi_WS/src/cmake-build-debug && $(MAKE) -f simulator/CMakeFiles/dynamics_node.dir/build.make simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node.cpp.s
-.PHONY : src/dynamics_node.cpp.s
+src/dynamics_node2.cpp.s:
+	cd /home/paul/Yumi_WS/src/cmake-build-debug && $(MAKE) -f simulator/CMakeFiles/dynamics_node.dir/build.make simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.s
+.PHONY : src/dynamics_node2.cpp.s
 
 # Help Target
 help:
@@ -655,9 +655,9 @@ help:
 	@echo "... std_msgs_generate_messages_nodejs"
 	@echo "... roscpp_generate_messages_nodejs"
 	@echo "... std_msgs_generate_messages_py"
-	@echo "... src/dynamics_node.o"
-	@echo "... src/dynamics_node.i"
-	@echo "... src/dynamics_node.s"
+	@echo "... src/dynamics_node2.o"
+	@echo "... src/dynamics_node2.i"
+	@echo "... src/dynamics_node2.s"
 .PHONY : help
 
 
