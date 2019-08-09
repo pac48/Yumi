@@ -1037,6 +1037,12 @@ catkin_DIR:PATH=/opt/ros/kinetic/share/catkin/cmake
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/kinetic/share/cpp_common/cmake
 
+//Value Computed by CMake
+dynamics_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/dynamics
+
+//Value Computed by CMake
+dynamics_SOURCE_DIR:STATIC=/home/paul/Yumi_WS/src/dynamics
+
 //The directory containing a CMake configuration file for gencpp.
 gencpp_DIR:PATH=/opt/ros/kinetic/share/gencpp/cmake
 
@@ -1138,12 +1144,12 @@ simulato_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/simulator
 simulato_SOURCE_DIR:STATIC=/home/paul/Yumi_WS/src/simulator
 
 //Value Computed by CMake
-simulator_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/simulator
+simulator_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/dynamics
 
 simulator_DIR:PATH=
 
 //Value Computed by CMake
-simulator_SOURCE_DIR:STATIC=/home/paul/Yumi_WS/src/simulator
+simulator_SOURCE_DIR:STATIC=/home/paul/Yumi_WS/src/dynamics
 
 //Value Computed by CMake
 state_server_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/state_server

@@ -9,9 +9,9 @@
     <!-- Add the packages you want to build on the following lines -->
     <!-- e.g. <build_depend>std_msgs</build_depend> -->
 <build_depend>abb_libegm</build_depend>
-   <build_depend>abb_libegm_samples</build_depend>
-   <build_depend>simulator</build_depend>
-   <build_depend>tcp</build_depend>
+   <build_depend>dynamics</build_depend>
+   <build_depend>state_server</build_depend>
+   <build_depend>velocity_control</build_depend>
    <build_depend>yumi_description</build_depend>
    <build_depend>yumi_launch</build_depend>
 </package>

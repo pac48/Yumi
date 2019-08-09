@@ -132,7 +132,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/paul/Yumi_WS/src/cmake-build-debug/gtest/cmake_install.cmake")
   include("/home/paul/Yumi_WS/src/cmake-build-debug/abb_libegm/cmake_install.cmake")
-  include("/home/paul/Yumi_WS/src/cmake-build-debug/simulator/cmake_install.cmake")
+  include("/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/cmake_install.cmake")
   include("/home/paul/Yumi_WS/src/cmake-build-debug/state_server/cmake_install.cmake")
   include("/home/paul/Yumi_WS/src/cmake-build-debug/velocity_control/cmake_install.cmake")
   include("/home/paul/Yumi_WS/src/cmake-build-debug/yumi_description/cmake_install.cmake")

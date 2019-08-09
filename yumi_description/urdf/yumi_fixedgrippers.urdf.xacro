@@ -9,7 +9,7 @@
   <!--Import the yumi servo gripper macro -->
   <xacro:include filename="$(find yumi_description)/urdf/yumi_servo_gripper_fixed1.xacro"/>
  <!-- Import Gazebo plugins -->
-  <!-- <xacro:include filename="$(find yumi_description)/gazebo/gazebo.urdf.xacro"/>-->
+   <xacro:include filename="$(find yumi_description)/gazebo/gazebo.urdf.xacro"/>
 
   <!-- Fix to world just for testing -->
   <link name="world"/>
@@ -29,10 +29,5 @@
     <origin xyz="0 0 0.007" rpy="0 0 ${PI}" />
   </xacro:yumi_servo_gripper>
 
-  <gazebo>
-    <plugin name="gazebo_ros_controller" filename="libgazebo_ros_control.so">
-      <robotNamespace>/yumi</robotNamespace>
-    </plugin>
-  </gazebo>
 
 </robot>

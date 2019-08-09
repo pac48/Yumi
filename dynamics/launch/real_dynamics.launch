@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+
+    <node pkg="dynamics" type="real_robot_node" name="real_robot_node" output="screen" >
+    </node>
+
+
+</launch>

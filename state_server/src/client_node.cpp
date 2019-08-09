@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 //socket creation
     tcp::socket socket(io_service);
 //connection
-    socket.connect(tcp::endpoint(boost::asio::ip::address::from_string("192.168.1.13"), 11002));
+    socket.connect(tcp::endpoint(boost::asio::ip::address::from_string("192.168.1.31"), 11002));
     ros::init(argc, argv, "state_server");
     ros::NodeHandle n;
     ros::Publisher SS_pub_L = n.advertise<std_msgs::Float32MultiArray>("joint_state_L", 1);

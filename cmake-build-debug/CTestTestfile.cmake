@@ -6,7 +6,7 @@
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
 subdirs("abb_libegm")
-subdirs("simulator")
+subdirs("dynamics")
 subdirs("state_server")
 subdirs("velocity_control")
 subdirs("yumi_description")

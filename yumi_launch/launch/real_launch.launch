@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find yumi_description)/launch/yumi_urdf_fixedgrippers.launch" />
+    <include file="$(find dynamics)/launch/real_dynamics.launch" />
+    <include file="$(find state_server)/launch/state_server.launch" />
+    <include file="$(find velocity_control)/launch/velocityController.launch" />
+</launch>

@@ -59,8 +59,10 @@ simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kineti
 simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/ros/wall_timer.h
 simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/ros/wall_timer_options.h
 simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/rosconsole/macros_generated.h
+simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/sensor_msgs/JointState.h
 simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/std_msgs/Float32.h
 simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/std_msgs/Float32MultiArray.h
+simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/std_msgs/Header.h
 simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/std_msgs/MultiArrayDimension.h
 simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/std_msgs/MultiArrayLayout.h
 simulator/CMakeFiles/dynamics_node.dir/src/dynamics_node2.cpp.o: /opt/ros/kinetic/include/xmlrpcpp/XmlRpcDecl.h

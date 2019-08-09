@@ -17,7 +17,7 @@
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- ~~  traversing 6 packages in topological order:
 -- ~~  - abb_libegm
--- ~~  - simulator
+-- ~~  - dynamics
 -- ~~  - state_server
 -- ~~  - velocity_control
 -- ~~  - yumi_description
@@ -33,10 +33,10 @@
 --   date_time
 --   atomic
 -- Generating protobuf C++ for: proto/egm.proto;proto/egm_wrapper.proto;proto/egm_wrapper_trajectory.proto
--- +++ processing catkin package: 'simulator'
--- ==> add_subdirectory(simulator)
+-- +++ processing catkin package: 'dynamics'
+-- ==> add_subdirectory(dynamics)
 -- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
--- simulator: 0 messages, 1 services
+-- dynamics: 0 messages, 2 services
 -- +++ processing catkin package: 'state_server'
 -- ==> add_subdirectory(state_server)
 -- +++ processing catkin package: 'velocity_control'

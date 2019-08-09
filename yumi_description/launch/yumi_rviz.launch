@@ -3,18 +3,16 @@
   <!-- this argument you can pass this launch file-->
   <arg name="hardware_interface" default="EffortJointInterface"/>
  <!-- Load the URDF with the given hardware interface into the ROS Parameter Server -->
-  <param name="robot_description"
-	 command="$(find xacro)/xacro.py '$(find yumi_description)/urdf/yumi.urdf.xacro' prefix:=$(arg hardware_interface)" />
+  <param name="rviz/robot_description"
+	 command="$(find xacro)/xacro.py '$(find yumi_description)/urdf/yumi_fixedgrippers.urdf.xacro' prefix:=$(arg hardware_interface)" />
 
   <!-- send fake joint values -->
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-    <param name="use_gui" value="TRUE"/>
-  </node>
+
 
   <!-- Combine joint values -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" ns="rviz"/>
 
   <!-- Show in Rviz   -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ayumi_description)/launch/yumi.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find yumi_description)/launch/yumi.rviz" ns="rviz"/>
 
 </launch>
