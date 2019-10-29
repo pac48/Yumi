@@ -12,7 +12,13 @@ find_package(catkin REQUIRED COMPONENTS
 add_service_files(
         FILES
         getStaticTorques.srv
+        getM.srv
+        getC.srv
+        getG.srv
+        getJ.srv
+        getT.srv
         setTorques.srv
+        getTrajTorques.srv
 )
 
 generate_messages(
@@ -45,6 +51,10 @@ add_dependencies( real_robot_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
 add_executable( sim_robot_node src/sim_robot_node.cpp) # ${RL_LIBRARIES}
 target_link_libraries(sim_robot_node ${RL_LIBRARIES} ${catkin_LIBRARIES})
 add_dependencies( sim_robot_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
+
+add_executable( vis_sim_robot_node src/vis_sim_robot_node.cpp) # ${RL_LIBRARIES}
+target_link_libraries(vis_sim_robot_node ${RL_LIBRARIES} ${catkin_LIBRARIES})
+add_dependencies( vis_sim_robot_node ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 
 

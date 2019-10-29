@@ -12,14 +12,14 @@
 #include <rl/mdl/Dynamic.h>
 #include <rl/mdl/Model.h>
 #include <rl/mdl/Body.h>
+#include "rl/mdl/Joint.h"
+#include "rl/mdl/UrdfFactory.h"
 #include <fstream>
 #include <cstdio>
 #include <iostream>
 #include <string>
-#include "rl/mdl/UrdfFactory.h"
 #include <ros/ros.h>
 #include "std_msgs/Float32.h"
-#include "rl/mdl/Joint.h"
 #include <boost/function.hpp>
 
 
@@ -43,6 +43,8 @@ public:
         int numDof = this->dynamics->getDof();
         this->J =rl::math::Matrix(6*numEE, numDof);
         this->M =rl::math::Matrix(numDof,numDof);
+        this->C =rl::math::Vector(numDof);
+        this->G =rl::math::Vector(numDof);
         for (int n=0;n<numEE;n++){
             this->Ji.push_back(rl::math::Matrix(6, numDof/numEE));
             this->invJi.push_back(rl::math::Matrix(6, numDof/numEE));
@@ -75,17 +77,14 @@ public:
         rl::math::Vector j = this->dynamics->getVelocity();
         return this->mathVec2FloatVec(j);
     }
-    std::vector<float> getKE(){
+    double getKE(){
         auto qd=this->dynamics->getVelocity();
         auto tau=this->dynamics->getTorque();
         this->dynamics->calculateMassMatrix(this->M);
         this->dynamics->setVelocity(qd);
         this->dynamics->setTorque(tau);
-        rl::math::Vector KE = .5*this->M*qd;
-        for (int i=0;i<qd.size();i++){
-            KE[i] =KE[i]*qd[i];
-        }
-        return this->mathVec2FloatVec(KE);
+        double KE = .5*qd.transpose()*(this->M)*qd;
+        return KE;
     }
     std::vector<float> getPE(){
         auto qd=this->dynamics->getVelocity();
@@ -97,9 +96,9 @@ public:
             float h0 = T0(2,3);
             auto T1 = b1->t;
             float h1 = T1(2,3);
-            std::cout<<h0<<std::endl;
-            std::cout<<h1<<std::endl;
-            std::cout<<.5*(h1+h0)<<std::endl;
+            //std::cout<<h0<<std::endl;
+            //std::cout<<h1<<std::endl;
+            //std::cout<<.5*(h1+h0)<<std::endl;
         }
         return this->mathVec2FloatVec(qd);
     }
@@ -108,6 +107,40 @@ public:
         rl::math::Vector jd = this->xd2jd(EE,xd);
         return this->mathVec2FloatVec(jd);
 
+    }
+    rl::math::Matrix& getInvJacobian(int EE){
+        this->dynamics->calculateJacobian(this->J);
+        rl::math::Matrix Ji = this->Ji[EE];
+        rl::math::Matrix invJi = this->invJi[EE];
+        int numEE = this->dynamics->getOperationalDof();
+        int numDof = this->dynamics->getDof();
+        int offseti = EE*6;
+        int offsetj=EE*numDof/numEE;
+        for (int i =0;i<6;i++){
+            for (int j=0;j<7;j++){
+                Ji(i,j) = this->J(i+offseti,j+offsetj);
+            }
+        }
+        this->dynamics->calculateJacobianInverse(Ji,invJi, 0.0f,true);
+        this->invJi[EE] = invJi;
+        return this->invJi[EE];
+
+    }
+    rl::math::Matrix& getJacobian(){
+        this->dynamics->calculateJacobian(this->J);
+        return this->J;
+    }
+    rl::math::Matrix getMassMatrix(){
+        this->dynamics->calculateMassMatrix(this->M);
+        return this->M;
+    }
+    rl::math::Vector& getCentrifugalCoriolis(){
+        this->dynamics->calculateCentrifugalCoriolis(this->C);
+        return this->C;
+    }
+    rl::math::Vector& getGravity(){
+        this->dynamics->calculateGravity(this->G);
+        return this->G;
     }
 
     rl::math::Vector xd2jd(int EE, rl::math::Vector xd){
@@ -136,7 +169,7 @@ public:
         }
         rl::math::Vector z0 = rl::math::Vector::Zero(3);
         z0[2]=1;
-        rl::math::Vector z = T.inverse().rotation()*z0;
+        rl::math::Vector z = T.rotation()*z0;
         for (int i =0;i<3;i++){
             p.push_back(z[i]);
         }
@@ -149,7 +182,7 @@ public:
         auto tau = this->dynamics->getTorque();
         for (int i=0;i<numsteps;i++){
             for (int i=0;i<tau.size();i++){
-                tau[i]=appliedTau[i]-qd[i];
+                tau[i]=appliedTau[i]-qd[i]*0;
             }
             this->dynamics->setTorque(tau);
             this->dynamics->forwardDynamics();
@@ -224,6 +257,11 @@ public:
         boost::function<void (T msg)> callBack = [=](T msg) {userFunc(msg);};
         return callBack;
     }
+    template<typename T>
+    boost::function<void (T msg)> getSubscriberCallBackRobot(void (*userFunc)(T,Robot*&), Robot*& robot){
+        boost::function<void (T msg)> callBack = [=,&robot](T msg) {userFunc(msg,robot);};
+        return callBack;
+    }
     template<typename T,typename T2>
     boost::function<void (T msg)> getSubscriberCallBackPublisher(void (*userFunc)(T,T2*),T2* pubMsg){
         boost::function<void (T msg)> callBack = [=](T msg) {userFunc(msg,pubMsg);};
@@ -262,12 +300,15 @@ public:
     }
     rl::mdl::Dynamic* dynamics;
     std::string name;
+    rl::math::Matrix M;
 private:
     std::vector<ros::ServiceServer> services;
     std::vector<PublisherPair> publisherPairs;
     rl::mdl::Model* model;
     rl::math::Matrix J;
-    rl::math::Matrix M;
+
+    rl::math::Vector C;
+    rl::math::Vector G;
     std::vector<rl::math::Matrix> Ji;
     std::vector<rl::math::Matrix> invJi;
     std::vector<rl::math::Vector> xdi;

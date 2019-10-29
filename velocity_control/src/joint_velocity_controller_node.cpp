@@ -130,7 +130,7 @@ int main(int argc, char** argv)
   while(ros::ok())
   {
     // Wait for a new EGM message from the EGM client (with a timeout of 500 ms).
-    if(egm_interface.waitForMessage(500))
+    if(egm_interface.waitForMessage(50))
     {
       // Read the message received from the EGM client.
       egm_interface.read(&input);

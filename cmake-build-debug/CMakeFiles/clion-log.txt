@@ -36,7 +36,7 @@
 -- +++ processing catkin package: 'dynamics'
 -- ==> add_subdirectory(dynamics)
 -- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
--- dynamics: 0 messages, 2 services
+-- dynamics: 0 messages, 8 services
 -- +++ processing catkin package: 'state_server'
 -- ==> add_subdirectory(state_server)
 -- +++ processing catkin package: 'velocity_control'
