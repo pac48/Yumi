@@ -1,0 +1,23 @@
+
+(cl:in-package :asdf)
+
+(defsystem "dynamics-srv"
+  :depends-on (:roslisp-msg-protocol :roslisp-utils )
+  :components ((:file "_package")
+    (:file "getC" :depends-on ("_package_getC"))
+    (:file "_package_getC" :depends-on ("_package"))
+    (:file "getG" :depends-on ("_package_getG"))
+    (:file "_package_getG" :depends-on ("_package"))
+    (:file "getJ" :depends-on ("_package_getJ"))
+    (:file "_package_getJ" :depends-on ("_package"))
+    (:file "getM" :depends-on ("_package_getM"))
+    (:file "_package_getM" :depends-on ("_package"))
+    (:file "getStaticTorques" :depends-on ("_package_getStaticTorques"))
+    (:file "_package_getStaticTorques" :depends-on ("_package"))
+    (:file "getT" :depends-on ("_package_getT"))
+    (:file "_package_getT" :depends-on ("_package"))
+    (:file "getTrajTorques" :depends-on ("_package_getTrajTorques"))
+    (:file "_package_getTrajTorques" :depends-on ("_package"))
+    (:file "setTorques" :depends-on ("_package_setTorques"))
+    (:file "_package_setTorques" :depends-on ("_package"))
+  ))
