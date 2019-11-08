@@ -294,7 +294,7 @@ int main(int argc, char *argv[]) {
     ros::Rate loop_rate(200);
     auto tau0 = rl::math::Vector::Zero(14);
     robot->dynamics->setTorque(tau0);
-    float realTimeFactor = .5;
+    float realTimeFactor = .01;
     while (ros::ok()) {
         //auto t1 = Clock::now();
         jointStateMsg->data = robot->getPosition();
@@ -303,6 +303,8 @@ int main(int argc, char *argv[]) {
         ros::spinOnce();
         robot->step(1/(200.0)*realTimeFactor,5);
         loop_rate.sleep();
+        auto J =robot->getJacobian();
+        std::cout<< J<<std::endl;
         //auto t2 = Clock::now();
        // std::cout << "Delta t2-t1: "
          //         << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()
