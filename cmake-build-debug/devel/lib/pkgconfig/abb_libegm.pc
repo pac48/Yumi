@@ -1,8 +1,0 @@
-prefix=/home/paul/Yumi_WS/src/cmake-build-debug/devel
-
-Name: abb_libegm
-Description: Description of abb_libegm
-Version: 1.0.0
-Cflags: -I/home/paul/Yumi_WS/src/abb_libegm/include -I/usr/include
-Libs: -L/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib -labb_libegm /usr/lib/x86_64-linux-gnu/libboost_system.so /usr/lib/x86_64-linux-gnu/libboost_thread.so -lpthread /usr/lib/x86_64-linux-gnu/libboost_chrono.so /usr/lib/x86_64-linux-gnu/libboost_date_time.so /usr/lib/x86_64-linux-gnu/libboost_atomic.so /usr/lib/x86_64-linux-gnu/libprotobuf.so
-Requires: 

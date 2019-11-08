@@ -1,2 +1,0 @@
-set(simulato_MESSAGE_FILES "")
-set(simulato_SERVICE_FILES "srv/getTorques.srv")

@@ -1,8 +1,0 @@
-prefix=/home/paul/Yumi_WS/src/cmake-build-debug/devel
-
-Name: tcp
-Description: Description of tcp
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib 
-Requires: 

@@ -1,1 +1,0 @@
-/usr/bin/c++  -g  -rdynamic CMakeFiles/yumi_simulator_viewer_node.dir/src/viewer_node.cpp.o  -o ../devel/lib/yumi_simulator/yumi_simulator_viewer_node 

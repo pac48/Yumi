@@ -1,8 +1,0 @@
-prefix=/usr/local
-
-Name: dynamics
-Description: Description of dynamics
-Version: 0.0.1
-Cflags: -I/usr/local/include
-Libs: -L/usr/local/lib 
-Requires: roscpp std_msgs message_runtime
