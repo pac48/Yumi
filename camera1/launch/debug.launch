@@ -5,8 +5,7 @@
     </node>
     <node pkg="camera1" type="depth.py" name="depth" output="screen" >
     </node>
-    <node pkg="camera1" type="get_points.py" name="get_camera_points" output="screen" >
-    </node>
+
     <node pkg="camera1" type="camera_transform.py" name="camera_transform" output="screen" >
     </node>
 
