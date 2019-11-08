@@ -394,7 +394,7 @@ int main(int argc, char *argv[]) {
     ros::Subscriber updateJointsSubscriber = n.subscribe("joint_states",1,updateJointsCallback);
 
     auto updateJointsVelCallback = robot->getSubscriberCallBackRobot(updateJointsVel,robot);
-    ros::Subscriber updateJointsVelSubscriber = n.subscribe("joint_states_vel",1,updateJointsCallback);
+    ros::Subscriber updateJointsVelSubscriber = n.subscribe("joint_states_vel",1,updateJointsVelCallback);
 
     ros::Publisher jointRvizPub = n.advertise<sensor_msgs::JointState>("rviz/joint_states",1);
     sensor_msgs::JointState* jointRvizMsg = new sensor_msgs::JointState();
@@ -416,7 +416,7 @@ int main(int argc, char *argv[]) {
         jointStateMsg->data = robot->getPosition();
         robot->publishAll();
         ros::spinOnce();
-        //robot->step(1/(200.0)*realTimeFactor,5);
+        robot->step(1/(200.0)*realTimeFactor,5);
         loop_rate.sleep();
         //auto t2 = Clock::now();
        // std::cout << "Delta t2-t1: "
