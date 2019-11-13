@@ -20,13 +20,19 @@ class image_converter:
     self.image_sub = rospy.Subscriber("/camera/depth/image_rect_raw",Image,self.callback_image)
     self.operational_sub = rospy.Subscriber("robot_calibration_points",Float32MultiArray,self.callback_robot_coords)
     self.camera_transform_sub = rospy.Subscriber("camera_calibration_points",Float32MultiArray,self.callback_camera_coords)
+    self.camera_coords_sub = rospy.Subscriber("/camera_coords",Float32MultiArray,self.callback_camera_coords2)
+    self.camera_coords2 = [0,0,0,1]
     self.pixpos = [0,0]
     self.x_vec = []
     self.camera_coords = [0,0,0,0]
     self.robot_coords = [0,0,0,0]
+    self.transformation_matrix = np.zeros((4,4))
 
-#  def callback_pixpos(self,data):
+  #  def callback_pixpos(self,data):
 #    self.pixpos = data.data
+  def callback_camera_coords2(self, msg):
+      self.camera_coords2 = list(msg.data)
+      self.camera_coords2.append(1.0)
 
   def callback_robot_coords(self, data):
     self.robot_coords = data.data
@@ -39,7 +45,9 @@ class image_converter:
       
     except CvBridgeError as e:
       print(e)
-    print('camera coords', self.camera_coords)
+    #print('camera coords', self.camera_coords)
+    val = np.matrix(self.camera_coords2)
+    print(self.transformation_matrix*val.transpose())
     if len(self.camera_coords)!=12:
       return
     P1_cam = np.array([self.camera_coords[0],self.camera_coords[1],self.camera_coords[2],1])
@@ -68,9 +76,9 @@ class image_converter:
     rob_offset = np.array([P1_rob[3],P2_rob[3],P3_rob[3],P4_rob[3]])
     fourth_row = np.linalg.solve(camera_matrix, rob_offset)
 
-    transformation_matrix = np.stack((top_row,second_row,third_row,fourth_row))
+    self.transformation_matrix = np.stack((top_row,second_row,third_row,fourth_row))
     
-    print('transformation_matrix', transformation_matrix)
+    print('transformation_matrix', self.transformation_matrix)
 
     try:
       self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
