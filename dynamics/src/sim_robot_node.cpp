@@ -308,7 +308,7 @@ bool setArmVelocity(dynamics::setTorques::Request  &req, dynamics::setTorques::R
 }
 
 
-void updateOpPosition(const std_msgs::Float32MultiArray::ConstPtr& msg,std::vector<std_msgs::Float32MultiArray*> opPostionMsgs, Robot*& robot){ //subpub
+void operationalPositionCallback(const std_msgs::Float32MultiArray::ConstPtr& msg,std::vector<std_msgs::Float32MultiArray*> opPostionMsgs, Robot*& robot){ //subpub
     std::vector<float> data = msg->data;
     auto q = robot->floatVec2MathVec(data);
     for (int i=0;i<data.size();i++) {
@@ -317,6 +317,23 @@ void updateOpPosition(const std_msgs::Float32MultiArray::ConstPtr& msg,std::vect
     opPostionMsgs[0]->data = robot->getOperationalPosition(0);
     opPostionMsgs[1]->data = robot->getOperationalPosition(1);
 }
+void EGMVelocityLCallback(const std_msgs::Float32MultiArray::ConstPtr& msg, Robot*& robot){ //fake egm
+    std::vector<float> data = msg->data;
+    auto qd = robot->dynamics->getVelocity();
+    for (int i=0;i<data.size();i++) {
+        qd[i+data.size()] = data[i];
+    }
+    robot->dynamics->setVelocity(qd);
+}
+void EGMVelocityRCallback(const std_msgs::Float32MultiArray::ConstPtr& msg, Robot*& robot){ //fake egm
+    std::vector<float> data = msg->data;
+    auto qd = robot->dynamics->getVelocity();
+    for (int i=0;i<data.size();i++) {
+        qd[i] = data[i];
+    }
+    robot->dynamics->setVelocity(qd);
+}
+
 void sendOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg,std::vector<std_msgs::Float32MultiArray*> jointVelMsgs,Robot*& robot){ //subpub
     std::vector<float> opvelL;
     std::vector<float> opvelR;
@@ -327,8 +344,8 @@ void sendOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg
     jointVelMsgs[0]->data = robot->xd2jd(0,opvelR);
     jointVelMsgs[1]->data = robot->xd2jd(1,opvelL);
 }
-
 std::vector<std::string> RvizJointnames = {"yumi_joint_1_r", "yumi_joint_2_r", "yumi_joint_7_r", "yumi_joint_3_r", "yumi_joint_4_r", "yumi_joint_5_r", "yumi_joint_6_r", "yumi_joint_1_l", "yumi_joint_2_l", "yumi_joint_7_l", "yumi_joint_3_l","yumi_joint_4_l", "yumi_joint_5_l", "yumi_joint_6_l"};
+
 void rvizUpdateJoints(const std_msgs::Float32MultiArray::ConstPtr& msg,sensor_msgs::JointState* rvizMsgs){ //subpub
     std::vector<double> tmp;
     for (int i=0;i<msg->data.size();i++) {
@@ -410,7 +427,6 @@ int main(int argc, char *argv[]) {
     sensor_msgs::JointState* jointRvizMsg = new sensor_msgs::JointState();
     robot->addPublisherPair(jointRvizPub,jointRvizMsg);
 
-
     ros::Publisher jointStatePub = n.advertise<std_msgs::Float32MultiArray>("joint_states",1);
     std_msgs::Float32MultiArray* jointStateMsg = new std_msgs::Float32MultiArray();
     robot->addPublisherPair(jointStatePub,jointStateMsg);
@@ -421,8 +437,14 @@ int main(int argc, char *argv[]) {
 
     // subscribers
     std::vector<std_msgs::Float32MultiArray*> msgs;msgs.push_back(operationalPosPubRMsg);msgs.push_back(operationalPosPubLMsg);
-    auto updateOpPositionCallback = robot->getSubscriberCallBackPublishersRobot(updateOpPosition,msgs,robot);
+    auto updateOpPositionCallback = robot->getSubscriberCallBackPublishersRobot(operationalPositionCallback,msgs,robot);
     ros::Subscriber jointStateSubscriber = n.subscribe("joint_states",1,updateOpPositionCallback);
+
+    auto jointVelSubLCallback = robot->getSubscriberCallBackRobot(EGMVelocityLCallback,robot);
+    ros::Subscriber jointVelSubL = n.subscribe("joint_velocity_command_L",1,jointVelSubLCallback);
+
+    auto jointVelSubRCallback = robot->getSubscriberCallBackRobot(EGMVelocityRCallback,robot);
+    ros::Subscriber jointVelSubR = n.subscribe("joint_velocity_command_R",1,jointVelSubRCallback);
 
     auto opVelCallback = robot->getSubscriberCallBackPublishersRobot(sendOpJointVelocities,jointVelPubRMsgs,robot);
     ros::Subscriber opVelSubscriber = n.subscribe("/operational_velocity_command",1,opVelCallback);
@@ -435,16 +457,16 @@ int main(int argc, char *argv[]) {
 
 
 
-    ros::Rate loop_rate(200);
+    ros::Rate loop_rate(50);
     auto tau0 = rl::math::Vector::Zero(14);
     robot->dynamics->setTorque(tau0);
-    float realTimeFactor = .1;
+    float realTimeFactor = 1.0;
     while (ros::ok()) {
         jointStateMsg->data = robot->getPosition();
         jointStateVelMsg->data = robot->getVelocity();
         robot->publishAll();
         ros::spinOnce();
-        robot->step(1/(200.0)*realTimeFactor,5);
+        robot->step(1/(200.0)*realTimeFactor,1);
         loop_rate.sleep();
     }
     return 0;

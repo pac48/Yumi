@@ -22,8 +22,8 @@ class controller:
     self.operational_sub = rospy.Subscriber("/operational_position_R",Float32MultiArray,self.callback_operational_R,buff_size=1)
     self.operational_sub = rospy.Subscriber("/operational_position_L",Float32MultiArray,self.callback_operational_L,buff_size=1)
     self.operational_sub = rospy.Subscriber("/goal_position",Float32MultiArray,self.callback_goal,buff_size=1)
-    self.operational_pub = rospy.Publisher("/operational_velocity_command",Float32MultiArray,queue_size=1)
-    self.moving=False
+    self.operational_pub = rospy.Publisher("/operational_velocity_command",Float32MultiArray,queue_size=10)
+    self.moving=True
 
   def getVelMsg(self):
     p = (self.goal[0:3]-self.robot_pose[0:3])
