@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
     ros::NodeHandle n;
     Messenger<float , const std_msgs::Float32::ConstPtr> messenger;
     ros::Subscriber sub_grippe = n.subscribe("gripper_command",5,&Messenger<float , const std_msgs::Float32::ConstPtr>::callback, &messenger);
-    ros::Rate loop_rate(1);
+    ros::Rate loop_rate(10);
     boost::asio::streambuf receive_buffer;
     boost::system::error_code error;
     boost::array<ROS_msg_gripper_position , 1>* buf = new boost::array<ROS_msg_gripper_position , 1>;
@@ -77,6 +77,7 @@ int main(int argc, char **argv) {
             socket.write_some(boost::asio::buffer(buf, 12), error);
             old_data = messenger.data;
     }
+        loop_rate.sleep();
 
     //    loop_rate.sleep();
     }
