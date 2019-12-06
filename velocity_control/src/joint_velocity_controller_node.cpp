@@ -154,7 +154,7 @@ int main(int argc, char** argv)
         if(output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() > 5 &&
             output.mutable_external()->mutable_joints()->mutable_velocity()->values_size() > 0) {
             for (int i = 0; i < 7; i++) {
-                double r = reference[i]*180/M_PI;;
+                double r = reference[i]*180/M_PI;
                 //r = messengers[i]->data*180/M_PI;
                 if (i < 2) {
                     output.mutable_robot()->mutable_joints()->mutable_velocity()->set_values(i, r);

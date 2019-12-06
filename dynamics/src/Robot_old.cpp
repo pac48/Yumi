@@ -64,11 +64,7 @@ rl::math::Vector Robot::xd2jd(int EE, rl::math::Vector xd){
         }
     }
     this->dynamics->calculateJacobianInverse(Ji,invJi,0.1f,true);
-    //std::cout<<xd<<std::endl;
-    //std::cout<<Ji<<std::endl;
-    //std::cout<<invJi<<std::endl;
     rl::math::Vector jd = invJi*xd;
-    //std::cout<<jd<<std::endl;
     return jd;
 }
 std::vector<float> Robot::getOperationalPosition(int EE){
@@ -185,53 +181,4 @@ boost::function<bool (T1,T2)> Robot::getServiceCallBackRobot(bool (*userFunc)(T1
     return callBack;
 }
 
-
-/*
-
-void mycallback(const std_msgs::Float32::ConstPtr& msg, std_msgs::Float32* publisherMsg){
-    std_msgs::Float32 msg2;
-     publisherMsg->data=msg->data+3;
-    //pub.publish(msg2);
-}
-void mycallback2(const std_msgs::Float32::ConstPtr& msg, std_msgs::Float32* publisherMsg,Robot* robot){
-    std_msgs::Float32 msg2;
-    publisherMsg->data=msg->data+3;
-    robot->publishOne(publisherMsg);
-}
-
-
-int main(int argc, char *argv[]) {
-    ros::init(argc, argv, "robot_node");
-    ros::NodeHandle n;
-    Robot* robot = new Robot("yumi");
-    std_msgs::Float32* msg = new std_msgs::Float32();
-    msg->data=12.0f;
-    ros::Publisher pub = n.advertise<std_msgs::Float32>("test1",10);
-    robot->addPublisherPair(pub,msg);
-    std_msgs::Float32* msg2 = new std_msgs::Float32();
-    msg2->data=2.0;
-    ros::Publisher pub2 = n.advertise<std_msgs::Float32>("test2",10);
-    robot->addPublisherPair(pub2,msg2);
-    auto callback2 = robot->getSubscriberCallBackPublisherRobot(mycallback2,msg2,robot);
-    ros::Subscriber sub = n.subscribe("test1",5,callback2);
-    ros::Rate loopRate = ros::Rate(10);
-    int i=0;
-    while (ros::ok()) {
-        loopRate.sleep();
-        //robot->publishAll();
-        robot->publishAll();
-        ros::spinOnce();
-        i++;
-        msg2->data=i;
-        std::vector<float> xd =std::vector<float>(6);
-        xd[2]=-1;
-        //std::cout<<xd<<std::endl;
-        std::vector<float> qd = robot->xd2jd(1,xd);
-        std::vector<float> p = robot->getOperationalPosition(0);
-        std::cout<<qd[0]<<std::endl;
-
-    }
-    return 0;
-}
-*/
 

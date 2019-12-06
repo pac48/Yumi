@@ -272,8 +272,8 @@ public:
         boost::function<void (T msg)> callBack = [=](T msg) {userFunc(msg);};
         return callBack;
     }
-    template<typename T>
-    boost::function<void (T msg)> getSubscriberCallBackRobot(void (*userFunc)(T,Robot*&), Robot*& robot){
+    template<typename T, typename R>
+    boost::function<void (T msg)> getSubscriberCallBackRobot(void (*userFunc)(T,R*&), R*& robot){
         boost::function<void (T msg)> callBack = [=,&robot](T msg) {userFunc(msg,robot);};
         return callBack;
     }
@@ -282,19 +282,19 @@ public:
         boost::function<void (T msg)> callBack = [=](T msg) {userFunc(msg,pubMsg);};
         return callBack;
     }
-    template<typename T,typename T2>
-    boost::function<void (T msg)> getSubscriberCallBackPublisherRobot(void (*userFunc)(T,T2*,Robot*&),T2* pubMsg,Robot*& robot){
+    template<typename T,typename T2, typename R>
+    boost::function<void (T msg)> getSubscriberCallBackPublisherRobot(void (*userFunc)(T,T2*,R*&),T2* pubMsg,R*& robot){
         boost::function<void (T msg)> callBack = [=,&robot](T msg) {userFunc(msg,pubMsg,robot);};
         return callBack;
     }
-    template<typename T,typename T2>
-    boost::function<void (T msg)> getSubscriberCallBackPublishersRobot(void (*userFunc)(T,std::vector<T2*>,Robot*&),std::vector<T2*> pubMsgs,Robot*& robot){
+    template<typename T,typename T2, typename R>
+    boost::function<void (T msg)> getSubscriberCallBackPublishersRobot(void (*userFunc)(T,std::vector<T2*>,R*&),std::vector<T2*> pubMsgs,R*& robot){
         boost::function<void (T msg)> callBack = [=,&robot](T msg) {userFunc(msg,pubMsgs,robot);};
         return callBack;
     }
 
     template<typename T1, typename T2, typename T3>
-    boost::function<bool (T1,T2)> getServiceCallBack(bool(*userFunc)(T1,T2)){
+    boost::function<bool (T1,T2)> getServiceCallBack(bool(T3::*userFunc)(T1,T2)){
         boost::function<bool (T1 req,T2 res)> callBack = [=](T1 req,T2 res) {return userFunc(req,res);};
         return callBack;
     }
@@ -303,13 +303,13 @@ public:
         boost::function<bool (T1 req,T2 res)> callBack = [=](T1 req,T2 res) {return userFunc(req,res,msg);};
         return callBack;
     }
-    template<typename T1, typename T2, typename T3>
-    boost::function<bool (T1,T2)> getServiceCallBackPublisherRobot(bool (*userFunc)(T1,T2,T3*,Robot*&),T3* msg, Robot*& robot){
+    template<typename T1, typename T2, typename T3, typename R>
+    boost::function<bool (T1,T2)> getServiceCallBackPublisherRobot(bool (*userFunc)(T1,T2,T3*,R*&),T3* msg, R*& robot){
         boost::function<bool (T1 req,T2 res)> callBack = [=,&robot](T1 req,T2 res) { return userFunc(req,res,msg,robot);};
         return callBack;
     }
-    template<typename T1, typename T2>
-    boost::function<bool(T1,T2)> getServiceCallBackRobot(bool (*userFunc)(T1,T2,Robot*&), Robot*& robot){
+    template<typename T1, typename T2, typename R>
+    boost::function<bool(T1,T2)> getServiceCallBackRobot(bool (*userFunc)(T1,T2,R*&), R*& robot){
         boost::function<bool(T1 req,T2 res)> callBack = [=,&robot](T1 req,T2 res) {return  userFunc(req,res,robot);};
         return callBack;
     }
@@ -321,7 +321,6 @@ private:
     std::vector<PublisherPair> publisherPairs;
     rl::mdl::Model* model;
     rl::math::Matrix J;
-
     rl::math::Vector C;
     rl::math::Vector G;
     std::vector<rl::math::Matrix> Ji;
@@ -330,60 +329,5 @@ private:
     std::map<void*,PublisherPair> msgMap;
     rl::math::Vector tau0;
 };
-
-/*
-class Robot {
-
-public:
-    Robot(std::string name);
-    ~Robot();
-    rl::math::Vector xd2jd(int , rl::math::Vector );
-    std::vector<float> xd2jd(int, std::vector<float>);
-    std::vector<float> getOperationalPosition(int);
-    void publishAll();
-    template<typename T>
-    void publishOne(T);
-    void publishOne(int);
-    template<typename T>
-    void addPublisherPair(ros::Publisher, T* msg);
-    //boost::function<void (T msg)> getSubscriberPublisherCallBack( int pub,boost::function<void (T msg,ros::Publisher pub)>);
-    template<typename T>
-    boost::function<void (T)> getSubscriberCallBack(void (*userFunc)(T));
-    template<typename T,typename T2>
-    boost::function<void (T)> getSubscriberCallBackPublisher(void (*userFunc)(T,T2*),T2*);
-    template<typename T, typename T2>
-    boost::function<void (T)> getSubscriberCallBackPublisherRobot(void (*userFunc)(T,T2*,Robot*),T2*, Robot* );
-    template<typename T, typename T2>
-    boost::function<void (T)> getSubscriberCallBackPublishersRobot(void (*userFunc)(const T,std::vector<T2*>,Robot*),std::vector<T2*>, Robot* );
-    template<typename T1, typename T2, typename T3>
-    boost::function<bool (T1,T2)> getServiceCallBack(bool (*userFunc)(T1,T2));
-    template<typename T1, typename T2, typename T3>
-    boost::function<bool (T1,T2)> getServiceCallBackPublisher(bool(*userFunc)(T1,T2,T3*),T3*);
-    template<typename T1, typename T2, typename T3>
-    boost::function<bool (T1,T2)> getServiceCallBackPublisherRobot(bool (*userFunc)(T1,T2,T3*,Robot*),T3*, Robot* );
-    template<typename T1, typename T2>
-    boost::function<bool (T1,T2)> getServiceCallBackRobot(bool (*userFunc)(T1,T2,Robot*), Robot*);
-    template<typename T>
-    void publisher(ros::Publisher pub,void* msg);
-    rl::math::Vector floatVec2MathVec(std::vector<float>);
-    std::vector<float> mathVec2FloatVec(rl::math::Vector);
-    rl::mdl::Dynamic* dynamics;
-    std::string name;
-private:
-    void generateURDF(std::string myRobotstr);
-    void loadModel(std::string urdf_file_name);
-    std::vector<ros::ServiceServer> services;
-    std::vector<PublisherPair> publisherPairs;
-    rl::mdl::Model* model;
-    rl::math::Matrix J;
-    std::vector<rl::math::Matrix> Ji;
-    std::vector<rl::math::Matrix> invJi;
-    std::vector<rl::math::Vector> xdi;
-    std::map<void*,PublisherPair> msgMap;
-};
-
-
-*/
-
 
 #endif //YUMI_WS_ROBOT_H

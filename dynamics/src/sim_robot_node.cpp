@@ -16,13 +16,13 @@
 #include "dynamics/getTrajTorques.h"
 #include "std_msgs/Float32MultiArray.h"
 #include "sensor_msgs/JointState.h"
-#include "Robot.h"
+#include "Yumi.h"
 
 #include <iostream>
 #include <chrono>
 typedef std::chrono::high_resolution_clock Clock;
 
-bool getM(dynamics::getM::Request  &req, dynamics::getM::Response &res, Robot*& robot) { // serviceRobot
+bool getM(dynamics::getM::Request  &req, dynamics::getM::Response &res, Yumi*& robot) { // serviceRobot
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();
     for (int i=0;i<req.q.size();i++) {
@@ -42,7 +42,7 @@ bool getM(dynamics::getM::Request  &req, dynamics::getM::Response &res, Robot*& 
     return true;
 }
 
-bool getC(dynamics::getC::Request  &req, dynamics::getC::Response &res, Robot*& robot) { // serviceRobot
+bool getC(dynamics::getC::Request  &req, dynamics::getC::Response &res, Yumi*& robot) { // serviceRobot
     auto q = robot->dynamics->getPosition();
     auto qd = robot->dynamics->getVelocity();
     auto qtmp = robot->dynamics->getPosition();
@@ -63,7 +63,7 @@ bool getC(dynamics::getC::Request  &req, dynamics::getC::Response &res, Robot*& 
     return true;
 }
 
-bool getT(dynamics::getT::Request  &req, dynamics::getT::Response &res, Robot*& robot) { // serviceRobot
+bool getT(dynamics::getT::Request  &req, dynamics::getT::Response &res, Yumi*& robot) { // serviceRobot
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();    //robot->publishOne(jointVelMsgs[0]);
     //robot->publishOne(jointVelMsgs[1]);amics->getPosition();
@@ -89,7 +89,7 @@ bool getT(dynamics::getT::Request  &req, dynamics::getT::Response &res, Robot*& 
     return true;
 }
 
-bool getG(dynamics::getG::Request  &req, dynamics::getG::Response &res, Robot*& robot) { // serviceRobot
+bool getG(dynamics::getG::Request  &req, dynamics::getG::Response &res, Yumi*& robot) { // serviceRobot
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();
     for (int i=0;i<req.q.size();i++) {
@@ -105,7 +105,7 @@ bool getG(dynamics::getG::Request  &req, dynamics::getG::Response &res, Robot*& 
     return true;
 }
 
-bool getJ(dynamics::getJ::Request  &req, dynamics::getJ::Response &res, Robot*& robot) { // serviceRobot
+bool getJ(dynamics::getJ::Request  &req, dynamics::getJ::Response &res, Yumi*& robot) { // serviceRobot
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();
     for (int i=0;i<req.q.size();i++) {
@@ -124,7 +124,7 @@ bool getJ(dynamics::getJ::Request  &req, dynamics::getJ::Response &res, Robot*& 
     return true;
 }
 
-bool getStaticTorques(dynamics::getStaticTorques::Request  &req, dynamics::getStaticTorques::Response &res, Robot*& robot){ // serviceRobot
+bool getStaticTorques(dynamics::getStaticTorques::Request  &req, dynamics::getStaticTorques::Response &res, Yumi*& robot){ // serviceRobot
     auto q = robot->dynamics->getPosition();
     auto qd = robot->dynamics->getVelocity();
     auto qdd = robot->dynamics->getAcceleration();
@@ -152,7 +152,7 @@ bool getStaticTorques(dynamics::getStaticTorques::Request  &req, dynamics::getSt
     return true;
 }
 
-bool getTrajTorques(dynamics::getTrajTorques::Request  &req, dynamics::getTrajTorques::Response &res,Robot*& robot){ // serviceRobot
+bool getTrajTorques(dynamics::getTrajTorques::Request  &req, dynamics::getTrajTorques::Response &res,Yumi*& robot){ // serviceRobot
     auto q = robot->dynamics->getPosition();
     auto qd = robot->dynamics->getVelocity();
     auto qdd = robot->dynamics->getAcceleration();
@@ -192,7 +192,7 @@ bool getTrajTorques(dynamics::getTrajTorques::Request  &req, dynamics::getTrajTo
     return true;
 }
 
-bool setTorques(dynamics::setTorques::Request  &req, dynamics::setTorques::Response &res,Robot*& robot){ // serviceRobot
+bool setTorques(dynamics::setTorques::Request  &req, dynamics::setTorques::Response &res,Yumi*& robot){ // serviceRobot
     auto tau = robot->dynamics->getTorque();
     for (int i=0;i<req.tau.size();i++){
         tau[i]=req.tau[i];
@@ -206,7 +206,7 @@ bool setTorques(dynamics::setTorques::Request  &req, dynamics::setTorques::Respo
     return true;
 }
 
-bool setAccelerations(dynamics::setTorques::Request  &req, dynamics::setTorques::Response &res,Robot*& robot){ // serviceRobot
+bool setAccelerations(dynamics::setTorques::Request  &req, dynamics::setTorques::Response &res,Yumi*& robot){ // serviceRobot
     auto qdd = robot->dynamics->getTorque();
     for (int i=0;i<req.tau.size();i++){
         qdd[i]=req.tau[i];
@@ -228,7 +228,7 @@ rl::math::Vector3 cross(rl::math::Vector3 a,rl::math::Vector3 b){
     return r;
 }
 
-bool setArmVelocity(dynamics::setTorques::Request  &req, dynamics::setTorques::Response &res,Robot*& robot) { // serviceRobot
+bool setArmVelocity(dynamics::setTorques::Request  &req, dynamics::setTorques::Response &res,Yumi*& robot) { // serviceRobot
     rl::math::Vector3 gax = rl::math::Vector3::Zero();
     rl::math::Vector3 gaxS = rl::math::Vector3::Zero();
     for (int i = 0; i < 3; i++) {
@@ -308,7 +308,7 @@ bool setArmVelocity(dynamics::setTorques::Request  &req, dynamics::setTorques::R
 }
 
 
-void operationalPositionCallback(const std_msgs::Float32MultiArray::ConstPtr& msg,std::vector<std_msgs::Float32MultiArray*> opPostionMsgs, Robot*& robot){ //subpub
+void operationalPositionCallback(const std_msgs::Float32MultiArray::ConstPtr& msg,std::vector<std_msgs::Float32MultiArray*> opPostionMsgs, Yumi*& robot){ //subpub
     std::vector<float> data = msg->data;
     auto q = robot->floatVec2MathVec(data);
     for (int i=0;i<data.size();i++) {
@@ -317,7 +317,7 @@ void operationalPositionCallback(const std_msgs::Float32MultiArray::ConstPtr& ms
     opPostionMsgs[0]->data = robot->getOperationalPosition(0);
     opPostionMsgs[1]->data = robot->getOperationalPosition(1);
 }
-void EGMVelocityLCallback(const std_msgs::Float32MultiArray::ConstPtr& msg, Robot*& robot){ //fake egm
+void EGMVelocityLCallback(const std_msgs::Float32MultiArray::ConstPtr& msg, Yumi*& robot){ //fake egm
     std::vector<float> data = msg->data;
     auto qd = robot->dynamics->getVelocity();
     for (int i=0;i<data.size();i++) {
@@ -325,7 +325,7 @@ void EGMVelocityLCallback(const std_msgs::Float32MultiArray::ConstPtr& msg, Robo
     }
     robot->dynamics->setVelocity(qd);
 }
-void EGMVelocityRCallback(const std_msgs::Float32MultiArray::ConstPtr& msg, Robot*& robot){ //fake egm
+void EGMVelocityRCallback(const std_msgs::Float32MultiArray::ConstPtr& msg, Yumi*& robot){ //fake egm
     std::vector<float> data = msg->data;
     auto qd = robot->dynamics->getVelocity();
     for (int i=0;i<data.size();i++) {
@@ -334,7 +334,7 @@ void EGMVelocityRCallback(const std_msgs::Float32MultiArray::ConstPtr& msg, Robo
     robot->dynamics->setVelocity(qd);
 }
 
-void sendOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg,std::vector<std_msgs::Float32MultiArray*> jointVelMsgs,Robot*& robot){ //subpub
+void sendOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg,std::vector<std_msgs::Float32MultiArray*> jointVelMsgs,Yumi*& robot){ //subpub
     std::vector<float> opvelL;
     std::vector<float> opvelR;
     for (int i=0;i<6;i++){
@@ -344,16 +344,15 @@ void sendOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg
     jointVelMsgs[0]->data = robot->xd2jd(0,opvelR);
     jointVelMsgs[1]->data = robot->xd2jd(1,opvelL);
 }
-std::vector<std::string> RvizJointnames = {"yumi_joint_1_r", "yumi_joint_2_r", "yumi_joint_7_r", "yumi_joint_3_r", "yumi_joint_4_r", "yumi_joint_5_r", "yumi_joint_6_r", "yumi_joint_1_l", "yumi_joint_2_l", "yumi_joint_7_l", "yumi_joint_3_l","yumi_joint_4_l", "yumi_joint_5_l", "yumi_joint_6_l"};
 
-void rvizUpdateJoints(const std_msgs::Float32MultiArray::ConstPtr& msg,sensor_msgs::JointState* rvizMsgs){ //subpub
+void rvizUpdateJoints(const std_msgs::Float32MultiArray::ConstPtr& msg,sensor_msgs::JointState* rvizMsgs,Yumi*& robot){ //subpub
     std::vector<double> tmp;
     for (int i=0;i<msg->data.size();i++) {
         double val = msg->data[i];
         tmp.push_back(val);
     }
     rvizMsgs->position=tmp;
-    rvizMsgs->name = RvizJointnames;
+    rvizMsgs->name = robot->RvizJointnames;
     rvizMsgs->header.stamp = ros::Time::now();
 }
 
@@ -362,17 +361,8 @@ void rvizUpdateJoints(const std_msgs::Float32MultiArray::ConstPtr& msg,sensor_ms
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "sim_robot_node");
     ros::NodeHandle n;
-    Robot* robot = new Robot("yumi");
+    Yumi* robot = new Yumi(n);
     //robot->dynamics->setWorldGravity(0,0,0);
-    auto q = robot->dynamics->getPosition();
-    q[0] = (46.0/180.0)*3.14;
-    q[1] = (-121.0/180.0)*3.14;
-    q[2] = (-87.0/180.0)*3.14;
-    q[3] = (4.0/180.0)*3.14;
-    q[4] = (44.0/180.0)*3.14;
-    q[5] = (54.0/180.0)*3.14;
-    q[6] = (-3.0/180.0)*3.14;
-    robot->dynamics->setPosition(q);
 
     // service setters
     auto setAccelerationsCallback = robot->getServiceCallBackRobot(setAccelerations,robot);
@@ -452,7 +442,7 @@ int main(int argc, char *argv[]) {
     std::vector<std_msgs::Float32MultiArray*> msgs2;msgs2.push_back(jointVelPubRMsg);msgs2.push_back(jointVelPubLMsg);
     auto sendJointVelCallback = robot->getSubscriberCallBackPublishersRobot(sendOpJointVelocities,msgs2,robot);
 
-    auto rvizUpdateJointsCallback = robot->getSubscriberCallBackPublisher(rvizUpdateJoints,jointRvizMsg);
+    auto rvizUpdateJointsCallback = robot->getSubscriberCallBackPublisherRobot(rvizUpdateJoints,jointRvizMsg,robot);
     ros::Subscriber jointStateSubscriberrviz = n.subscribe("joint_states",1,rvizUpdateJointsCallback);
 
 
