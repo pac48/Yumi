@@ -17,7 +17,7 @@ class controller:
     self.robot_L = [0.0,0.0,0.0,0.0,0.0,0.0]
     self.robot_pose = np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
     self.robot_vel = np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]) # message order is right then left
-    self.goal = np.array([0.28637367486953735, -0.23328398168087006, 0.09796947240829468+.3, 0.9996191263198853, 0.027586041018366814, -0.0007667283643968403 /
+    self.goal = np.array([0.28637367486953735+.2, -0.23328398168087006, 0.09796947240829468+.0, 0.9996191263198853, 0.027586041018366814, -0.0007667283643968403 /
                           0.16970492899417877, 0.3836527466773987, 0.16571415960788727, 0.8278752565383911, -0.37586238980293274, -0.4163532853126526])
     self.operational_sub = rospy.Subscriber("/operational_position_R",Float32MultiArray,self.callback_operational_R,buff_size=1)
     self.operational_sub = rospy.Subscriber("/operational_position_L",Float32MultiArray,self.callback_operational_L,buff_size=1)

@@ -134,8 +134,11 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 #add_executable(${PROJECT_NAME}_node src/tcp_node.cpp)
-add_executable(client_node src/client_node.cpp)
-add_executable(client_node_motion src/client_node_motion.cpp)
+add_executable(client_node_R src/client_node_R.cpp)
+add_executable(client_node_motion_R src/client_node_motion_R.cpp)
+add_executable(client_node_L src/client_node_L.cpp)
+add_executable(client_node_motion_L src/client_node_motion_L.cpp)
+add_executable(joint_state src/joint_state.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
@@ -147,10 +150,19 @@ add_executable(client_node_motion src/client_node_motion.cpp)
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(client_node
+ target_link_libraries(client_node_R
    ${catkin_LIBRARIES}
  )
-target_link_libraries(client_node_motion
+target_link_libraries(client_node_motion_R
+        ${catkin_LIBRARIES}
+        )
+target_link_libraries(client_node_L
+        ${catkin_LIBRARIES}
+        )
+target_link_libraries(client_node_motion_L
+        ${catkin_LIBRARIES}
+        )
+target_link_libraries(joint_state
         ${catkin_LIBRARIES}
         )
 
