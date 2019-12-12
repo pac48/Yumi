@@ -175,7 +175,7 @@ public:
         }
         return p;
     }
-    void stepPhysics(float dt, int numsteps){
+    void step(float dt, int numsteps){
         auto appliedTau = this->dynamics->getTorque();
         auto q = this->dynamics->getPosition();
         auto qd = this->dynamics->getVelocity();
@@ -194,22 +194,8 @@ public:
         }
         //this->dynamics->setTorque(this->tau0);
         this->dynamics->setTorque(appliedTau);
-    }
-    void step(float dt, int numsteps){
-        auto appliedTau = this->dynamics->getTorque();
-        auto q = this->dynamics->getPosition();
-        auto qd = this->dynamics->getVelocity();
-        auto acc = this->dynamics->getAcceleration();
-        acc*=0;
-        for (int i=0;i<numsteps;i++){
-            this->dynamics->setAcceleration(acc);
-            this->dynamics->inverseDynamics();
-            this->dynamics->rungeKuttaNystrom(dt/numsteps);
-        }
-        //this->dynamics->setTorque(this->tau0);
-        //this->dynamics->setTorque(appliedTau);
-    }
 
+    }
     void generateURDF(std::string myRobotstr){
         std::ofstream myfile;
         myfile.open (this->name+".urdf");
@@ -248,7 +234,6 @@ public:
             publishOne(i);
         }
     }
-
 
     template<typename T>
     void publisher(ros::Publisher pub,void* msg){

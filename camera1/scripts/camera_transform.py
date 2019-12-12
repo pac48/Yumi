@@ -70,7 +70,7 @@ class image_converter:
       
     except CvBridgeError as e:
       print(e)
-    print('camera coords', self.camera_coords)
+    #print('camera coords', self.camera_coords)
     #val = np.matrix(self.camera_coords2)
     msg = self.getTransformMsg()
     self.br.sendTransformMessage(msg)
@@ -120,7 +120,7 @@ class image_converter:
     fourth_row = np.array([0, 0, 0, 1])
     self.transformation_matrix = np.stack((T_values[0,0:4],T_values[0,4:8],T_values[0,8:12],fourth_row))
     
-    #print('transformation_matrix', self.transformation_matrix)
+    print('transformation_matrix', self.transformation_matrix)
     #try:
     #  self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
     #except CvBridgeError as e:
