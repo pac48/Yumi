@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: controller_jug
+Description: Description of controller_jug
+Version: 0.0.0
+Cflags: 
+Libs: -L/usr/local/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/paul/Yumi_WS/src/cmake-build-debug/devel
+
+Name: camera1
+Description: Description of camera1
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib 
+Requires: 
