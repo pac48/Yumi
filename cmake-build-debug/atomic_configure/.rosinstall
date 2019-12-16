@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/unhrobotics/ROS_WS/src/cmake-build-debug/devel/setup.sh

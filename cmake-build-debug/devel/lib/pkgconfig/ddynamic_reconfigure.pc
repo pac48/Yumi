@@ -1,0 +1,8 @@
+prefix=/home/unhrobotics/ROS_WS/src/cmake-build-debug/devel
+
+Name: ddynamic_reconfigure
+Description: Description of ddynamic_reconfigure
+Version: 0.2.2
+Cflags: -I/home/unhrobotics/ROS_WS/src/ddynamic_reconfigure1/include
+Libs: -L/home/unhrobotics/ROS_WS/src/cmake-build-debug/devel/lib -lddynamic_reconfigure
+Requires: roscpp dynamic_reconfigure

@@ -1,0 +1,2 @@
+set(dynamics_MESSAGE_FILES "")
+set(dynamics_SERVICE_FILES "/home/unhrobotics/ROS_WS/src/dynamics/srv/getStaticTorques.srv;/home/unhrobotics/ROS_WS/src/dynamics/srv/getM.srv;/home/unhrobotics/ROS_WS/src/dynamics/srv/getC.srv;/home/unhrobotics/ROS_WS/src/dynamics/srv/getG.srv;/home/unhrobotics/ROS_WS/src/dynamics/srv/getJ.srv;/home/unhrobotics/ROS_WS/src/dynamics/srv/getT.srv;/home/unhrobotics/ROS_WS/src/dynamics/srv/setTorques.srv;/home/unhrobotics/ROS_WS/src/dynamics/srv/getTrajTorques.srv")

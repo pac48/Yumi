@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: abb_libegm
+Description: Description of abb_libegm
+Version: 1.0.0
+Cflags: -I/usr/local/include -I/usr/include
+Libs: -L/usr/local/lib -labb_libegm /usr/local/lib/libboost_system.so /usr/local/lib/libboost_thread.so -lpthread /usr/local/lib/libboost_chrono.so /usr/local/lib/libboost_date_time.so /usr/local/lib/libboost_atomic.so /usr/lib/x86_64-linux-gnu/libprotobuf.so
+Requires: 

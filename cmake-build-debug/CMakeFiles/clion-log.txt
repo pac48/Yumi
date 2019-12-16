@@ -1,0 +1,105 @@
+/home/unhrobotics/Downloads/clion-2019.3.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/unhrobotics/ROS_WS/src
+CMake Warning (dev) in CMakeLists.txt:
+  No project() command is present.  The top-level CMakeLists.txt file must
+  contain a literal, direct call to the project() command.  Add a line of
+  code such as
+
+    project(ProjectName)
+
+  near the top of the file, but after cmake_minimum_required().
+
+  CMake is pretending there is a "project(Project)" command on the first
+  line.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- The C compiler identification is GNU 7.4.0
+-- The CXX compiler identification is GNU 7.4.0
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Using CATKIN_DEVEL_PREFIX: /home/unhrobotics/ROS_WS/src/cmake-build-debug/devel
+-- Using CMAKE_PREFIX_PATH: /opt/ros/kinetic
+-- This workspace overlays: /opt/ros/kinetic
+-- Found PythonInterp: /usr/bin/python (found version "2.7.12") 
+-- Using PYTHON_EXECUTABLE: /usr/bin/python
+-- Using Debian Python package layout
+-- Using empy: /usr/bin/empy
+-- Using CATKIN_ENABLE_TESTING: ON
+-- Call enable_testing()
+-- Using CATKIN_TEST_RESULTS_DIR: /home/unhrobotics/ROS_WS/src/cmake-build-debug/test_results
+-- Found gmock sources under '/usr/src/gmock': gmock will be built
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+-- Looking for pthread_create in pthreads
+-- Looking for pthread_create in pthreads - not found
+-- Looking for pthread_create in pthread
+-- Looking for pthread_create in pthread - found
+-- Found Threads: TRUE  
+-- Found gtest sources under '/usr/src/gmock': gtests will be built
+-- Using Python nosetests: /usr/bin/nosetests-2.7
+-- catkin 0.7.18
+-- BUILD_SHARED_LIBS is on
+-- BUILD_SHARED_LIBS is on
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~  traversing 12 packages in topological order:
+-- ~~  - abb_libegm
+-- ~~  - camera1
+-- ~~  - controller
+-- ~~  - realsense2_description
+-- ~~  - dynamics
+-- ~~  - dynamic_reconfigure
+-- ~~  - state_server
+-- ~~  - ddynamic_reconfigure
+-- ~~  - realsense2_camera
+-- ~~  - velocity_control
+-- ~~  - yumi_description
+-- ~~  - yumi_launch
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- +++ processing catkin package: 'abb_libegm'
+-- ==> add_subdirectory(abb_libegm)
+-- Found Boost: /usr/local/include (found version "1.61.0") found components:  system thread chrono date_time atomic 
+-- Found Protobuf: /usr/lib/x86_64-linux-gnu/libprotobuf.so;-lpthread (found version "2.6.1") 
+-- Generating protobuf C++ for: proto/egm.proto;proto/egm_wrapper.proto;proto/egm_wrapper_trajectory.proto
+-- +++ processing catkin package: 'camera1'
+-- ==> add_subdirectory(camera1)
+-- +++ processing catkin package: 'controller'
+-- ==> add_subdirectory(controller)
+-- +++ processing catkin package: 'realsense2_description'
+-- ==> add_subdirectory(realsense2_description)
+-- +++ processing catkin package: 'dynamics'
+-- ==> add_subdirectory(dynamics)
+-- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+-- dynamics: 0 messages, 8 services
+-- +++ processing catkin package: 'dynamic_reconfigure'
+-- ==> add_subdirectory(dynamic_reconfigure1)
+-- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+-- dynamic_reconfigure: 10 messages, 1 services
+-- +++ processing catkin package: 'state_server'
+-- ==> add_subdirectory(state_server)
+-- +++ processing catkin package: 'ddynamic_reconfigure'
+-- ==> add_subdirectory(ddynamic_reconfigure1)
+-- +++ processing catkin package: 'realsense2_camera'
+-- ==> add_subdirectory(realsense2_camera)
+-- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+-- Create Debug Build.
+-- realsense2_camera: 2 messages, 0 services
+-- +++ processing catkin package: 'velocity_control'
+-- ==> add_subdirectory(velocity_control)
+-- +++ processing catkin package: 'yumi_description'
+-- ==> add_subdirectory(yumi_description)
+-- +++ processing catkin package: 'yumi_launch'
+-- ==> add_subdirectory(yumi_launch)
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/unhrobotics/ROS_WS/src/cmake-build-debug

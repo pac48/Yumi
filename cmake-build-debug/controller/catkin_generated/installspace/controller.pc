@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: controller
+Description: Description of controller
+Version: 0.0.0
+Cflags: 
+Libs: -L/usr/local/lib 
+Requires: 
