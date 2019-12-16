@@ -1,0 +1,8 @@
+prefix=/home/unhrobotics/ROS_WS/src/cmake-build-debug/devel
+
+Name: controller
+Description: Description of controller
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/unhrobotics/ROS_WS/src/cmake-build-debug/devel/lib 
+Requires: 

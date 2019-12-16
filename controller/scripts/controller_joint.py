@@ -9,7 +9,7 @@ from cv_bridge import CvBridge, CvBridgeError
 np.set_printoptions(threshold=sys.maxsize)
 
 
-class controller:
+class controller_joint:
 
   def __init__(self):
     self.kp=1.0*1
