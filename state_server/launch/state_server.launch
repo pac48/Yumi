@@ -4,10 +4,16 @@
   <param name="use_sim_time" value="false" />
 
 
-  <node pkg="state_server" type="client_node" name="client_node" output="screen" args="192.168.1.13">
+  <node pkg="state_server" type="client_node_R" name="client_node_R" output="screen" args="192.168.1.13">
   </node>
-  <node pkg="state_server" type="client_node_motion" name="client_node_motion" output="screen" args="192.168.1.13">
+  <node pkg="state_server" type="client_node_motion_R" name="client_node_motion_R" output="screen" args="192.168.1.13">
   </node>
+  <node pkg="state_server" type="client_node_L" name="client_node_L" output="screen" args="192.168.1.13">
+  </node>
+  <node pkg="state_server" type="client_node_motion_L" name="client_node_motion_L" output="screen" args="192.168.1.13">
+  </node>
+  <node pkg="state_server" type="joint_state" name="joint_state" output="screen" args="192.168.1.13">
+    </node>
 
 
 

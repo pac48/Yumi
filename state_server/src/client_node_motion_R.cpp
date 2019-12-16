@@ -54,13 +54,13 @@ int main(int argc, char **argv) {
 //socket creation
     tcp::socket socket(io_service);
 //connection
-    //std::string IP = argv[1];
-    std::string IP = "192.168.1.13";
+    std::string IP = argv[1];
+    //std::string IP = "192.168.1.13";
     socket.connect(tcp::endpoint(boost::asio::ip::address::from_string(IP), 11000));
-    ros::init(argc, argv, "state_server");
+    ros::init(argc, argv, "motion_server_R");
     ros::NodeHandle n;
     Messenger<float , const std_msgs::Float32::ConstPtr> messenger;
-    ros::Subscriber sub_grippe = n.subscribe("gripper_command",5,&Messenger<float , const std_msgs::Float32::ConstPtr>::callback, &messenger);
+    ros::Subscriber sub_grippe = n.subscribe("gripper_command_R",5,&Messenger<float , const std_msgs::Float32::ConstPtr>::callback, &messenger);
     ros::Rate loop_rate(10);
     boost::asio::streambuf receive_buffer;
     boost::system::error_code error;
@@ -71,15 +71,13 @@ int main(int argc, char **argv) {
         if (old_data != messenger.data){
             ROS_msg_gripper_position msgs;
             msgs.position = messenger.data;
-            msgs.msg_type = 2;
+            msgs.msg_type = 3;
             msgs.endType = 0;
             buf->assign(msgs);
             socket.write_some(boost::asio::buffer(buf, 12), error);
             old_data = messenger.data;
     }
         loop_rate.sleep();
-
-    //    loop_rate.sleep();
     }
     socket.close();
     return 0;

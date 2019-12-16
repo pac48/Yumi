@@ -6,6 +6,7 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "vector"
 #include "string"
+#include <math.h>
 
 using namespace boost::asio;
 using ip::tcp;
@@ -50,15 +51,15 @@ int main(int argc, char **argv) {
 //socket creation
     tcp::socket socket(io_service);
 //connection
-    //std::string IP = argv[1];
-    std::string IP = "192.168.1.13";
+    std::string IP = argv[1];
+    //std::string IP = "192.168.1.13";
     socket.connect(tcp::endpoint(boost::asio::ip::address::from_string(IP), 11002));
-    ros::init(argc, argv, "state_server");
+    ros::init(argc, argv, "state_server_R");
     ros::NodeHandle n;
     ros::Publisher pub_joints = n.advertise<std_msgs::Float32MultiArray>("joint_state_R", 1);
     ros::Publisher pub_torques = n.advertise<std_msgs::Float32MultiArray>("joint_torque_R", 1);
-    ros::Publisher pub_gripper_pos = n.advertise<std_msgs::Float32>("gripper_state", 1);
-    ros::Publisher pub_gripper_force = n.advertise<std_msgs::Float32>("gripper_froce", 1);
+    ros::Publisher pub_gripper_pos = n.advertise<std_msgs::Float32>("gripper_state_R", 1);
+    //ros::Publisher pub_gripper_force = n.advertise<std_msgs::Float32>("gripper_froce_L", 1);
     ros::Rate loop_rate(200);
     boost::asio::streambuf receive_buffer;
     boost::system::error_code error;
@@ -74,6 +75,9 @@ int main(int argc, char **argv) {
         }else {
             ROS_msgs const* data = boost::asio::buffer_cast<ROS_msgs const*>(receive_buffer.data());
             std::copy(data->joint_position_msg.joints, data->joint_position_msg.joints + 7, std::back_inserter(msg_joints.data));
+            for (int i =0;i<7;i++){
+                msg_joints.data[i]*=(M_PI/180.0);
+            }
             std::copy(data->joint_torque_msg.joints, data->joint_torque_msg.joints + 7, std::back_inserter(msg_torque.data));
             msg_gripper_pos.data = data->gripper_position_msg.position;
             msg_gripper_force.data = data->gripper_force_msg.force;
@@ -82,7 +86,7 @@ int main(int argc, char **argv) {
         pub_joints.publish(msg_joints);
         pub_torques.publish(msg_torque);
         pub_gripper_pos.publish(msg_gripper_pos);
-        pub_gripper_force.publish(msg_gripper_force);
+        //pub_gripper_force.publish(msg_gripper_force);
         receive_buffer.consume(msg_size);
         ros::spinOnce();
         loop_rate.sleep();
