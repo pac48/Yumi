@@ -537,6 +537,24 @@ realsense2_description/preinstall:
 .PHONY : realsense2_description/preinstall
 
 #=============================================================================
+# Directory level rules for directory controller_node_jug
+
+# Convenience name for "all" pass in the directory.
+controller_node_jug/all:
+
+.PHONY : controller_node_jug/all
+
+# Convenience name for "clean" pass in the directory.
+controller_node_jug/clean:
+
+.PHONY : controller_node_jug/clean
+
+# Convenience name for "preinstall" pass in the directory.
+controller_node_jug/preinstall:
+
+.PHONY : controller_node_jug/preinstall
+
+#=============================================================================
 # Directory level rules for directory dynamics
 
 # Convenience name for "all" pass in the directory.

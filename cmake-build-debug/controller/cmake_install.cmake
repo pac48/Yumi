@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/paul/Yumi_WS/src/cmake-build-debug/controller/catkin_generated/installspace/controller_jug.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/paul/Yumi_WS/src/cmake-build-debug/controller/catkin_generated/installspace/controller.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/controller_jug/cmake" TYPE FILE FILES
-    "/home/paul/Yumi_WS/src/cmake-build-debug/controller/catkin_generated/installspace/controller_jugConfig.cmake"
-    "/home/paul/Yumi_WS/src/cmake-build-debug/controller/catkin_generated/installspace/controller_jugConfig-version.cmake"
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/controller/cmake" TYPE FILE FILES
+    "/home/paul/Yumi_WS/src/cmake-build-debug/controller/catkin_generated/installspace/controllerConfig.cmake"
+    "/home/paul/Yumi_WS/src/cmake-build-debug/controller/catkin_generated/installspace/controllerConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/controller_jug" TYPE FILE FILES "/home/paul/Yumi_WS/src/controller/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/controller" TYPE FILE FILES "/home/paul/Yumi_WS/src/controller/package.xml")
 endif()
 

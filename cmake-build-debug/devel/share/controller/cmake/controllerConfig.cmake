@@ -67,8 +67,8 @@ set(controller_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(controller_SOURCE_PREFIX /home/unhrobotics/ROS_WS/src/controller)
-  set(controller_DEVEL_PREFIX /home/unhrobotics/ROS_WS/src/cmake-build-debug/devel)
+  set(controller_SOURCE_PREFIX /home/paul/Yumi_WS/src/controller)
+  set(controller_DEVEL_PREFIX /home/paul/Yumi_WS/src/cmake-build-debug/devel)
   set(controller_INSTALL_PREFIX "")
   set(controller_PREFIX ${controller_DEVEL_PREFIX})
 else()
@@ -110,7 +110,7 @@ if(NOT " " STREQUAL " ")
         message(FATAL_ERROR "Project 'controller' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'controller' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/unhrobotics/ROS_WS/src/controller/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'controller' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/paul/Yumi_WS/src/controller/${idir}'.  ${_report}")
     endif()
     _list_append_unique(controller_INCLUDE_DIRS ${include})
   endforeach()
@@ -131,7 +131,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/unhrobotics/ROS_WS/src/cmake-build-debug/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/paul/Yumi_WS/src/cmake-build-debug/devel/lib;/home/paul/Yumi_WS/devel/lib;/home/paul/ROS_WS/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

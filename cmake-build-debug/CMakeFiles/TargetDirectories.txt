@@ -58,6 +58,13 @@
 /home/paul/Yumi_WS/src/cmake-build-debug/realsense2_description/CMakeFiles/install/local.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/realsense2_description/CMakeFiles/rebuild_cache.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/realsense2_description/CMakeFiles/install.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/controller_node_jug/CMakeFiles/install/strip.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/controller_node_jug/CMakeFiles/edit_cache.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/controller_node_jug/CMakeFiles/list_install_components.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/controller_node_jug/CMakeFiles/test.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/controller_node_jug/CMakeFiles/install/local.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/controller_node_jug/CMakeFiles/rebuild_cache.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/controller_node_jug/CMakeFiles/install.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/dynamics/CMakeFiles/install/strip.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/dynamics/CMakeFiles/install/local.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/dynamics/CMakeFiles/install.dir

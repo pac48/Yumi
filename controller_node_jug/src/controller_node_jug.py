@@ -32,15 +32,15 @@ class controller:
         self.robot_R= None
         self.theta= None
         self.goal =np.array([0.0 , 0.0 , 0.0])
-        self.kp = 0.1
+        self.kp = 0.3
 
         self.kp_z = 1.0*0.8
 
         self.kd = 1.0*0
         # self.kd=1.0*0
-        # self.robot_R = [0.0,0.0,0.0,0.0,0.0,0.0]
-        # self.robot_L = [0.0,0.0,0.0,0.0,0.0,0.0]
-        # self.robot_pose = np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
+        self.robot_R = [0.0,0.0,0.0,0.0,0.0,0.0]
+        self.robot_L = [0.0,0.0,0.0,0.0,0.0,0.0]
+        self.robot_pose = np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0])
         self.robot_vel = np.array([0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]) # message order is right then left
         # self.goal = np.array([0.28637367486953735, -0.23328398168087006, 0.09796947240829468, 0.9996191263198853, 0.027586041018366814, -0.0007667283643968403 /
         #                       0.16970492899417877, 0.3836527466773987, 0.16571415960788727, 0.8278752565383911, -0.37586238980293274, -0.4163532853126526])
@@ -48,9 +48,9 @@ class controller:
         # Subscribing to join_state_topic. It should contain message from YuMi Paul node
         # [right arm left arm - joints angles]
         self.tf = TransformListener()
-        self.operational_pub = rospy.Publisher("/operational_velocity_command",Float32MultiArray,queue_size=10)
+        self.operational_pub = rospy.Publisher("/operational_velocity_command",Float32MultiArray,queue_size=1)
 
-        self.operational_sub = rospy.Subscriber("/joint_states",Float32MultiArray,self.callback_operational_R,buff_size=1)
+        self.operational_sub = rospy.Subscriber("/operational_position_R",Float32MultiArray,self.callback_operational_R,buff_size=1)
         # Subscribing to simulation from Sean with ball's position and velocity
         self.camera_coords_sub = rospy.Subscriber("/camera_coords",Float32MultiArray,self.callback_camera_coords,buff_size=1)
 
@@ -90,7 +90,7 @@ class controller:
         self.theta=self.robot_R[0:8]
         for i in range(0,len(self.robot_L)):
             self.robot_R.append(self.robot_L[i]) #combines two arrays
-            self.robot_pose= np.array(self.robot_R)
+        self.robot_pose= np.array(self.robot_R)
 
         if self.moving==True:
             vel_msg=self.getVelMsg()
@@ -109,7 +109,8 @@ class controller:
         self.moving=True
 
     def getVelMsg(self):
-        p = (self.goal[0:2]-self.robot_pose[0:2])
+        #self.goal = np.array([0.88,  0.343, 0.3])
+        p = self.goal[0:2]-self.robot_pose[0:2]
         #print(self.goal)
         print(p)
         # d = self.goal[0:3]*0-self.robot_vel[0:3]
@@ -125,6 +126,8 @@ class controller:
         val_z = 0.0
 
         self.robot_vel[2] = val_z
+        #self.robot_vel[1]=0.0
+        #self.robot_vel[0]=0.1
 
         vel_msg = Float32MultiArray()
         vel_msg.data = self.robot_vel.tolist()

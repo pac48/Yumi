@@ -432,10 +432,22 @@ catkin_DIR:PATH=/opt/ros/kinetic/share/catkin/cmake
 class_loader_DIR:PATH=/opt/ros/kinetic/share/class_loader/cmake
 
 //Value Computed by CMake
+controller_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/controller
+
+//Value Computed by CMake
+controller_SOURCE_DIR:STATIC=/home/paul/Yumi_WS/src/controller
+
+//Value Computed by CMake
 controller_jug_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/controller
 
 //Value Computed by CMake
 controller_jug_SOURCE_DIR:STATIC=/home/paul/Yumi_WS/src/controller
+
+//Value Computed by CMake
+controller_node_jug_BINARY_DIR:STATIC=/home/paul/Yumi_WS/src/cmake-build-debug/controller_node_jug
+
+//Value Computed by CMake
+controller_node_jug_SOURCE_DIR:STATIC=/home/paul/Yumi_WS/src/controller_node_jug
 
 //The directory containing a CMake configuration file for cpp_common.
 cpp_common_DIR:PATH=/opt/ros/kinetic/share/cpp_common/cmake
@@ -817,7 +829,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=16
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=17
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
