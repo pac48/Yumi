@@ -3,6 +3,7 @@
 
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: ../dynamics/src/Robot.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: ../dynamics/src/Yumi.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: ../dynamics/src/callbacks.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: ../dynamics/src/sim_robot_node.cpp
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: /opt/ros/kinetic/include/ros/advertise_options.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: /opt/ros/kinetic/include/ros/advertise_service_options.h
@@ -270,11 +271,25 @@ dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: /usr/include/rl
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: /usr/include/rl-0.7.0/rl/mdl/Model.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: /usr/include/rl-0.7.0/rl/mdl/Transform.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: /usr/include/rl-0.7.0/rl/mdl/UrdfFactory.h
-dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: /usr/include/rl-0.7.0/rl/std/chrono
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: /usr/include/rl-0.7.0/rl/std/string
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getC.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getCRequest.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getCResponse.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getG.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getGRequest.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getGResponse.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getJ.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getJRequest.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getJResponse.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getM.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getMRequest.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getMResponse.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getStaticTorques.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getStaticTorquesRequest.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getStaticTorquesResponse.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getT.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getTRequest.h
+dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getTResponse.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getTrajTorques.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getTrajTorquesRequest.h
 dynamics/CMakeFiles/sim_robot_node.dir/src/sim_robot_node.cpp.o: devel/include/dynamics/getTrajTorquesResponse.h

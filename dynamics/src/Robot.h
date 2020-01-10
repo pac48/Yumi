@@ -5,11 +5,24 @@
 #ifndef YUMI_WS_ROBOT_H
 #define YUMI_WS_ROBOT_H
 
+#include "ros/ros.h"
+#include "dynamics/getStaticTorques.h"
+#include "dynamics/setTorques.h"
+#include "dynamics/getTrajTorques.h"
+#include "dynamics/getT.h"
+#include "dynamics/getM.h"
+#include "dynamics/getG.h"
+#include "dynamics/getC.h"
+#include "dynamics/getJ.h"
+#include "std_msgs/Float32MultiArray.h"
+#include "sensor_msgs/JointState.h"
 #include <rl/math/Transform.h>
 #include <rl/math/Vector.h>
 #include <rl/math/Matrix.h>
+#include <rl/math/Quaternion.h>
 #include <rl/math/Unit.h>
 #include <rl/mdl/Dynamic.h>
+#include <rl/mdl/Kinematic.h>
 #include <rl/mdl/Model.h>
 #include <rl/mdl/Body.h>
 #include "rl/mdl/Joint.h"
@@ -174,7 +187,7 @@ public:
         auto tau = this->dynamics->getTorque();
         for (int i=0;i<numsteps;i++){
             for (int i=0;i<tau.size();i++){
-                tau[i]=appliedTau[i]-qd[i]*1.1;
+                tau[i]=appliedTau[i]-qd[i]*1.1*0;
             }
             this->dynamics->setTorque(tau);
             this->dynamics->forwardDynamics();
@@ -271,11 +284,12 @@ public:
     rl::mdl::Dynamic* dynamics;
     std::string name;
     rl::math::Matrix M;
+    rl::mdl::Model* model;
 private:
     std::vector<ros::Subscriber> subscribers;
     std::vector<ros::ServiceServer> services;
     std::vector<PublisherPair> publisherPairs;
-    rl::mdl::Model* model;
+
     rl::math::Matrix J;
     rl::math::Vector C;
     rl::math::Vector G;

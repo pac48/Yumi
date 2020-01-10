@@ -5,7 +5,7 @@
 #define YUMI_WS_YUMI_H
 
 #include "Robot.h"
-#include "callbacks.h"
+
 
 class Yumi: public Robot {
 public:
@@ -30,3 +30,5 @@ public:
 };
 
 #endif //YUMI_WS_YUMI_H
+
+#include "callbacks.h"

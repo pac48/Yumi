@@ -167,90 +167,6 @@
 					<DistClean command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="vis_sim_robot_node">
-				<Option output="/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib/dynamics/vis_sim_robot_node" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib/dynamics"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add option="-DROS_BUILD_SHARED_LIBS=1"/>
-					<Add option="-DROS_PACKAGE_NAME=&quot;dynamics&quot;"/>
-					<Add option="-DROSCONSOLE_BACKEND_LOG4CXX"/>
-					<Add option="-DRL_MDL_NLOPT"/>
-					<Add option="-DBOOST_ALL_NO_LIB"/>
-					<Add option="-DLIBDC1394_VERSION_MAJOR=20"/>
-					<Add option="-DRL_SG_BULLET"/>
-					<Add option="-DCOIN_DLL"/>
-					<Add option="-DRL_SG_ODE"/>
-					<Add option="-DdDOUBLE"/>
-					<Add option="-DRL_SG_SOLID"/>
-					<Add directory="/home/paul/Yumi_WS/src/cmake-build-debug/devel/include"/>
-					<Add directory="/usr/include/rl-0.7.0/rl/std"/>
-					<Add directory="/opt/ros/kinetic/include"/>
-					<Add directory="/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"/>
-					<Add directory="/usr/include/rl-0.7.0"/>
-					<Add directory="/usr/include/eigen3"/>
-					<Add directory="/usr/include/libxml2"/>
-					<Add directory="/usr/include/bullet"/>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 vis_sim_robot_node"/>
-					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="vis_sim_robot_node/fast">
-				<Option output="/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib/dynamics/vis_sim_robot_node" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib/dynamics"/>
-				<Option object_output="./"/>
-				<Option type="1"/>
-				<Option compiler="gcc"/>
-				<Compiler>
-					<Add option="-DROS_BUILD_SHARED_LIBS=1"/>
-					<Add option="-DROS_PACKAGE_NAME=&quot;dynamics&quot;"/>
-					<Add option="-DROSCONSOLE_BACKEND_LOG4CXX"/>
-					<Add option="-DRL_MDL_NLOPT"/>
-					<Add option="-DBOOST_ALL_NO_LIB"/>
-					<Add option="-DLIBDC1394_VERSION_MAJOR=20"/>
-					<Add option="-DRL_SG_BULLET"/>
-					<Add option="-DCOIN_DLL"/>
-					<Add option="-DRL_SG_ODE"/>
-					<Add option="-DdDOUBLE"/>
-					<Add option="-DRL_SG_SOLID"/>
-					<Add directory="/home/paul/Yumi_WS/src/cmake-build-debug/devel/include"/>
-					<Add directory="/usr/include/rl-0.7.0/rl/std"/>
-					<Add directory="/opt/ros/kinetic/include"/>
-					<Add directory="/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"/>
-					<Add directory="/usr/include/rl-0.7.0"/>
-					<Add directory="/usr/include/eigen3"/>
-					<Add directory="/usr/include/libxml2"/>
-					<Add directory="/usr/include/bullet"/>
-					<Add directory="/usr/include/c++/5"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
-					<Add directory="/usr/include/c++/5/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
-					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
-				</Compiler>
-				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 vis_sim_robot_node/fast"/>
-					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j16 -f &quot;/home/paul/Yumi_WS/src/cmake-build-debug/dynamics/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
 			<Target title="rosgraph_msgs_generate_messages_nodejs">
 				<Option working_dir="/home/paul/Yumi_WS/src/cmake-build-debug/dynamics"/>
 				<Option type="4"/>
@@ -615,9 +531,6 @@
 		</Unit>
 		<Unit filename="/home/paul/Yumi_WS/src/dynamics/src/sim_robot_node.cpp">
 			<Option target="sim_robot_node"/>
-		</Unit>
-		<Unit filename="/home/paul/Yumi_WS/src/dynamics/src/vis_sim_robot_node.cpp">
-			<Option target="vis_sim_robot_node"/>
 		</Unit>
 		<Unit filename="/home/paul/Yumi_WS/src/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

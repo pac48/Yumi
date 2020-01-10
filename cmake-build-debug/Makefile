@@ -506,19 +506,6 @@ rosgraph_msgs_generate_messages_cpp/fast:
 .PHONY : rosgraph_msgs_generate_messages_cpp/fast
 
 #=============================================================================
-# Target rules for targets named vis_sim_robot_node
-
-# Build rule for target.
-vis_sim_robot_node: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 vis_sim_robot_node
-.PHONY : vis_sim_robot_node
-
-# fast build rule for target.
-vis_sim_robot_node/fast:
-	$(MAKE) -f dynamics/CMakeFiles/vis_sim_robot_node.dir/build.make dynamics/CMakeFiles/vis_sim_robot_node.dir/build
-.PHONY : vis_sim_robot_node/fast
-
-#=============================================================================
 # Target rules for targets named rosgraph_msgs_generate_messages_nodejs
 
 # Build rule for target.
@@ -2351,7 +2338,6 @@ help:
 	@echo "... roscpp_generate_messages_cpp"
 	@echo "... dynamics_generate_messages_py"
 	@echo "... rosgraph_msgs_generate_messages_cpp"
-	@echo "... vis_sim_robot_node"
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... _dynamics_generate_messages_check_deps_setTorques"
 	@echo "... roscpp_generate_messages_lisp"

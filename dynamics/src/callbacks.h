@@ -4,7 +4,131 @@
 #ifndef YUMI_WS_CALLBACKS_H
 #define YUMI_WS_CALLBACKS_H
 
+#include "Yumi.h"
+
 // Service callbacks
+bool getTranformations(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
+    Robot* robot = (Robot*) Struct;
+    auto q = robot->dynamics->getPosition();
+    auto qtmp = robot->dynamics->getPosition();
+    for (int i=0;i<req.q.size();i++) {
+        q[i] = req.q[i];
+    }
+    robot->dynamics->setPosition(q);
+    robot->dynamics->forwardPosition();
+    robot->dynamics->update();
+    robot->dynamics->forwardPosition();
+    for (int i=1;i<8;i++){
+        auto T = robot->dynamics->getFrame(i); // 3 is 2
+        rl::math::Quaternion q(T.rotation());
+        res.M.push_back(T(0,3));
+        res.M.push_back(T(1,3));
+        res.M.push_back(T(2,3));
+        res.M.push_back(q.x());
+        res.M.push_back(q.y());
+        res.M.push_back(q.z());
+        res.M.push_back(q.w());
+    }
+    robot->dynamics->setPosition(qtmp);
+    return true;
+}
+
+bool getM(dynamics::getM::Request  &req, dynamics::getM::Response &res, Robot*& robot) { // serviceRobot
+    auto q = robot->dynamics->getPosition();
+    auto qtmp = robot->dynamics->getPosition();
+    for (int i=0;i<req.q.size();i++) {
+        q[i] = req.q[i];
+    }
+    robot->dynamics->setPosition(q);
+    auto M = robot->getMassMatrix();
+    for (int i=0;i<M.rows();i++){
+        for (int j=0;j<M.cols();j++){
+            res.M.push_back(M(i,j));
+        }
+    }
+    auto b = robot->dynamics->getBody(8); // 8 is right finger
+    std::cout<< b->m <<std::endl;
+    robot->dynamics->setPosition(qtmp);
+    std::cout<< M <<std::endl;
+    return true;
+}
+bool getC(dynamics::getC::Request  &req, dynamics::getC::Response &res, Robot*& robot) { // serviceRobot
+    auto q = robot->dynamics->getPosition();
+    auto qd = robot->dynamics->getVelocity();
+    auto qtmp = robot->dynamics->getPosition();
+    auto qdtmp = robot->dynamics->getVelocity();
+    for (int i=0;i<req.q.size();i++) {
+        q[i] = req.q[i];
+        qd[i] = req.qd[i];
+    }
+    robot->dynamics->setPosition(q);
+    robot->dynamics->setVelocity(qd);
+    auto c = robot->getCentrifugalCoriolis();
+    for (int i=0;i<c.size();i++){
+        res.c.push_back(c(i));
+    }
+    robot->dynamics->setPosition(qtmp);
+    robot->dynamics->setVelocity(qdtmp);
+    std::cout<< c <<std::endl;
+    return true;
+}
+bool getT(dynamics::getT::Request  &req, dynamics::getT::Response &res, Robot*& robot) { // serviceRobot
+    auto q = robot->dynamics->getPosition();
+    auto qtmp = robot->dynamics->getPosition();
+    for (int i=0;i<req.q.size();i++) {
+        q[i] = req.q[i];
+    }
+    robot->dynamics->setPosition(q);
+    auto M = robot->getMassMatrix();
+    for (int k=0;k<q.size();k++) {
+        q[k]=q[k]+0.001;
+        robot->dynamics->setPosition(q);
+        robot->M = robot->getMassMatrix()-M;
+        auto Ti = robot->M;
+        for (int i = 0; i < Ti.rows(); i++) {
+            for (int j = 0; j < Ti.cols(); j++) {
+                res.T.push_back(Ti(i, j)/0.001);
+            }
+        }
+        q[k]=q[k]-0.001;
+    }
+    //std::cout<< Ti <<std::endl;
+    robot->dynamics->setPosition(qtmp);
+    return true;
+}
+bool getG(dynamics::getG::Request  &req, dynamics::getG::Response &res, Robot*& robot) { // serviceRobot
+    auto q = robot->dynamics->getPosition();
+    auto qtmp = robot->dynamics->getPosition();
+    for (int i=0;i<req.q.size();i++) {
+        q[i] = req.q[i];
+    }
+    robot->dynamics->setPosition(q);
+    auto g = robot->getGravity();
+    for (int i=0;i<g.size();i++){
+        res.g.push_back(g(i));
+    }
+    robot->dynamics->setPosition(qtmp);
+    std::cout<< g <<std::endl;
+    return true;
+}
+bool getJ(dynamics::getJ::Request  &req, dynamics::getJ::Response &res, Robot*& robot) { // serviceRobot
+    auto q = robot->dynamics->getPosition();
+    auto qtmp = robot->dynamics->getPosition();
+    for (int i=0;i<req.q.size();i++) {
+        q[i] = req.q[i];
+    }
+    robot->dynamics->setPosition(q);
+    robot->dynamics->forwardPosition();
+    auto J = robot->getJacobian();
+    for (int i=0;i<J.rows();i++){
+        for (int j=0;j<J.cols();j++){
+            res.J.push_back(J(i,j));
+        }
+    }
+    robot->dynamics->setPosition(qtmp);
+    std::cout<< J <<std::endl;
+    return true;
+}
 bool getStaticTorques(dynamics::getStaticTorques::Request  &req, dynamics::getStaticTorques::Response &res,void*& Struct){ // serviceRobot
     Robot* robot = (Robot*) Struct;
     auto q = robot->dynamics->getPosition();
@@ -181,6 +305,8 @@ bool setArmVelocity(dynamics::setTorques::Request  &req, dynamics::setTorques::R
     }
     return true;
 }
+
+
 // Structs
 struct VectorFloat32MultiArrayRobot{
     std::vector<std_msgs::Float32MultiArray*>* msgs;
@@ -226,6 +352,16 @@ void updateJoints(void*& Struct){
     Yumi* robot = tmp->robot;
     std_msgs::Float32MultiArray* jointStateMsg = tmp->msg;
     jointStateMsg->data = robot->getPosition();
+}
+void updateJoints_R(void*& Struct){
+    Float32MultiArrayRobot* tmp = (Float32MultiArrayRobot*) Struct;
+    Yumi* robot = tmp->robot;
+    std_msgs::Float32MultiArray* jointStateMsg = tmp->msg;
+    jointStateMsg->data = robot->getPosition();
+    for (int i =0;i<7;i++){
+        jointStateMsg->data.pop_back();
+    }
+
 }
 void updateJointsVel(void*& Struct){
     Float32MultiArrayRobot* tmp = (Float32MultiArrayRobot*) Struct;

@@ -6,8 +6,8 @@
 #include "dynamics/getStaticTorques.h"
 #include "std_msgs/Float32MultiArray.h"
 #include "sensor_msgs/JointState.h"
-#include "Robot.h"
-
+#include "Yumi.h"
+/*
 bool getStaticTorques(dynamics::getStaticTorques::Request  &req, dynamics::getStaticTorques::Response &res,Robot*& robot){ // serviceRobot
     auto q = robot->dynamics->getPosition();
     auto qd = robot->dynamics->getVelocity();
@@ -77,12 +77,55 @@ void sendOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg
     //robot->publishOne(jointVelMsgs[1]);
 }
 
-
+*/
 int main(int argc, char *argv[]) {
+    float rate = 200;
+    ros::init(argc, argv, "real_robot_node");
+    ros::NodeHandle n;
+    ros::Rate loop_rate(rate);
+    Yumi* robot = new Yumi();
+    // Messages
+    sensor_msgs::JointState* jointRvizMsg;
+    std_msgs::Float32MultiArray* jointStateMsg;
+    std_msgs::Float32MultiArray* jointStateVelMsg;
+    std_msgs::Float32MultiArray* operationalPosPubLMsg;
+    std_msgs::Float32MultiArray* operationalPosPubRMsg;
+    std::vector<std_msgs::Float32MultiArray*> opPostionMsgs;
+    // Publishers
+    jointRvizMsg = robot->addPublisher(n,"rviz/joint_states",1, new sensor_msgs::JointState());
+    //jointStateMsg = robot->addPublisher(n,"joint_states",1,new std_msgs::Float32MultiArray());
+    //jointStateVelMsg = robot->addPublisher(n,"joint_states_vel",1,new std_msgs::Float32MultiArray());
+    operationalPosPubLMsg = robot->addPublisher(n,"operational_position_L",1, new std_msgs::Float32MultiArray());
+    operationalPosPubRMsg = robot->addPublisher(n,"operational_position_R",1, new std_msgs::Float32MultiArray());
+    // Services
+    robot->addService(n, "getStaticJointTorques", getStaticTorques, (void*&) robot);
+    robot->addService(n,"getTrajTorques",getTrajTorques,(void*&) robot);
+    robot->addService(n,"setTrajTorques",setTorques,(void*&) robot);
+    robot->addService(n,"setArmVelocities",setArmVelocity,(void*&) robot);
+    robot->addService(n,"setJointAccelerations",setAccelerations,(void*&) robot);
+    robot->addService(n,"getTranformations",getTranformations,(void*&) robot);
+    // Subscribers
+    opPostionMsgs.push_back(operationalPosPubRMsg);
+    opPostionMsgs.push_back(operationalPosPubLMsg);
+    VectorFloat32MultiArrayRobot* s1 = new VectorFloat32MultiArrayRobot{&opPostionMsgs,robot};
+    JointStateRobot* s2 = new JointStateRobot{jointRvizMsg,robot};
+    robot->addSubscriber(n,"joint_states",1,updateOpPosition,(void*&) s1);
+    robot->addSubscriber(n,"joint_states",1,rvizUpdateJoints,(void*&) s2);
+    // main loop
+    while (ros::ok()) {
+        robot->publishAll(); //publishers all messages
+        ros::spinOnce(); // checks for incoming messages and executes callbacks
+        if (ros::param::get("/rosRate", rate)){
+            if (rate<10.0)
+                rate=10.0;
+            loop_rate = rate;}
+        loop_rate.sleep(); //wait
+    }
+    return 0;
+    /*
     ros::init(argc, argv, "real_robot_node");
     ros::NodeHandle n;
     Robot* robot =new Robot("yumi");
-
     auto StaticTorquesCallback = robot->getServiceCallBackRobot(getStaticTorques,robot);
     ros::ServiceServer getStaticJointTorqueService = n.advertiseService("getStaticJointTorques", StaticTorquesCallback);
 
@@ -119,4 +162,5 @@ int main(int argc, char *argv[]) {
         loop_rate.sleep();
     }
     return 0;
+     */
 }
