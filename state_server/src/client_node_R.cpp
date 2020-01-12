@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     ros::Publisher pub_torques = n.advertise<std_msgs::Float32MultiArray>("joint_torque_R", 1);
     ros::Publisher pub_gripper_pos = n.advertise<std_msgs::Float32>("gripper_state_R", 1);
     //ros::Publisher pub_gripper_force = n.advertise<std_msgs::Float32>("gripper_froce_L", 1);
-    ros::Rate loop_rate(200);
+    ros::Rate loop_rate(100);
     boost::asio::streambuf receive_buffer;
     boost::system::error_code error;
     while (ros::ok()){
@@ -84,12 +84,12 @@ int main(int argc, char **argv) {
 
         }
         pub_joints.publish(msg_joints);
-        pub_torques.publish(msg_torque);
-        pub_gripper_pos.publish(msg_gripper_pos);
+        //pub_torques.publish(msg_torque);
+        //pub_gripper_pos.publish(msg_gripper_pos);
         //pub_gripper_force.publish(msg_gripper_force);
-        receive_buffer.consume(msg_size);
-        ros::spinOnce();
-        loop_rate.sleep();
+        receive_buffer.consume(msg_size*10);
+        //ros::spinOnce();
+        //loop_rate.sleep();
     }
     socket.close();
     return 0;

@@ -3,7 +3,6 @@
     it makes the tracker hang for some reason. -->
   <param name="use_sim_time" value="false" />
 
-
   <node pkg="state_server" type="client_node_R" name="client_node_R" output="screen" args="192.168.1.13">
   </node>
   <node pkg="state_server" type="client_node_motion_R" name="client_node_motion_R" output="screen" args="192.168.1.13">

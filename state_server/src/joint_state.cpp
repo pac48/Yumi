@@ -12,9 +12,9 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "state_server");
     ros::NodeHandle n;
     Messenger<std::vector<float> , const std_msgs::Float32MultiArray::ConstPtr> messenger_R;
-    ros::Subscriber sub_joint_state_R = n.subscribe("joint_state_R",5,&Messenger<std::vector<float> , const std_msgs::Float32MultiArray::ConstPtr>::callback, &messenger_R);
+    ros::Subscriber sub_joint_state_R = n.subscribe("joint_state_R",1,&Messenger<std::vector<float> , const std_msgs::Float32MultiArray::ConstPtr>::callback, &messenger_R);
     Messenger<std::vector<float> , const std_msgs::Float32MultiArray::ConstPtr> messenger_L;
-    ros::Subscriber sub_joint_state_L= n.subscribe("joint_state_L",5,&Messenger<std::vector<float> , const std_msgs::Float32MultiArray::ConstPtr>::callback, &messenger_L);
+    ros::Subscriber sub_joint_state_L= n.subscribe("joint_state_L",1,&Messenger<std::vector<float> , const std_msgs::Float32MultiArray::ConstPtr>::callback, &messenger_L);
     ros::Publisher pub_joints = n.advertise<std_msgs::Float32MultiArray>("joint_states", 1);
     ros::Rate loop_rate(100);
     while (ros::ok()) {
