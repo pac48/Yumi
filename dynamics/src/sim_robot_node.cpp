@@ -10,12 +10,16 @@
 int main(int argc, char *argv[]) {
     float realTimeFactor = 1;
     float rate = 200;
+    bool gravity = false;
     ros::init(argc, argv, "sim_robot_node");
     ros::NodeHandle n;
     ros::param::set("/realTimeFactor", realTimeFactor);
     ros::param::set("/rosRate", rate);
+    ros::param::set("/gravity", gravity);
     ros::Rate loop_rate(rate);
     Yumi* robot = new Yumi();
+    auto q0 = robot->dynamics->getPosition();
+    auto qd0 = robot->dynamics->getVelocity();
     // Messages
     sensor_msgs::JointState* jointRvizMsg;
     std_msgs::Float32MultiArray* jointStateMsg;
@@ -45,6 +49,7 @@ int main(int argc, char *argv[]) {
     JointStateRobot* s2 = new JointStateRobot{jointRvizMsg,robot};
     robot->addSubscriber(n,"joint_states",1,updateOpPosition,(void*&) s1);
     robot->addSubscriber(n,"joint_states",1,rvizUpdateJoints,(void*&) s2);
+    robot->addSubscriber(n,"operational_velocity_command",1,setOpJointVelocities,(void*&) robot);
     // Links
     auto s3 = new Float32MultiArrayRobot{jointStateMsg,robot};
     robot->addStepCallback(updateJoints, (void*&) s3);
@@ -55,15 +60,48 @@ int main(int argc, char *argv[]) {
     robot->addStepCallback(updateJointsVel, (void*&) s4);
     // main loop
     while (ros::ok()) {
-        robot->publishAll(); //publishers all messages
-        ros::spinOnce(); // checks for incoming messages and executes callbacks
+        auto qi = robot->getPosition();
+        for (int i=0;i<qi.size();i++) {
+            if (std::isnan(qi[i])) {
+                robot->dynamics->setPosition(q0);
+                robot->dynamics->setVelocity(qd0);
+                robot->dynamics->forwardDynamics();
+                robot->dynamics->update();
+                robot->dynamics->forwardPosition();
+                robot->dynamics->forwardVelocity();
+            }
+        }
+        qi = robot->getPosition();
         robot->step(1/rate*realTimeFactor,5); // simulate robot forward and updates messages linked to robot
+        qi = robot->getPosition();
+        for (int i=0;i<qi.size();i++) {
+            if (std::isnan(qi[i])) {
+                robot->dynamics->setPosition(q0);
+                robot->dynamics->setVelocity(qd0);
+                robot->dynamics->forwardDynamics();
+                robot->dynamics->update();
+                robot->dynamics->forwardPosition();
+                robot->dynamics->forwardVelocity();
+            }
+        }
+        qi = robot->getPosition();
+        robot->publishAll(); //publishers all messages
+        qi = robot->getPosition();
+        ros::spinOnce(); // checks for incoming messages and executes callbacks
+
         if (ros::param::get("/realTimeFactor", realTimeFactor)){} // set parameters
+        if (ros::param::get("/gravity", gravity)){
+            if (gravity)
+                robot->dynamics->setWorldGravity(0,0,1);
+            else
+                robot->dynamics->setWorldGravity(0,0,0);
+        }
         if (ros::param::get("/rosRate", rate)){
             if (rate<10.0)
                 rate=10.0;
             loop_rate = rate;}
         loop_rate.sleep(); //wait
+
     }
     return 0;
 }

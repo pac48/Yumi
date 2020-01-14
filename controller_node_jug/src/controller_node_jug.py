@@ -53,10 +53,11 @@ class controller:
         self.operational_sub = rospy.Subscriber("/operational_position_R",Float32MultiArray,self.callback_operational_R,buff_size=1)
         # Subscribing to simulation from Sean with ball's position and velocity
         self.camera_coords_sub = rospy.Subscriber("/camera_coords",Float32MultiArray,self.callback_camera_coords,buff_size=1)
+        self.ball_sub = rospy.Subscriber("/ball_position",Float32MultiArray,self.callback_ball,buff_size=1)
 
 
 
-        # Publishing to joint command which receives a message from Yumi Paul node
+    # Publishing to joint command which receives a message from Yumi Paul node
         # What we actually sending to the robot to do
         # Use Jacobian matrix to find joint velocities for each joint
         self.joint_command_pub = rospy.Publisher("/joint_command_topic",Float32MultiArray,queue_size=10)
@@ -66,7 +67,10 @@ class controller:
         # Try to get this message from already existing function getVel
         self.yumi_hand_pub = rospy.Publisher("/yumi_hand_topic",Float32MultiArray,queue_size=10)
 
-
+    def callback_ball(self,msg):
+        self.goal[0] = msg.data[0]
+        self.goal[1] = msg.data[1]
+        self.goal[2] = msg.data[2]
 
     def callback_camera_coords(self,msg):
         if self.tf.frameExists("yumi_body") and self.tf.frameExists("camera_depth_optical_frame"):
@@ -110,22 +114,24 @@ class controller:
 
     def getVelMsg(self):
         #self.goal = np.array([0.88,  0.343, 0.3])
-        p = self.goal[0:2]-self.robot_pose[0:2]
+        p = (self.goal[0:3]-self.robot_pose[0:3])*15
         #print(self.goal)
-        print(p)
+       # print(p)
         # d = self.goal[0:3]*0-self.robot_vel[0:3]
         direction = p/np.linalg.norm(p)
         val = direction*np.linalg.norm(p)*self.kp #+direction*d*self.kd
-        for i in range(0,2):
+        #val = p
+        for i in range(0,3):
+            #val[i] = np.sign(val[i])
             self.robot_vel[i] = val[i]
 
         # p_z = self.goal[2]-self.robot_pose[2]
         # direction_z = p_z/np.linalg.norm(p_z)
         # val_z = -direction_z*np.linalg.norm(p_z)*self.kp_z
 
-        val_z = 0.0
+        #val_z = 0.0
 
-        self.robot_vel[2] = val_z
+        #self.robot_vel[2] = val_z
         #self.robot_vel[1]=0.0
         #self.robot_vel[0]=0.1
 

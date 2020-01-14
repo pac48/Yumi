@@ -346,6 +346,32 @@ void rvizUpdateJoints(const std_msgs::Float32MultiArray::ConstPtr& msg, void*& S
     rvizMsgs->name = robot->jointNames;
     rvizMsgs->header.stamp = ros::Time::now();
 }
+void setOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg, void*& Struct){ //subpub
+    Yumi* robot = (Yumi*) Struct;
+    auto qd = robot->dynamics->getVelocity();
+    std::vector<float> opvelL;
+    std::vector<float> opvelR;
+    for (int i=0;i<6;i++){
+        opvelR.push_back(opVelMsg->data[i]);
+        opvelL.push_back(opVelMsg->data[i+6]);
+    }
+    std::vector<float> tmp1 = robot->xd2jd(0,opvelR);
+    std::vector<float> tmp2 = robot->xd2jd(1,opvelL);
+    for (int i =0;i<tmp1.size();i++)
+        qd[i] = tmp1[i];
+    for (int i =0;i<tmp2.size();i++)
+        qd[i+tmp1.size()] = tmp2[i];
+    for (int i =0;i<qd.size();i++){
+        if (-1*qd[i]>3.0)
+            qd[i] = -3.0;
+        if (qd[i]>3.0)
+            qd[i] = 3.0;
+    }
+    robot->dynamics->setVelocity(qd);
+    robot->dynamics->forwardDynamics();
+    //robot->publishOne(jointVelMsgs[0]);
+    //robot->publishOne(jointVelMsgs[1]);
+}
 // Link update functions
 void updateJoints(void*& Struct){
     Float32MultiArrayRobot* tmp = (Float32MultiArrayRobot*) Struct;

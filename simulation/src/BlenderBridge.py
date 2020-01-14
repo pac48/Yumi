@@ -32,6 +32,8 @@ class BlenderBridge:
         #self.sub = rospy.Subscriber("/tf",TFMessage,self.callback,buff_size=1)
 
     def callback_joint_state_R(self,msg):
+        if any(np.isnan(msg.data)):
+            return
         self.joints_R = msg.data[:7]
 
     def buildPacket(self):

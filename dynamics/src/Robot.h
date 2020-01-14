@@ -66,14 +66,14 @@ public:
     ~Robot(){
         delete this->model;
     }
-    rl::math::Vector floatVec2MathVec(std::vector<float> fv){
+    static rl::math::Vector floatVec2MathVec(std::vector<float> fv){
         rl::math::Vector mv =rl::math::Vector(fv.size());
         for (int i =0;i<fv.size();i++){
             mv[i]=fv[i];
         }
         return mv;
     }
-    std::vector<float> mathVec2FloatVec(rl::math::Vector mv){
+    static std::vector<float> mathVec2FloatVec(rl::math::Vector mv){
         std::vector<float> fv;
         for (int i =0;i<mv.size();i++){
             fv.push_back(mv[i]);
