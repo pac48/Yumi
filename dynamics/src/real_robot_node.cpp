@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
     robot->addService(n,"setTrajTorques",setTorques,(void*&) robot);
     robot->addService(n,"setArmVelocities",setArmVelocity,(void*&) robot);
     robot->addService(n,"setJointAccelerations",setAccelerations,(void*&) robot);
-    robot->addService(n,"getTranformations",getTranformations,(void*&) robot);
+    robot->addService(n,"getTransformations",getTransformations,(void*&) robot);
     // Subscribers
     opPostionMsgs.push_back(operationalPosPubRMsg);
     opPostionMsgs.push_back(operationalPosPubLMsg);

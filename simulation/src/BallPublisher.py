@@ -80,12 +80,17 @@ if __name__ == '__main__':
                 pos_msg = Float32MultiArray()
                 vel_msg = Float32MultiArray()
                 pos_msg.data = ballPublisher.getPacket()
-                ballPublisher.ball_pub.publish(pos_msg)
                 if ballPublisher.old_pos==None:
                     vel = np.zeros((7,1))
                     ballPublisher.old_time = time.time()
                 else:
-                    vel = (np.array(pos_msg.data)-np.array(ballPublisher.old_pos))/(time.time()-ballPublisher.old_time)
+                    vel = (np.array(pos_msg.data)-np.array(ballPublisher.old_pos))/(1/60.0)
+                    pos_msg.data[0] = 0.5*pos_msg.data[0]+0.5*ballPublisher.old_pos[0]
+                    pos_msg.data[1] = 0.5*pos_msg.data[1]+0.5*ballPublisher.old_pos[1]
+                    pos_msg.data[2] = 0.5*pos_msg.data[2]+0.5*ballPublisher.old_pos[2]
+
+                    #vel = (np.array(pos_msg.data)-np.array(ballPublisher.old_pos))/(time.time()-ballPublisher.old_time)
+
                 ballPublisher.old_pos = pos_msg.data
                 ballPublisher.old_time=time.time()
                 vel_msg.data = vel.tolist()

@@ -41,7 +41,7 @@ class BlenderBridge:
         frames = ["yumi_link_1_r", "yumi_link_2_r","yumi_link_3_r","yumi_link_4_r", "yumi_link_5_r", "yumi_link_6_r", "yumi_link_7_r"]
         #rospy.wait_for_service('getTranformations')
         try:
-            serv= rospy.ServiceProxy('getTranformations', getM)
+            serv= rospy.ServiceProxy('getTransformations', getM)
             resp = serv(self.joints_R)
         except rospy.ServiceException, e:
             print("Service call failed: %s"%e)

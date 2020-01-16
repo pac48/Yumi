@@ -9,6 +9,7 @@ from numpy import linalg as LA
 import tf
 from geometry_msgs.msg import PoseStamped
 from tf import transformations, TransformListener
+from dynamics.srv import getM
 
 
 from sensor_msgs.msg import Image
@@ -32,6 +33,8 @@ class controller:
         self.robot_R= None
         self.theta= None
         self.goal =np.array([0.0 , 0.0 , 0.0])
+        self.ball_pos =np.array([0.0 , 0.0 , 0.0])
+        self.ball_vel =np.array([0.0 , 0.0 , 0.0])
         self.kp = 0.3
 
         self.kp_z = 1.0*0.8
@@ -54,7 +57,9 @@ class controller:
         # Subscribing to simulation from Sean with ball's position and velocity
         self.camera_coords_sub = rospy.Subscriber("/camera_coords",Float32MultiArray,self.callback_camera_coords,buff_size=1)
         self.ball_sub = rospy.Subscriber("/ball_position",Float32MultiArray,self.callback_ball,buff_size=1)
-
+        self.ball_vel_sub = rospy.Subscriber("/ball_velocity",Float32MultiArray,self.callback_vel_ball,buff_size=1)
+        self.joint_states_sub = rospy.Subscriber("/joint_state_R",Float32MultiArray,self.callback_joint_state_R,buff_size=1)
+        self.joints_R =[0.0,0.0,0.0,0.0,0.0,0.0,0.0]
 
 
     # Publishing to joint command which receives a message from Yumi Paul node
@@ -67,10 +72,21 @@ class controller:
         # Try to get this message from already existing function getVel
         self.yumi_hand_pub = rospy.Publisher("/yumi_hand_topic",Float32MultiArray,queue_size=10)
 
+
+    def callback_joint_state_R(self,msg):
+        if any(np.isnan(msg.data)):
+            return
+        self.joints_R = msg.data[:7]
+
     def callback_ball(self,msg):
-        self.goal[0] = msg.data[0]
-        self.goal[1] = msg.data[1]
-        self.goal[2] = msg.data[2]
+        self.ball_pos[0] = msg.data[0]
+        self.ball_pos[1] = msg.data[1]
+        self.ball_pos[2] = msg.data[2]
+
+    def callback_vel_ball(self,msg):
+        self.ball_vel[0] = msg.data[0]
+        self.ball_vel[1] = msg.data[1]
+        self.ball_vel[2] = msg.data[2]
 
     def callback_camera_coords(self,msg):
         if self.tf.frameExists("yumi_body") and self.tf.frameExists("camera_depth_optical_frame"):
@@ -87,8 +103,6 @@ class controller:
             #print(p1)
 
     def callback_operational_R(self,msg):
-
-
         self.robot_L = [0.0,0.0,0.0,0.0,0.0,0.0]
         self.robot_R=list(msg.data)
         self.theta=self.robot_R[0:8]
@@ -114,24 +128,63 @@ class controller:
 
     def getVelMsg(self):
         #self.goal = np.array([0.88,  0.343, 0.3])
-        p = (self.goal[0:3]-self.robot_pose[0:3])*15
-        #print(self.goal)
-       # print(p)
+        self.ball_vel= self.ball_vel
+        try:
+            serv= rospy.ServiceProxy('getLastTransformation', getM)
+            resp = serv(self.joints_R)
+        except rospy.ServiceException, e:
+            print("Service call failed: %s"%e)
+            return self.robot_vel
+
+        Te = np.matrix(np.zeros((4,4)))
+        Te[0:3,:] = np.reshape(resp.M,(3,4))
+        Te[3,3] = 1.0
+        #Te = np.linalg.inv(Te)
+        Tep = np.matrix([[1.0, 0.0,0.0, 0.0],[0.0, 0.0, -1.0, 0.0],[0.0, 1.0, 0.0, 0.25],[0.0, 0.0, 0.0 ,1.0]])
+        #Tep = np.matrix([[0.0, 0.0,1.0, 0.0],[0.0, 1.0, 0.0, 0.0],[-1.0, 0.0, 0.0, 0.05],[0.0, 0.0, 0.0 ,1.0]])
+        #Tep = np.matrix([[0.0, -1.0 ,0.0, 0.0],[1.0, 0.0, 0.0, 0.0],[0.0, 0.0, 1.0, 0.05],[0.0, 0.0, 0.0 ,1.0]])
+        # Tep = np.matrix([[1.0, 0.0 ,0.0, 0.0],[0.0, 1.0, 0.0, 0.0],[0.0, 0.0, 1.0, 0.05],[0.0, 0.0, 0.0 ,1.0]])
+    #T0p = np.linalg.inv(np.matmul(Te,Tep))
+        #Tep = np.linalg.inv(Tep)
+        T0p = np.matmul(Te,Tep)
+        tmp = T0p[0:3,3]
+        self.ball_pos[2] = 0.25
+        p = (self.ball_pos[0:3]-np.array(tmp.transpose()))*2
+        normal = np.matmul(T0p[0:3,0:3],np.array([1.0,0.0,0.0]))
+        self.ball_pos[2] = 0.0
+        save = np.array([0.0,0.0,1.0])-0.5*(self.ball_pos-np.array([0.2,-0.3,0.0]))
+        #save[1]*=-1
+        save =save/np.linalg.norm(save)
+        rot = np.cross(normal,np.array(save))
+        rot = np.matrix(rot).transpose()
+        tmp = normal
+        tmp =tmp/np.linalg.norm(normal)
+        an1 = np.arccos(np.clip(np.dot(tmp,np.array([-0.0,0.0,1.0])), -1.0, 1.0))
+        #Tpe = np.linalg.inv(Tep)
+        #rot = np.matmul(Tpe[0:3,0:3],np.matrix(rot).transpose())
         # d = self.goal[0:3]*0-self.robot_vel[0:3]
         direction = p/np.linalg.norm(p)
         val = direction*np.linalg.norm(p)*self.kp #+direction*d*self.kd
-        #val = p
-        for i in range(0,3):
+        val = p
+        for i in range(0,2):
             #val[i] = np.sign(val[i])
-            self.robot_vel[i] = val[i]
-
+            self.robot_vel[i] =7.0*val[0,i]+self.ball_vel[i]
+        self.robot_vel[2] = 4.0*val[0,2]
         # p_z = self.goal[2]-self.robot_pose[2]
         # direction_z = p_z/np.linalg.norm(p_z)
         # val_z = -direction_z*np.linalg.norm(p_z)*self.kp_z
 
         #val_z = 0.0
-
-        #self.robot_vel[2] = val_z
+        #if (self.ball_vel[2]<0.0):
+        self.robot_vel[2] += -1.0*self.ball_vel[2]/(5*np.abs(val[0,2])+0.5)
+        #else:
+       #     self.robot_vel[2] += 0.0
+        tmp = self.robot_pose[3:6]
+        tmp =tmp/np.linalg.norm(self.robot_pose[3:6])
+        rot2 =np.cross(tmp,np.array([1.0,0.0,0.1]))
+        an2 = np.arccos(np.clip(np.dot(tmp,np.array([1.0,0.0,0.0])), -1.0, 1.0))
+        # np.arccos(np.dot(self.robot_pose[3:6],np.array([1.0,0.0,0.0])))
+        self.robot_vel[3:6] = (rot2*1.0*an2+rot.transpose()*an1[0,0])*200
         #self.robot_vel[1]=0.0
         #self.robot_vel[0]=0.1
 

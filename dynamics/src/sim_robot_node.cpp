@@ -41,13 +41,11 @@ int main(int argc, char *argv[]) {
     robot->addService(n,"setTrajTorques",setTorques,(void*&) robot);
     robot->addService(n,"setArmVelocities",setArmVelocity,(void*&) robot);
     robot->addService(n,"setJointAccelerations",setAccelerations,(void*&) robot);
-    robot->addService(n,"getTranformations",getTranformations,(void*&) robot);
+    robot->addService(n,"getTransformations",getTransformations,(void*&) robot);
+    robot->addService(n,"getLastTransformation",getLastTransformation,(void*&) robot);
     // Subscribers
-    opPostionMsgs.push_back(operationalPosPubRMsg);
-    opPostionMsgs.push_back(operationalPosPubLMsg);
-    VectorFloat32MultiArrayRobot* s1 = new VectorFloat32MultiArrayRobot{&opPostionMsgs,robot};
     JointStateRobot* s2 = new JointStateRobot{jointRvizMsg,robot};
-    robot->addSubscriber(n,"joint_states",1,updateOpPosition,(void*&) s1);
+    //robot->addSubscriber(n,"joint_states",1,updateOpPosition,(void*&) s1);
     robot->addSubscriber(n,"joint_states",1,rvizUpdateJoints,(void*&) s2);
     robot->addSubscriber(n,"operational_velocity_command",1,setOpJointVelocities,(void*&) robot);
     // Links
@@ -58,35 +56,39 @@ int main(int argc, char *argv[]) {
     robot->addStepCallback(updateJoints_R, (void*&) s5);
     auto s4 = new Float32MultiArrayRobot{jointStateVelMsg,robot};
     robot->addStepCallback(updateJointsVel, (void*&) s4);
+    opPostionMsgs.push_back(operationalPosPubRMsg);
+    opPostionMsgs.push_back(operationalPosPubLMsg);
+    VectorFloat32MultiArrayRobot* s1 = new VectorFloat32MultiArrayRobot{&opPostionMsgs,robot};
+    robot->addStepCallback(updateOpPos, (void*&) s1);
     // main loop
     while (ros::ok()) {
-        auto qi = robot->getPosition();
-        for (int i=0;i<qi.size();i++) {
-            if (std::isnan(qi[i])) {
-                robot->dynamics->setPosition(q0);
-                robot->dynamics->setVelocity(qd0);
-                robot->dynamics->forwardDynamics();
-                robot->dynamics->update();
-                robot->dynamics->forwardPosition();
-                robot->dynamics->forwardVelocity();
-            }
-        }
-        qi = robot->getPosition();
+       // auto qi = robot->getPosition();
+      //  for (int i=0;i<qi.size();i++) {
+       //     if (std::isnan(qi[i])) {
+       //         robot->dynamics->setPosition(q0);
+       //         robot->dynamics->setVelocity(qd0);
+       //         robot->dynamics->forwardDynamics();
+       //         robot->dynamics->update();
+       //         robot->dynamics->forwardPosition();
+        //        robot->dynamics->forwardVelocity();
+       //     }
+        //}
+       // qi = robot->getPosition();
         robot->step(1/rate*realTimeFactor,5); // simulate robot forward and updates messages linked to robot
-        qi = robot->getPosition();
-        for (int i=0;i<qi.size();i++) {
-            if (std::isnan(qi[i])) {
-                robot->dynamics->setPosition(q0);
-                robot->dynamics->setVelocity(qd0);
-                robot->dynamics->forwardDynamics();
-                robot->dynamics->update();
-                robot->dynamics->forwardPosition();
-                robot->dynamics->forwardVelocity();
-            }
-        }
-        qi = robot->getPosition();
+       // qi = robot->getPosition();
+       // for (int i=0;i<qi.size();i++) {
+       //     if (std::isnan(qi[i])) {
+        //        robot->dynamics->setPosition(q0);
+         //       robot->dynamics->setVelocity(qd0);
+         //       robot->dynamics->forwardDynamics();
+         //       robot->dynamics->update();
+         //       robot->dynamics->forwardPosition();
+         //       robot->dynamics->forwardVelocity();
+         //   }
+       // }
+       // qi = robot->getPosition();
         robot->publishAll(); //publishers all messages
-        qi = robot->getPosition();
+       // qi = robot->getPosition();
         ros::spinOnce(); // checks for incoming messages and executes callbacks
 
         if (ros::param::get("/realTimeFactor", realTimeFactor)){} // set parameters

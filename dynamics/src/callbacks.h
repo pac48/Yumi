@@ -7,7 +7,7 @@
 #include "Yumi.h"
 
 // Service callbacks
-bool getTranformations(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
+bool getTransformations(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
     Robot* robot = (Robot*) Struct;
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();
@@ -28,6 +28,28 @@ bool getTranformations(dynamics::getM::Request  &req, dynamics::getM::Response &
         res.M.push_back(q.y());
         res.M.push_back(q.z());
         res.M.push_back(q.w());
+    }
+    robot->dynamics->setPosition(qtmp);
+    return true;
+}
+
+bool getLastTransformation(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
+    Robot* robot = (Robot*) Struct;
+    auto q = robot->dynamics->getPosition();
+    auto qtmp = robot->dynamics->getPosition();
+    for (int i=0;i<req.q.size();i++) {
+        q[i] = req.q[i];
+    }
+    //robot->dynamics->setPosition(q);
+    //robot->dynamics->forwardPosition();
+    //robot->dynamics->update();
+    //robot->dynamics->forwardPosition();
+    rl::math::Transform T = robot->dynamics->getFrame(7); // 3 is 2
+
+    for (int i=0;i<T.rows();i++){
+        for (int j=0;j<T.cols();j++){
+            res.M.push_back(T(i,j));
+        }
     }
     robot->dynamics->setPosition(qtmp);
     return true;
@@ -362,10 +384,10 @@ void setOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg,
     for (int i =0;i<tmp2.size();i++)
         qd[i+tmp1.size()] = tmp2[i];
     for (int i =0;i<qd.size();i++){
-        if (-1*qd[i]>3.0)
-            qd[i] = -3.0;
-        if (qd[i]>3.0)
-            qd[i] = 3.0;
+        if (-1*qd[i]>4.0)
+            qd[i] = -4.0;
+        if (qd[i]> 4.0)
+            qd[i] = 4.0;
     }
     robot->dynamics->setVelocity(qd);
     robot->dynamics->forwardDynamics();
@@ -394,6 +416,18 @@ void updateJointsVel(void*& Struct){
     Yumi* robot = tmp->robot;
     std_msgs::Float32MultiArray* jointStateVelMsg = tmp->msg;
     jointStateVelMsg->data = robot->getVelocity();
+}
+void updateOpPos(void*& Struct){
+    VectorFloat32MultiArrayRobot* tmp = (VectorFloat32MultiArrayRobot*) Struct;
+    Yumi* robot = tmp->robot;
+    std::vector<std_msgs::Float32MultiArray*>* opPostionMsgs = tmp->msgs;
+   // std::vector<float> data = msg->data;
+    //auto q = robot->floatVec2MathVec(data);
+    //for (int i=0;i<data.size();i++) {
+     //   q[i] = data[i];
+    //}
+    opPostionMsgs->at(0)->data = robot->getOperationalPosition(0);
+    opPostionMsgs->at(1)->data = robot->getOperationalPosition(1);
 }
 
 #endif //YUMI_WS_CALLBACKS_H

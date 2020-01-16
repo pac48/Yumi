@@ -128,7 +128,7 @@ public:
                 Ji(i,j) = this->J(i+offseti,j+offsetj);
             }
         }
-        this->dynamics->calculateJacobianInverse(Ji,invJi, 0.0f,true);
+        this->dynamics->calculateJacobianInverse(Ji,invJi, 0.01f,true);
         this->invJi[EE] = invJi;
         return this->invJi[EE];
     }
@@ -166,17 +166,24 @@ public:
         return jd;
     }
     std::vector<float> getOperationalPosition(int EE){
-        this->dynamics->forwardPosition();
-        rl::math::Transform T = this->dynamics->getOperationalPosition(EE);
+        //this->dynamics->forwardPosition();
+        //this->dynamics->update();
+        //this->dynamics->forwardPosition();
+        //rl::math::Transform T = this->dynamics->getOperationalPosition(EE);
+        rl::math::Transform T;
+        if (EE==0)
+           T = this->dynamics->getFrame(7); // 3 is 2
+        else
+            T = this->dynamics->getFrame(9+7); //probably not
         std::vector<float> p;
         for (int i =0;i<3;i++){
             p.push_back(T(i,3));
         }
-        rl::math::Vector z0 = rl::math::Vector::Zero(3);
-        z0[2]=1;
-        rl::math::Vector z = T.rotation()*z0;
+        //rl::math::Vector z0 = rl::math::Vector::Zero(3);
+        //z0[2]=1;
+        //rl::math::Vector z = T*z0;
         for (int i =0;i<3;i++){
-            p.push_back(z[i]);
+            p.push_back(T(i,2));
         }
         return p;
     }
