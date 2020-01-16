@@ -5,8 +5,86 @@
 #define YUMI_WS_CALLBACKS_H
 
 #include "Yumi.h"
+#include <Eigen/Dense>
 
 // Service callbacks
+rl::math::Vector3 cross(rl::math::Vector3 a,rl::math::Vector3 b){
+    rl::math::Vector3 r =rl::math::Vector3::Zero();
+    r[0] = a[1]*b[2]-a[2]*b[1];
+    r[1] = a[2]*b[0]-a[0]*b[2];
+    r[2] = a[0]*b[1]-a[1]*b[0];
+    return r;
+}
+bool getRigidBodyVelocities(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
+    Robot* robot = (Robot*) Struct;
+    auto q = robot->dynamics->getPosition();
+    auto qtmp = robot->dynamics->getPosition();
+    auto qd = robot->dynamics->getVelocity();
+    Eigen::VectorXd qd_R =Eigen::VectorXd::Zero(7);
+    for (int i=0;i<qd_R.size();i++) {
+        qd_R[i] = qd[i];
+    }
+    for (int i=0;i<req.q.size();i++) {
+        q[i] = req.q[i];
+    }
+   // for (int i=0;i<6;i++){
+     //   res.M.push_back(0.0);
+    //}
+    //Eigen::MatrixXd J(6,7);
+    Eigen::MatrixXd J = Eigen::MatrixXd::Zero(6,7);
+    //robot->dynamics->setPosition(q);
+    robot->dynamics->forwardPosition();
+    robot->dynamics->update();
+    robot->dynamics->forwardPosition();
+    Eigen::Vector3d P;
+    std::vector<Eigen::Vector3d> Pvec;
+    std::vector<Eigen::Vector3d> Zvec;
+    for (int i=1;i<9;i++) {
+        auto T = robot->dynamics->getFrame(i); // 3 is 2
+        Eigen::Vector3d p;
+        for (int j = 0; j < 3; j++) {
+            p[j] = T(j, 3);
+        }
+        Eigen::Vector3d z;
+        for (int j = 0; j < 3; j++) {
+            z[j] = T(j, 2);
+        }
+        Pvec.push_back(p);
+        Zvec.push_back(z);
+    }
+    //Eigen::Vector3d z = Zvec.at(0);
+    //for (int k = 0; k < 3; k++) {
+    //    res.M.push_back(0.0);
+    //}
+    //for (int k = 0; k < 3; k++) {
+     //   res.M.push_back(z[k]*qd_R[0]);
+    //}
+    for (int i=0;i<7;i++) {
+        J = Eigen::MatrixXd::Zero(6, 7);
+        P = Pvec.at(i);
+        for (int j = 0; j <= i; j++) {
+            Eigen::Vector3d p = Pvec.at(j);
+            Eigen::Vector3d z = Zvec.at(j);
+            rl::math::Vector3 result = cross(z, P - p);
+            for (int k = 0; k < 3; k++) {
+                J(k, j) = result[k];
+            }
+            for (int k = 0; k < 3; k++) {
+                J(k + 3, j) = z[k];
+            }
+        }
+            auto Vel = J * qd_R;
+           // std::cout <<J <<std::endl;
+            //std::cout <<Vel <<std::endl;
+            //std::cout <<z <<std::endl;
+            for (int k = 0; k < 6; k++) {
+                res.M.push_back(Vel[k]);
+            }
+    }
+    //robot->dynamics->setPosition(qtmp);
+    return true;
+}
+
 bool getTransformations(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
     Robot* robot = (Robot*) Struct;
     auto q = robot->dynamics->getPosition();
@@ -14,7 +92,7 @@ bool getTransformations(dynamics::getM::Request  &req, dynamics::getM::Response 
     for (int i=0;i<req.q.size();i++) {
         q[i] = req.q[i];
     }
-    robot->dynamics->setPosition(q);
+    //robot->dynamics->setPosition(q);
     robot->dynamics->forwardPosition();
     robot->dynamics->update();
     robot->dynamics->forwardPosition();
@@ -29,9 +107,15 @@ bool getTransformations(dynamics::getM::Request  &req, dynamics::getM::Response 
         res.M.push_back(q.z());
         res.M.push_back(q.w());
     }
-    robot->dynamics->setPosition(qtmp);
+    //robot->dynamics->setPosition(qtmp);
     return true;
 }
+bool getBlender(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
+    getTransformations(req,res,Struct);
+    return getRigidBodyVelocities(req,res,Struct);
+
+}
+
 
 bool getLastTransformation(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
     Robot* robot = (Robot*) Struct;
@@ -238,13 +322,6 @@ bool setAccelerations(dynamics::setTorques::Request  &req, dynamics::setTorques:
     }
     return true;
 }
-rl::math::Vector3 cross(rl::math::Vector3 a,rl::math::Vector3 b){
-    rl::math::Vector3 r =rl::math::Vector3::Zero();
-    r[0] = a[1]*b[2]-a[2]*b[1];
-    r[1] = a[2]*b[0]-a[0]*b[2];
-    r[2] = a[0]*b[1]-a[1]*b[0];
-    return r;
-}
 
 bool setArmVelocity(dynamics::setTorques::Request  &req, dynamics::setTorques::Response &res, void*& Struct) { // serviceRobot
     Robot* robot = (Robot*) Struct;
@@ -384,10 +461,10 @@ void setOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg,
     for (int i =0;i<tmp2.size();i++)
         qd[i+tmp1.size()] = tmp2[i];
     for (int i =0;i<qd.size();i++){
-        if (-1*qd[i]>4.0)
-            qd[i] = -4.0;
-        if (qd[i]> 4.0)
-            qd[i] = 4.0;
+        if (-1*qd[i]>2.0)
+            qd[i] = -2.0;
+        if (qd[i]> 2.0)
+            qd[i] = 2.0;
     }
     robot->dynamics->setVelocity(qd);
     robot->dynamics->forwardDynamics();

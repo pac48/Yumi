@@ -152,7 +152,7 @@ class controller:
         p = (self.ball_pos[0:3]-np.array(tmp.transpose()))*2
         normal = np.matmul(T0p[0:3,0:3],np.array([1.0,0.0,0.0]))
         self.ball_pos[2] = 0.0
-        save = np.array([0.0,0.0,1.0])-0.5*(self.ball_pos-np.array([0.2,-0.3,0.0]))
+        save = np.array([0.0,0.0,1.0])-0.5*(self.ball_pos-np.array([0.2,-0.5,0.0]))
         #save[1]*=-1
         save =save/np.linalg.norm(save)
         rot = np.cross(normal,np.array(save))
@@ -176,15 +176,15 @@ class controller:
 
         #val_z = 0.0
         #if (self.ball_vel[2]<0.0):
-        self.robot_vel[2] += -1.0*self.ball_vel[2]/(5*np.abs(val[0,2])+0.5)
+        self.robot_vel[2] += -1*0.4*self.ball_vel[2]/(2*np.abs(val[0,2])+0.2)
         #else:
        #     self.robot_vel[2] += 0.0
         tmp = self.robot_pose[3:6]
         tmp =tmp/np.linalg.norm(self.robot_pose[3:6])
-        rot2 =np.cross(tmp,np.array([1.0,0.0,0.1]))
+        rot2 =np.cross(tmp,np.array([1.0,0.0,0.0]))
         an2 = np.arccos(np.clip(np.dot(tmp,np.array([1.0,0.0,0.0])), -1.0, 1.0))
         # np.arccos(np.dot(self.robot_pose[3:6],np.array([1.0,0.0,0.0])))
-        self.robot_vel[3:6] = (rot2*1.0*an2+rot.transpose()*an1[0,0])*200
+        self.robot_vel[3:6] = (rot2*0.1*an2+rot.transpose()*an1[0,0])*200
         #self.robot_vel[1]=0.0
         #self.robot_vel[0]=0.1
 

@@ -161,7 +161,7 @@ public:
                 Ji(i,j) = J(i+offseti,j+offsetj);
             }
         }
-        this->dynamics->calculateJacobianInverse(Ji,invJi,0.01f,true);
+        this->dynamics->calculateJacobianInverse(Ji,invJi,0.001f,true);
         rl::math::Vector jd = invJi*xd;
         return jd;
     }

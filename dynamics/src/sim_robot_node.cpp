@@ -42,7 +42,9 @@ int main(int argc, char *argv[]) {
     robot->addService(n,"setArmVelocities",setArmVelocity,(void*&) robot);
     robot->addService(n,"setJointAccelerations",setAccelerations,(void*&) robot);
     robot->addService(n,"getTransformations",getTransformations,(void*&) robot);
+    robot->addService(n,"getRigidBodyVelocities",getRigidBodyVelocities,(void*&) robot);
     robot->addService(n,"getLastTransformation",getLastTransformation,(void*&) robot);
+    robot->addService(n,"getBlender",getBlender,(void*&) robot);
     // Subscribers
     JointStateRobot* s2 = new JointStateRobot{jointRvizMsg,robot};
     //robot->addSubscriber(n,"joint_states",1,updateOpPosition,(void*&) s1);

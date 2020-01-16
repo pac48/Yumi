@@ -84,10 +84,11 @@ if __name__ == '__main__':
                     vel = np.zeros((7,1))
                     ballPublisher.old_time = time.time()
                 else:
-                    vel = (np.array(pos_msg.data)-np.array(ballPublisher.old_pos))/(1/60.0)
                     pos_msg.data[0] = 0.5*pos_msg.data[0]+0.5*ballPublisher.old_pos[0]
                     pos_msg.data[1] = 0.5*pos_msg.data[1]+0.5*ballPublisher.old_pos[1]
                     pos_msg.data[2] = 0.5*pos_msg.data[2]+0.5*ballPublisher.old_pos[2]
+                    vel = (np.array(pos_msg.data)-np.array(ballPublisher.old_pos))/(1/60.0)
+
 
                     #vel = (np.array(pos_msg.data)-np.array(ballPublisher.old_pos))/(time.time()-ballPublisher.old_time)
 
