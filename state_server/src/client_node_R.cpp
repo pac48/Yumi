@@ -70,6 +70,7 @@ int main(int argc, char **argv) {
         std_msgs::Float32 msg_gripper_force;
         int msg_size = 21*4;
         boost::asio::read(socket, receive_buffer,boost::asio::transfer_exactly(msg_size), error);
+        //boost::asio::read(socket, receive_buffer,boost::asio::transfer_all(), error);
         if( error && error != boost::asio::error::eof ) {
             cout << "receive failed: " << error.message() << endl;
         }else {
@@ -84,10 +85,10 @@ int main(int argc, char **argv) {
 
         }
         pub_joints.publish(msg_joints);
-        //pub_torques.publish(msg_torque);
-        //pub_gripper_pos.publish(msg_gripper_pos);
+        pub_torques.publish(msg_torque);
+        pub_gripper_pos.publish(msg_gripper_pos);
         //pub_gripper_force.publish(msg_gripper_force);
-        receive_buffer.consume(msg_size*10);
+        receive_buffer.consume(msg_size);
         //ros::spinOnce();
         //loop_rate.sleep();
     }

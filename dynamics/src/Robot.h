@@ -34,6 +34,7 @@
 #include <ros/ros.h>
 #include "std_msgs/Float32.h"
 #include <boost/function.hpp>
+#include <chrono>
 
 
 struct PublisherPair{
@@ -62,6 +63,7 @@ public:
             this->invJi.push_back(rl::math::Matrix(6, numDof/numEE));
             this->xdi.push_back(rl::math::Vector(6));
         }
+        this->time =  std::chrono::high_resolution_clock::now();
     }
     ~Robot(){
         delete this->model;
@@ -161,7 +163,7 @@ public:
                 Ji(i,j) = J(i+offseti,j+offsetj);
             }
         }
-        this->dynamics->calculateJacobianInverse(Ji,invJi,0.001f,true);
+        this->dynamics->calculateJacobianInverse(Ji,invJi,0.0f,true);
         rl::math::Vector jd = invJi*xd;
         return jd;
     }
@@ -292,6 +294,7 @@ public:
     std::string name;
     rl::math::Matrix M;
     rl::mdl::Model* model;
+    std::chrono::high_resolution_clock::time_point time;
 private:
     std::vector<ros::Subscriber> subscribers;
     std::vector<ros::ServiceServer> services;

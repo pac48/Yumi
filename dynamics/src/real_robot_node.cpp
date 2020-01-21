@@ -79,22 +79,25 @@ void sendOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg
 
 */
 int main(int argc, char *argv[]) {
-    float rate = 200;
+    float rate = 100;
     ros::init(argc, argv, "real_robot_node");
     ros::NodeHandle n;
     ros::Rate loop_rate(rate);
     Yumi* robot = new Yumi();
     // Messages
     sensor_msgs::JointState* jointRvizMsg;
-    std_msgs::Float32MultiArray* jointStateMsg;
+    //std_msgs::Float32MultiArray* jointStateMsg;
+   // std_msgs::Float32MultiArray* jointState_RMsg;
     std_msgs::Float32MultiArray* jointStateVelMsg;
     std_msgs::Float32MultiArray* operationalPosPubLMsg;
     std_msgs::Float32MultiArray* operationalPosPubRMsg;
     std::vector<std_msgs::Float32MultiArray*> opPostionMsgs;
     // Publishers
     jointRvizMsg = robot->addPublisher(n,"rviz/joint_states",1, new sensor_msgs::JointState());
+    //jointState_RMsg = robot->addPublisher(n,"joint_state_R",1,new std_msgs::Float32MultiArray());
+
     //jointStateMsg = robot->addPublisher(n,"joint_states",1,new std_msgs::Float32MultiArray());
-    //jointStateVelMsg = robot->addPublisher(n,"joint_states_vel",1,new std_msgs::Float32MultiArray());
+    jointStateVelMsg = robot->addPublisher(n,"joint_states_vel",1,new std_msgs::Float32MultiArray());
     operationalPosPubLMsg = robot->addPublisher(n,"operational_position_L",1, new std_msgs::Float32MultiArray());
     operationalPosPubRMsg = robot->addPublisher(n,"operational_position_R",1, new std_msgs::Float32MultiArray());
     // Services
@@ -104,15 +107,30 @@ int main(int argc, char *argv[]) {
     robot->addService(n,"setArmVelocities",setArmVelocity,(void*&) robot);
     robot->addService(n,"setJointAccelerations",setAccelerations,(void*&) robot);
     robot->addService(n,"getTransformations",getTransformations,(void*&) robot);
+    robot->addService(n,"getRigidBodyVelocities",getRigidBodyVelocities,(void*&) robot);
+    robot->addService(n,"getLastTransformation",getLastTransformation,(void*&) robot);
+    robot->addService(n,"getBlender",getBlender,(void*&) robot);
     // Subscribers
     opPostionMsgs.push_back(operationalPosPubRMsg);
     opPostionMsgs.push_back(operationalPosPubLMsg);
     VectorFloat32MultiArrayRobot* s1 = new VectorFloat32MultiArrayRobot{&opPostionMsgs,robot};
     JointStateRobot* s2 = new JointStateRobot{jointRvizMsg,robot};
-    robot->addSubscriber(n,"joint_states",1,updateOpPosition,(void*&) s1);
+    robot->addSubscriber(n,"joint_states",1,updateOpPositionReal,(void*&) s1);
     robot->addSubscriber(n,"joint_states",1,rvizUpdateJoints,(void*&) s2);
+    // Links
+    //auto s3 = new Float32MultiArrayRobot{jointStateMsg,robot};
+    //robot->addStepCallback(updateJoints, (void*&) s3);
+    //auto s5 = new Float32MultiArrayRobot{jointState_RMsg,robot};
+    //robot->addStepCallback(updateJoints_R, (void*&) s5);
+    auto s4 = new Float32MultiArrayRobot{jointStateVelMsg,robot};
+    robot->addStepCallback(updateJointsVel, (void*&) s4);
+    opPostionMsgs.push_back(operationalPosPubRMsg);
+    opPostionMsgs.push_back(operationalPosPubLMsg);
+    //VectorFloat32MultiArrayRobot* s1 = new VectorFloat32MultiArrayRobot{&opPostionMsgs,robot};
+    robot->addStepCallback(updateOpPos, (void*&) s1);
     // main loop
     while (ros::ok()) {
+        robot->updateStepCallbacks();
         robot->publishAll(); //publishers all messages
         ros::spinOnce(); // checks for incoming messages and executes callbacks
         if (ros::param::get("/rosRate", rate)){

@@ -53,7 +53,6 @@ int main(int argc, char *argv[]) {
     // Links
     auto s3 = new Float32MultiArrayRobot{jointStateMsg,robot};
     robot->addStepCallback(updateJoints, (void*&) s3);
-    // Links
     auto s5 = new Float32MultiArrayRobot{jointState_RMsg,robot};
     robot->addStepCallback(updateJoints_R, (void*&) s5);
     auto s4 = new Float32MultiArrayRobot{jointStateVelMsg,robot};
