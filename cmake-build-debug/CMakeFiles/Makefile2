@@ -3111,6 +3111,24 @@ clean: dynamic_reconfigure1/test/CMakeFiles/run_tests_dynamic_reconfigure_rostes
 .PHONY : clean
 
 #=============================================================================
+# Directory level rules for directory simulation
+
+# Convenience name for "all" pass in the directory.
+simulation/all:
+
+.PHONY : simulation/all
+
+# Convenience name for "clean" pass in the directory.
+simulation/clean:
+
+.PHONY : simulation/clean
+
+# Convenience name for "preinstall" pass in the directory.
+simulation/preinstall:
+
+.PHONY : simulation/preinstall
+
+#=============================================================================
 # Directory level rules for directory state_server
 
 # Convenience name for "all" pass in the directory.

@@ -109,7 +109,7 @@ devel/lib/librealsense2_camera.so: realsense2_camera/CMakeFiles/realsense2_camer
 devel/lib/librealsense2_camera.so: realsense2_camera/CMakeFiles/realsense2_camera.dir/src/base_realsense_node.cpp.o
 devel/lib/librealsense2_camera.so: realsense2_camera/CMakeFiles/realsense2_camera.dir/src/t265_realsense_node.cpp.o
 devel/lib/librealsense2_camera.so: realsense2_camera/CMakeFiles/realsense2_camera.dir/build.make
-devel/lib/librealsense2_camera.so: /usr/lib/x86_64-linux-gnu/librealsense2.so.2.29.0
+devel/lib/librealsense2_camera.so: /usr/lib/x86_64-linux-gnu/librealsense2.so.2.32.1
 devel/lib/librealsense2_camera.so: /opt/ros/kinetic/lib/libnodeletlib.so
 devel/lib/librealsense2_camera.so: /usr/lib/x86_64-linux-gnu/libuuid.so
 devel/lib/librealsense2_camera.so: /opt/ros/kinetic/lib/libbondcpp.so

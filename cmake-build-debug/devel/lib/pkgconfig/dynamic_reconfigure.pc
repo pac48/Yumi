@@ -4,5 +4,5 @@ Name: dynamic_reconfigure
 Description: Description of dynamic_reconfigure
 Version: 1.6.0
 Cflags: -I/home/paul/Yumi_WS/src/cmake-build-debug/devel/include -I/home/paul/Yumi_WS/src/dynamic_reconfigure1/include
-Libs: -L/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib -ldynamic_reconfigure_config_init_mutex
+Libs: -L${prefix}/lib -ldynamic_reconfigure_config_init_mutex
 Requires: message_runtime std_msgs

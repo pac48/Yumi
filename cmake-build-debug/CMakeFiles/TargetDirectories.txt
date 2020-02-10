@@ -157,6 +157,13 @@
 /home/paul/Yumi_WS/src/cmake-build-debug/dynamic_reconfigure1/test/CMakeFiles/list_install_components.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/dynamic_reconfigure1/test/CMakeFiles/run_tests_dynamic_reconfigure_rostest_test_test_python_simple_client.launch.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/dynamic_reconfigure1/test/CMakeFiles/install.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/simulation/CMakeFiles/install/strip.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/simulation/CMakeFiles/edit_cache.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/simulation/CMakeFiles/list_install_components.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/simulation/CMakeFiles/test.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/simulation/CMakeFiles/install/local.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/simulation/CMakeFiles/rebuild_cache.dir
+/home/paul/Yumi_WS/src/cmake-build-debug/simulation/CMakeFiles/install.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/state_server/CMakeFiles/install.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/state_server/CMakeFiles/list_install_components.dir
 /home/paul/Yumi_WS/src/cmake-build-debug/state_server/CMakeFiles/rebuild_cache.dir

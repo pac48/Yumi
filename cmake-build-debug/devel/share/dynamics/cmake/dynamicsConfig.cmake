@@ -123,6 +123,29 @@ foreach(library ${libraries})
     list(APPEND dynamics_LIBRARIES ${library})
   elseif(${library} MATCHES "^-l")
     list(APPEND dynamics_LIBRARIES ${library})
+  elseif(${library} MATCHES "^-")
+    # This is a linker flag/option (like -pthread)
+    # There's no standard variable for these, so create an interface library to hold it
+    if(NOT dynamics_NUM_DUMMY_TARGETS)
+      set(dynamics_NUM_DUMMY_TARGETS 0)
+    endif()
+    # Make sure the target name is unique
+    set(interface_target_name "catkin::dynamics::wrapped-linker-option${dynamics_NUM_DUMMY_TARGETS}")
+    while(TARGET "${interface_target_name}")
+      math(EXPR dynamics_NUM_DUMMY_TARGETS "${dynamics_NUM_DUMMY_TARGETS}+1")
+      set(interface_target_name "catkin::dynamics::wrapped-linker-option${dynamics_NUM_DUMMY_TARGETS}")
+    endwhile()
+    add_library("${interface_target_name}" INTERFACE IMPORTED)
+    if("${CMAKE_VERSION}" VERSION_LESS "3.13.0")
+      set_property(
+        TARGET
+        "${interface_target_name}"
+        APPEND PROPERTY
+        INTERFACE_LINK_LIBRARIES "${library}")
+    else()
+      target_link_options("${interface_target_name}" INTERFACE "${library}")
+    endif()
+    list(APPEND dynamics_LIBRARIES "${interface_target_name}")
   elseif(TARGET ${library})
     list(APPEND dynamics_LIBRARIES ${library})
   elseif(IS_ABSOLUTE ${library})

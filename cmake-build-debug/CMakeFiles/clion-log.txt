@@ -8,14 +8,14 @@
 -- Using CATKIN_ENABLE_TESTING: ON
 -- Call enable_testing()
 -- Using CATKIN_TEST_RESULTS_DIR: /home/paul/Yumi_WS/src/cmake-build-debug/test_results
--- Found gmock sources under '/usr/src/gmock': gmock will be built
 -- Found gtest sources under '/usr/src/gmock': gtests will be built
+-- Found gmock sources under '/usr/src/gmock': gmock will be built
 -- Using Python nosetests: /usr/bin/nosetests-2.7
--- catkin 0.7.18
+-- catkin 0.7.20
 -- BUILD_SHARED_LIBS is on
 -- BUILD_SHARED_LIBS is on
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--- ~~  traversing 13 packages in topological order:
+-- ~~  traversing 14 packages in topological order:
 -- ~~  - abb_libegm
 -- ~~  - camera1
 -- ~~  - controller
@@ -23,6 +23,7 @@
 -- ~~  - controller_node_jug
 -- ~~  - dynamics
 -- ~~  - dynamic_reconfigure
+-- ~~  - simulation
 -- ~~  - state_server
 -- ~~  - ddynamic_reconfigure
 -- ~~  - realsense2_camera
@@ -63,6 +64,8 @@
 --   date_time
 --   atomic
 -- dynamic_reconfigure: 10 messages, 1 services
+-- +++ processing catkin package: 'simulation'
+-- ==> add_subdirectory(simulation)
 -- +++ processing catkin package: 'state_server'
 -- ==> add_subdirectory(state_server)
 -- +++ processing catkin package: 'ddynamic_reconfigure'

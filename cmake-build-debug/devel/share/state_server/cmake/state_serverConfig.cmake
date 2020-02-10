@@ -123,6 +123,29 @@ foreach(library ${libraries})
     list(APPEND state_server_LIBRARIES ${library})
   elseif(${library} MATCHES "^-l")
     list(APPEND state_server_LIBRARIES ${library})
+  elseif(${library} MATCHES "^-")
+    # This is a linker flag/option (like -pthread)
+    # There's no standard variable for these, so create an interface library to hold it
+    if(NOT state_server_NUM_DUMMY_TARGETS)
+      set(state_server_NUM_DUMMY_TARGETS 0)
+    endif()
+    # Make sure the target name is unique
+    set(interface_target_name "catkin::state_server::wrapped-linker-option${state_server_NUM_DUMMY_TARGETS}")
+    while(TARGET "${interface_target_name}")
+      math(EXPR state_server_NUM_DUMMY_TARGETS "${state_server_NUM_DUMMY_TARGETS}+1")
+      set(interface_target_name "catkin::state_server::wrapped-linker-option${state_server_NUM_DUMMY_TARGETS}")
+    endwhile()
+    add_library("${interface_target_name}" INTERFACE IMPORTED)
+    if("${CMAKE_VERSION}" VERSION_LESS "3.13.0")
+      set_property(
+        TARGET
+        "${interface_target_name}"
+        APPEND PROPERTY
+        INTERFACE_LINK_LIBRARIES "${library}")
+    else()
+      target_link_options("${interface_target_name}" INTERFACE "${library}")
+    endif()
+    list(APPEND state_server_LIBRARIES "${interface_target_name}")
   elseif(TARGET ${library})
     list(APPEND state_server_LIBRARIES ${library})
   elseif(IS_ABSOLUTE ${library})

@@ -3,6 +3,6 @@ prefix=/usr/local
 Name: ddynamic_reconfigure
 Description: Description of ddynamic_reconfigure
 Version: 0.2.2
-Cflags: -I/usr/local/include
-Libs: -L/usr/local/lib -lddynamic_reconfigure
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lddynamic_reconfigure
 Requires: roscpp dynamic_reconfigure

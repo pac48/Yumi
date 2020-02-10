@@ -1,6 +1,6 @@
 # generated from catkin/cmake/template/pkg.context.pc.in
 CATKIN_PACKAGE_PREFIX = ""
-PROJECT_PKG_CONFIG_INCLUDE_DIRS = "/usr/local/include".split(';') if "/usr/local/include" != "" else []
+PROJECT_PKG_CONFIG_INCLUDE_DIRS = "${prefix}/include".split(';') if "${prefix}/include" != "" else []
 PROJECT_CATKIN_DEPENDS = "roscpp;dynamic_reconfigure".replace(';', ' ')
 PKG_CONFIG_LIBRARIES_WITH_PREFIX = "-lddynamic_reconfigure".split(';') if "-lddynamic_reconfigure" != "" else []
 PROJECT_NAME = "ddynamic_reconfigure"

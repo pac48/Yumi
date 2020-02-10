@@ -9,8 +9,8 @@
 
 int main(int argc, char *argv[]) {
     float realTimeFactor = 1;
-    float rate = 200;
-    bool gravity = false;
+    float rate = 500;
+    bool gravity = true;
     ros::init(argc, argv, "sim_robot_node");
     ros::NodeHandle n;
     ros::param::set("/realTimeFactor", realTimeFactor);
@@ -45,6 +45,11 @@ int main(int argc, char *argv[]) {
     robot->addService(n,"getRigidBodyVelocities",getRigidBodyVelocities,(void*&) robot);
     robot->addService(n,"getLastTransformation",getLastTransformation,(void*&) robot);
     robot->addService(n,"getBlender",getBlender,(void*&) robot);
+    robot->addService(n,"getM",getM,(void*&) robot);
+    robot->addService(n,"getJ",getJ,(void*&) robot);
+    robot->addService(n,"getG",getG,(void*&) robot);
+    robot->addService(n,"getC",getC,(void*&) robot);
+    robot->addService(n,"getT",getT,(void*&) robot);
     // Subscribers
     JointStateRobot* s2 = new JointStateRobot{jointRvizMsg,robot};
     //robot->addSubscriber(n,"joint_states",1,updateOpPosition,(void*&) s1);
@@ -75,7 +80,7 @@ int main(int argc, char *argv[]) {
        //     }
         //}
        // qi = robot->getPosition();
-        robot->step(1/rate*realTimeFactor,5); // simulate robot forward and updates messages linked to robot
+        robot->step(1/rate*realTimeFactor,1); // simulate robot forward and updates messages linked to robot
        // qi = robot->getPosition();
        // for (int i=0;i<qi.size();i++) {
        //     if (std::isnan(qi[i])) {
@@ -94,9 +99,13 @@ int main(int argc, char *argv[]) {
 
         if (ros::param::get("/realTimeFactor", realTimeFactor)){} // set parameters
         if (ros::param::get("/gravity", gravity)){
-            if (gravity)
-                robot->dynamics->setWorldGravity(0,0,1);
-            else
+            if (gravity) {
+                //rl::math::Vector v = rl::math::Vector(3);
+               // robot->dynamics->getWorldGravity(v);
+                //std::cout << v << std::endl;
+                robot->dynamics->setWorldGravity(0, 0, 9.80665);
+
+            } else
                 robot->dynamics->setWorldGravity(0,0,0);
         }
         if (ros::param::get("/rosRate", rate)){

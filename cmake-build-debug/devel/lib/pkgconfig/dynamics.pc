@@ -4,5 +4,5 @@ Name: dynamics
 Description: Description of dynamics
 Version: 0.0.1
 Cflags: -I/home/paul/Yumi_WS/src/cmake-build-debug/devel/include
-Libs: -L/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib 
+Libs: -L${prefix}/lib 
 Requires: roscpp std_msgs message_runtime

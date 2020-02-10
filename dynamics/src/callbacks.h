@@ -139,7 +139,8 @@ bool getLastTransformation(dynamics::getM::Request  &req, dynamics::getM::Respon
     return true;
 }
 
-bool getM(dynamics::getM::Request  &req, dynamics::getM::Response &res, Robot*& robot) { // serviceRobot
+bool getM(dynamics::getM::Request  &req, dynamics::getM::Response &res, void*& Struct) { // serviceRobot
+    Robot* robot = (Robot*) Struct;
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();
     for (int i=0;i<req.q.size();i++) {
@@ -153,13 +154,14 @@ bool getM(dynamics::getM::Request  &req, dynamics::getM::Response &res, Robot*& 
         }
     }
     auto b = robot->dynamics->getBody(8); // 8 is right finger
-    std::cout<< b->m <<std::endl;
+    //std::cout<< b->m <<std::endl;
     robot->dynamics->setPosition(qtmp);
 //std::cout<< M <<std::endl;
     robot->dynamics->setPosition(qtmp);
     return true;
 }
-bool getC(dynamics::getC::Request  &req, dynamics::getC::Response &res, Robot*& robot) { // serviceRobot
+bool getC(dynamics::getC::Request  &req, dynamics::getC::Response &res, void*& Struct) { // serviceRobot
+    Robot* robot = (Robot*) Struct;
     auto q = robot->dynamics->getPosition();
     auto qd = robot->dynamics->getVelocity();
     auto qtmp = robot->dynamics->getPosition();
@@ -180,7 +182,8 @@ bool getC(dynamics::getC::Request  &req, dynamics::getC::Response &res, Robot*& 
     robot->dynamics->setPosition(qtmp);
     return true;
 }
-bool getT(dynamics::getT::Request  &req, dynamics::getT::Response &res, Robot*& robot) { // serviceRobot
+bool getT(dynamics::getT::Request  &req, dynamics::getT::Response &res, void*& Struct) { // serviceRobot
+    Robot* robot = (Robot*) Struct;
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();
     for (int i=0;i<req.q.size();i++) {
@@ -204,7 +207,8 @@ bool getT(dynamics::getT::Request  &req, dynamics::getT::Response &res, Robot*& 
     robot->dynamics->setPosition(qtmp);
     return true;
 }
-bool getG(dynamics::getG::Request  &req, dynamics::getG::Response &res, Robot*& robot) { // serviceRobot
+bool getG(dynamics::getG::Request  &req, dynamics::getG::Response &res, void*& Struct) { // serviceRobot
+    Robot* robot = (Robot*) Struct;
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();
     for (int i=0;i<req.q.size();i++) {
@@ -219,7 +223,8 @@ bool getG(dynamics::getG::Request  &req, dynamics::getG::Response &res, Robot*& 
    // std::cout<< g <<std::endl;
     return true;
 }
-bool getJ(dynamics::getJ::Request  &req, dynamics::getJ::Response &res, Robot*& robot) { // serviceRobot
+bool getJ(dynamics::getJ::Request  &req, dynamics::getJ::Response &res, void*& Struct) { // serviceRobot
+    Robot* robot = (Robot*) Struct;
     auto q = robot->dynamics->getPosition();
     auto qtmp = robot->dynamics->getPosition();
     for (int i=0;i<req.q.size();i++) {
@@ -396,7 +401,7 @@ bool setArmVelocity(dynamics::setTorques::Request  &req, dynamics::setTorques::R
         robot->dynamics->forwardPosition();
         e1 =  gax - z3;
         e2 =  gaxS - z3S;
-        ///std::cout<<e1.norm()+e2.norm()<<std::endl;
+        //std::cout<<e1.norm()+e2.norm()<<std::endl;
     }
     while(e1.norm()+e2.norm()>0.005);
 

@@ -4,5 +4,5 @@ Name: velocity_control
 Description: Description of velocity_control
 Version: 0.0.0
 Cflags: 
-Libs: -L/home/paul/Yumi_WS/src/cmake-build-debug/devel/lib 
+Libs: -L${prefix}/lib 
 Requires: roscpp abb_libegm

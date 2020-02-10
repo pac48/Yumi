@@ -4,5 +4,5 @@ Name: realsense2_description
 Description: Description of realsense2_description
 Version: 2.2.9
 Cflags: 
-Libs: -L/usr/local/lib 
+Libs: -L${prefix}/lib 
 Requires: 
