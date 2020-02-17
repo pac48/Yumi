@@ -460,6 +460,9 @@ void updateOpPositionReal(const std_msgs::Float32MultiArray::ConstPtr& msg, void
     //q = robot->dynamics->getPosition();
     //std::cout<<q<<std::endl;
     //std::cout<<"  "<<std::endl;
+    robot->dynamics->forwardPosition();
+    robot->dynamics->update();
+    robot->dynamics->forwardPosition();
     opPostionMsgs->at(0)->data = robot->getOperationalPosition(0);
     opPostionMsgs->at(1)->data = robot->getOperationalPosition(1);
     robot->time = time;

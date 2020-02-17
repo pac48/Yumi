@@ -126,8 +126,8 @@ int main(int argc, char *argv[]) {
     robot->addStepCallback(updateJointsVel, (void*&) s4);
     opPostionMsgs.push_back(operationalPosPubRMsg);
     opPostionMsgs.push_back(operationalPosPubLMsg);
-    //VectorFloat32MultiArrayRobot* s1 = new VectorFloat32MultiArrayRobot{&opPostionMsgs,robot};
-    robot->addStepCallback(updateOpPos, (void*&) s1);
+    //VectorFloat32MultiArrayRobot* s8 = new VectorFloat32MultiArrayRobot{&opPostionMsgs,robot};
+   // robot->addStepCallback(updateOpPos, (void*&) s8);
     // main loop
     while (ros::ok()) {
         robot->updateStepCallbacks();
