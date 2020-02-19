@@ -174,9 +174,9 @@ public:
         //rl::math::Transform T = this->dynamics->getOperationalPosition(EE);
         rl::math::Transform T;
         if (EE==0)
-           T = this->dynamics->getFrame(7); // 3 is 2
+           T = this->dynamics->getFrame(7+2); // 3 is 2
         else
-            T = this->dynamics->getFrame(9+7); //probably not
+            T = this->dynamics->getFrame(9+7+1); //probably not
         std::vector<float> p;
         for (int i =0;i<3;i++){
             p.push_back(T(i,3));

@@ -40,8 +40,10 @@ class image_converter:
     rotation/=np.sqrt(rotation[0]**2+rotation[1]**2+rotation[2]**2+rotation[3]**2)
     translation = self.transformation_matrix[0:3,3]
     time = rospy.get_rostime()
-    parent = "world"
-    child ="camera_depth_optical_frame" #"camera_depth_optical_frame"
+    #parent = "world"
+    #child ="camera_depth_optical_frame" #"camera_depth_optical_frame"
+    child = "world"
+    parent ="camera_depth_optical_frame" #"camera_depth_optical_frame"
     msg = TransformStamped()
     msg.header.frame_id = parent
     msg.header.stamp = time
