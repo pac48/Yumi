@@ -8,7 +8,7 @@
 //typedef std::chrono::high_resolution_clock Clock;
 
 int main(int argc, char *argv[]) {
-    float realTimeFactor = 1;
+    float realTimeFactor = 0.00000000001;
     float rate = 500;
     bool gravity = true;
     ros::init(argc, argv, "sim_robot_node");
@@ -50,6 +50,7 @@ int main(int argc, char *argv[]) {
     robot->addService(n,"getG",getG,(void*&) robot);
     robot->addService(n,"getC",getC,(void*&) robot);
     robot->addService(n,"getT",getT,(void*&) robot);
+    robot->addService(n,"setQ",setPosition,(void*&) robot);
     // Subscribers
     JointStateRobot* s2 = new JointStateRobot{jointRvizMsg,robot};
     //robot->addSubscriber(n,"joint_states",1,updateOpPosition,(void*&) s1);

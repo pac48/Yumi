@@ -10,9 +10,12 @@
     <!-- e.g. <build_depend>std_msgs</build_depend> -->
 <build_depend>abb_libegm</build_depend>
    <build_depend>camera1</build_depend>
-   <build_depend>ddynamic_reconfigure</build_depend>
-   <build_depend>dynamic_reconfigure</build_depend>
+   <build_depend>controller</build_depend>
+   <build_depend>controller_node_jug</build_depend>
    <build_depend>dynamics</build_depend>
+   <build_depend>realsense2_camera</build_depend>
+   <build_depend>realsense2_description</build_depend>
+   <build_depend>simulation</build_depend>
    <build_depend>state_server</build_depend>
    <build_depend>velocity_control</build_depend>
    <build_depend>yumi_description</build_depend>

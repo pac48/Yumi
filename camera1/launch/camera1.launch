@@ -9,5 +9,7 @@
     </node>
     <node pkg="camera1" type="camera_transform.py" name="camera_transform" output="screen" >
     </node>
+    <node pkg="camera1" type="pos_vel_pub.py" name="pos_vel_pub" output="screen" >
+    </node>
 
 </launch>

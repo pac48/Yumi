@@ -33,6 +33,7 @@ class image_converter:
     self.transformation_matrix = np.eye(4)
     self.transformation_matrix[3,0:3]=0.0
     self.br = tf.TransformBroadcaster()
+    self.pub_tranform = rospy.Publisher("/transfrom", Float32MultiArray, queue_size=1)
 
 
   def getTransformMsg(self):
@@ -121,7 +122,14 @@ class image_converter:
     #rob_offset = np.array([P1_rob[3],P2_rob[3],P3_rob[3],P4_rob[3]])
     fourth_row = np.array([0, 0, 0, 1])
     self.transformation_matrix = np.stack((T_values[0,0:4],T_values[0,4:8],T_values[0,8:12],fourth_row))
-    
+    l = list(self.transformation_matrix)
+    flat_list = []
+    for sublist in l:
+        for item in sublist:
+            flat_list.append(item)
+    trans_msg = Float32MultiArray()
+    trans_msg.data = flat_list
+    self.pub_tranform.publish(trans_msg)
     print('transformation_matrix', self.transformation_matrix)
     #try:
     #  self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))

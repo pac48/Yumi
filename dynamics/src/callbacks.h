@@ -315,6 +315,21 @@ bool setTorques(dynamics::setTorques::Request  &req, dynamics::setTorques::Respo
     }
     return true;
 }
+bool setPosition(dynamics::getG::Request  &req, dynamics::getG::Response &res,void*& Struct){ // serviceRobot
+    Robot* robot = (Robot*) Struct;
+    auto q = robot->dynamics->getPosition();
+    for (int i=0;i<req.q.size();i++){
+        q[i]=req.q[i];
+    }
+    robot->dynamics->setPosition(q);
+    robot->dynamics->forwardDynamics();
+   // auto qdd = robot->dynamics->getAcceleration();
+    //for (int i=0;i<req.tau.size();i++) {
+     //   res.qdd.push_back(qdd[i]);
+    //}
+    return true;
+}
+
 bool setAccelerations(dynamics::setTorques::Request  &req, dynamics::setTorques::Response &res,void*& Struct){ // serviceRobot
     Robot* robot = (Robot*) Struct;
     auto qdd = robot->dynamics->getTorque();
