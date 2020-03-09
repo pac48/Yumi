@@ -74,7 +74,7 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "joint_velocity_controller_node"+LR);
   ros::NodeHandle n;
   Messenger<std::vector<float> ,const std_msgs::Float32MultiArray::ConstPtr> messenger;
-  ros::Subscriber sub = n.subscribe("joint_velocity_command"+LR,1,&Messenger<std::vector<float> ,const std_msgs::Float32MultiArray::ConstPtr>::callback, &messenger);
+  ros::Subscriber sub = n.subscribe("joint_velocity_command"+LR,10,&Messenger<std::vector<float> ,const std_msgs::Float32MultiArray::ConstPtr>::callback, &messenger);
     std::vector <ros::Subscriber> velocitySubscribers;
     ros::Subscriber velocitySubscriber;
     int JOINT_NUMBER=7;
@@ -82,7 +82,7 @@ int main(int argc, char** argv)
     for(int i = 0;i < JOINT_NUMBER;i++){
         Messenger<double ,const std_msgs::Float64::ConstPtr>* mi = new Messenger<double ,const std_msgs::Float64::ConstPtr>;
         messengers[i]=mi;
-        velocitySubscriber = n.subscribe(velocityTopicNames[i], 1,&Messenger<double ,const std_msgs::Float64::ConstPtr>::callback,mi);
+        velocitySubscriber = n.subscribe(velocityTopicNames[i], 10,&Messenger<double ,const std_msgs::Float64::ConstPtr>::callback,mi);
         velocitySubscribers.push_back(velocitySubscriber);
     }
   // Boost components for managing asynchronous UDP socket(s).
@@ -148,7 +148,7 @@ int main(int argc, char** argv)
       else
       {
         reference = messenger.data;
-        ROS_INFO_STREAM("References: Joint 1 = " << reference[0] << " [degrees/s]");
+        ROS_INFO_STREAM("References: Joint 1 = " << reference[0] << " [rad/s]");
         ROS_INFO_STREAM(output.mutable_external()->mutable_joints()->mutable_velocity()->values_size());
         ROS_INFO_STREAM(output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size());
         if(output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() > 5 &&

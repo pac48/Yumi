@@ -79,7 +79,7 @@ void sendOpJointVelocities(const std_msgs::Float32MultiArray::ConstPtr& opVelMsg
 
 */
 int main(int argc, char *argv[]) {
-    float rate = 100;
+    float rate = 300;
     ros::init(argc, argv, "real_robot_node");
     ros::NodeHandle n;
     ros::Rate loop_rate(rate);
