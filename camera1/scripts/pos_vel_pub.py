@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# This file returns the file necessary values for the modeling/control part of the project
+# this file returns the position of the ball and velocity of the ball with respect to the robot
+# the camera must be calibrated with the robot using the other vision files for this to work properly
+
 from __future__ import print_function
 
 import roslib
@@ -62,6 +67,11 @@ class image_converter:
 
 
   def callback_pos_vel(self, msg):
+      
+      # computes position of the ball with respect to the robot by
+      # using the current reading of the camera an multiplying with the transfromation matrix
+      # also computes the velocity by getting the time between readings and
+      # change in position between readings
       
       #---- position -----
       data = list(msg.data)
