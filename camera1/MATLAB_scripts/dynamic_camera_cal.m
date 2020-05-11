@@ -1,6 +1,11 @@
 %% coords
 %clear all
 
+% This code calculates the transformation matrix between the camera and the robot
+
+
+
+% load in points that were gathered in the initial calibration stage
 points = load('calibration.mat');
 
 robot_points = points.calibration{1, 1};
@@ -45,6 +50,10 @@ end
 
 %robot_array = [P1_rob,P2_rob,P3_rob,P4_rob]';
 
+
+% optimaization function that minimizes the error
+% also considers matrix properties to increase accuracy
+
 fun = @(x) sum((camera_matrix*x-robot_array).^2);
 nonlcon = @(x)constraints(x);
 opt = optimoptions("fmincon", 'MaxFunctionEvaluations', 30000);
@@ -63,5 +72,6 @@ tmp = [b;0;0;0;1];%[quat';transformation_matrix(1:3,4)];
 msg.Data = tmp;
 transformation_pub = rospublisher("/transfrom");
 
+% publish the transfromation matrix to be used to calculate position of ball with respect to trobot
 send(transformation_pub,msg)
 
