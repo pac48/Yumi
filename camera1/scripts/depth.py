@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# This code publishes the location of the ping pong ball with respect to the robot
+# it also makes a marker that can be used in RVIZ, currently not working properly
+
+
 from __future__ import print_function
 
 import roslib
@@ -20,13 +25,19 @@ class image_converter:
   def __init__(self):
     self.image_pub = rospy.Publisher("image_topic_2",Image)
     self.bridge = CvBridge()
+    
+    # this publisher publishes the position of the ball with respect to the camera
     self.pub = rospy.Publisher('camera_coords', Float32MultiArray, queue_size=5)
     self.image_sub = rospy.Subscriber("/camera/aligned_depth_to_color/image_raw",Image,self.callback_image)
+    
+    # this subscribers is subscribed to the pixel position of the ball
     self.pixpos_sub = rospy.Subscriber("pixpos",Int32MultiArray,self.callback_pixpos)
     self.pixpos = [0,0]
     self.x_vec = []
     self.mkr_pub = rospy.Publisher('/rviz_markers', Marker, queue_size = 10)
 
+  # RVIZ marker code
+    
   def publishRViZMarker(self, point):
     """ Publishes a LINE marker that can be visualizaed in RViZ.
     This implementation takes geometry_msg/Point variables for the
@@ -62,6 +73,12 @@ class image_converter:
     a = np.size(cv_image_array)
     #print(cv_image_array[self.pixpos[1],self.pixpos[0]])
     print('picpos',self.pixpos)
+    
+    
+    # the following coputes the location of the ball with respect to the camera from
+    # depth readings and balls pixel position
+    # equations used can be referenced in Senior Design Final Report (Vision Section)
+    
     depth = cv_image_array[self.pixpos[1],self.pixpos[0]]
     #print('size', np.shape(cv_image_array))
     print('depth',depth)
