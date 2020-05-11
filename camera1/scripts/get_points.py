@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# This file allows for camera callibration to begin
+# the user uses the record_points subscriber to begin collection of transfromation points
+# the user than moves YuMi's hand and the program collects points as the hand is moved
+
 from __future__ import print_function
 
 import roslib
