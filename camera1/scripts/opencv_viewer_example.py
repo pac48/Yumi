@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# THIS FILE IS NOT PROPERLY NAMED
+# should be named image_seg_and_pix_pub
+# this file peforms image segmentation and publishes pixel positions of the ping pong ball
+
 from __future__ import print_function
 
 import roslib
@@ -28,6 +33,11 @@ class image_converter:
     (rows,cols,channels) = cv_image.shape
     if cols > 60 and rows > 60 :
       cv2.circle(cv_image, (50,50), 10, 255)
+      
+    # begining of image segmentation
+    # IMPORTANT: current code segments for BLUE not green or red, variables are not properly labeled
+    # converts image to gray scale and then segmenents pixels based on defined threshold
+    
     cv_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
     cv_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2HSV)
     dark_green_bgr = np.uint8([[[100,10,10 ]]])
@@ -41,9 +51,13 @@ class image_converter:
     result = cv2.cvtColor(result, cv2.COLOR_HSV2BGR)
     cv_image = cv2.cvtColor(result, cv2.COLOR_BGR2GRAY)
     ret,thresh = cv2.threshold(cv_image, 0, 255, 0)
+    
+    # make contour around largest section of white pixels
+    # calcualte center of contour and define it as ping pong ball pixel location
+    
     cv_image, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     c = max(contours, key = cv2.contourArea)
-    M = cv2.moments(c)
+    M = cv2.moments(c)  
     cX = int(M["m10"] / M["m00"])
     cY = int(M["m01"] / M["m00"])
     pix_coord = [cX,cY]
