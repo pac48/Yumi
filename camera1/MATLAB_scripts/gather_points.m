@@ -1,7 +1,10 @@
+% file that gather recordings of position of YuMi's hand with respect to camera
+
 clear all
 rosshutdown()
 rosinit("192.168.1.27")
 
+% how many points to consider
 desired_points = 100;
 
 rob_points = zeros(desired_points,3);
@@ -24,4 +27,5 @@ while i <= desired_points
     i = i+1
 end
 calibration = {rob_points,camera_points};
+% variable that is used to store the positional readings for both the camera and robot
 save("calibration" ,"calibration")
