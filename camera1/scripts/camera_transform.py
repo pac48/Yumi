@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+# Create Transfromation matrix between positional readings of YuMi's finger caputred by the camera in its reference frame 
+# and positional readings of YuMi's hand recorded by YuMi.
+
 from __future__ import print_function
 
 import roslib
@@ -19,6 +23,11 @@ np.set_printoptions(threshold=sys.maxsize)
 class image_converter:
 
   def __init__(self):
+    
+    # set up subscribers to necessary camera nodes via ROS
+    # set up publisher so transfromation matrix can be used py other files
+    # set up variables
+    
     self.image_pub = rospy.Publisher("image_topic_2",Image)
     self.bridge = CvBridge()
     self.image_sub = rospy.Subscriber("/camera/depth/image_rect_raw",Image,self.callback_image)
@@ -79,6 +88,10 @@ class image_converter:
     self.br.sendTransformMessage(msg)
     if len(self.camera_coords)!=12:
       return
+    
+    # use camera points of hand captured in various locations to define camera matrix
+    # also use robot hand readings from YuMi to define robot point matrix
+    
     P1_cam = np.matrix([self.camera_coords[0],self.camera_coords[1],self.camera_coords[2],1.0])
     P1_rob = np.matrix([self.robot_coords[0],self.robot_coords[1],self.robot_coords[2]])
 
