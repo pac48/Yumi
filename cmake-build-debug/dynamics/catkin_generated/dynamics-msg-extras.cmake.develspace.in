@@ -1,2 +1,0 @@
-set(dynamics_MESSAGE_FILES "")
-set(dynamics_SERVICE_FILES "/home/paul/Yumi_WS/src/dynamics/srv/getStaticTorques.srv;/home/paul/Yumi_WS/src/dynamics/srv/getM.srv;/home/paul/Yumi_WS/src/dynamics/srv/getC.srv;/home/paul/Yumi_WS/src/dynamics/srv/getG.srv;/home/paul/Yumi_WS/src/dynamics/srv/getJ.srv;/home/paul/Yumi_WS/src/dynamics/srv/getT.srv;/home/paul/Yumi_WS/src/dynamics/srv/setTorques.srv;/home/paul/Yumi_WS/src/dynamics/srv/getTrajTorques.srv")

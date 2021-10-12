@@ -1,8 +1,0 @@
-prefix=/home/paul/Yumi_WS/src/cmake-build-debug/devel
-
-Name: ddynamic_reconfigure
-Description: Description of ddynamic_reconfigure
-Version: 0.2.2
-Cflags: -I/home/paul/Yumi_WS/src/ddynamic_reconfigure1/include
-Libs: -L${prefix}/lib -lddynamic_reconfigure
-Requires: roscpp dynamic_reconfigure

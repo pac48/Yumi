@@ -1,8 +1,0 @@
-prefix=/home/paul/Yumi_WS/src/cmake-build-debug/devel
-
-Name: controller
-Description: Description of controller
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

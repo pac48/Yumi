@@ -45,7 +45,19 @@ struct ROS_msgs{
     ROS_msg_joint_data joint_torque_msg;
 };
 
+
+
 int main(int argc, char **argv) {
+    std::vector<string> jointNames = {
+            "yumi_joint_1_l",
+            "yumi_joint_2_l",
+            "yumi_joint_3_l",
+            "yumi_joint_4_l",
+            "yumi_joint_5_l",
+            "yumi_joint_6_l",
+            "yumi_joint_7_l",
+            "gripper_l_joint" };
+
     boost::asio::io_service io_service;
 //socket creation
     tcp::socket socket(io_service);
@@ -55,18 +67,16 @@ int main(int argc, char **argv) {
     socket.connect(tcp::endpoint(boost::asio::ip::address::from_string(IP), 12002));
     ros::init(argc, argv, "state_server_L");
     ros::NodeHandle n;
-    ros::Publisher pub_joints = n.advertise<std_msgs::Float32MultiArray>("joint_state_L", 1);
-    ros::Publisher pub_torques = n.advertise<std_msgs::Float32MultiArray>("joint_torque_L", 1);
-    ros::Publisher pub_gripper_pos = n.advertise<std_msgs::Float32>("gripper_state_L", 1);
-    //ros::Publisher pub_gripper_force = n.advertise<std_msgs::Float32>("gripper_froce_L", 1);
+    ros::Publisher pub_joints_L = n.advertise<sensor_msgs::JointState>("joint_state_L", 1);
     ros::Rate loop_rate(100);
     boost::asio::streambuf receive_buffer;
     boost::system::error_code error;
     while (ros::ok()){
-        std_msgs::Float32MultiArray msg_joints;
-        std_msgs::Float32MultiArray msg_torque;
-        std_msgs::Float32 msg_gripper_pos;
-        std_msgs::Float32 msg_gripper_force;
+        std::vector<float> joints_pos;
+        std::vector<float> joints_torque;
+        float gripper_pos;
+        float gripper_force;
+        sensor_msgs::JointState msg_joints;
         int msg_size = 21*4;
         boost::asio::read(socket, receive_buffer,boost::asio::transfer_exactly(msg_size), error);
         //boost::asio::read(socket, receive_buffer,boost::asio::transfer_all(), error);
@@ -74,22 +84,29 @@ int main(int argc, char **argv) {
             cout << "receive failed: " << error.message() << endl;
         }else {
             ROS_msgs const* data = boost::asio::buffer_cast<ROS_msgs const*>(receive_buffer.data());
-            std::copy(data->joint_position_msg.joints, data->joint_position_msg.joints + 7, std::back_inserter(msg_joints.data));
+            std::copy(data->joint_position_msg.joints, data->joint_position_msg.joints + 7, std::back_inserter(joints_pos));
             for (int i =0;i<7;i++){
-                msg_joints.data[i]*=(M_PI/180.0);
+                joints_pos[i]*=(M_PI/180.0);
             }
-            std::copy(data->joint_torque_msg.joints, data->joint_torque_msg.joints + 7, std::back_inserter(msg_torque.data));
-            msg_gripper_pos.data = data->gripper_position_msg.position;
-            msg_gripper_force.data = data->gripper_force_msg.force;
+            std::copy(data->joint_torque_msg.joints, data->joint_torque_msg.joints + 7, std::back_inserter(joints_torque));
+            gripper_pos = data->gripper_position_msg.position;
+            gripper_force = data->gripper_force_msg.force;
+            joints_pos.push_back(gripper_pos);
+            joints_torque.push_back(gripper_force);
 
         }
-        pub_joints.publish(msg_joints);
-        pub_torques.publish(msg_torque);
-        pub_gripper_pos.publish(msg_gripper_pos);
-        //pub_gripper_force.publish(msg_gripper_force);
+        for (int i = 0; i < joints_pos.size(); i++){
+            msg_joints.name.push_back(jointNames[i]);
+            msg_joints.position.push_back(joints_pos[i]);
+            msg_joints.effort.push_back(joints_torque[i]);
+        }
+        auto t = ros::Time::now();
+        msg_joints.header.stamp.sec = t.sec;
+        msg_joints.header.stamp.nsec = t.nsec;
+
+        pub_joints_L.publish(msg_joints);;
         receive_buffer.consume(msg_size);
         //ros::spinOnce();
-        //loop_rate.sleep();
     }
     socket.close();
     return 0;

@@ -5,4 +5,8 @@
     <include file="$(find dynamics)/launch/real_dynamics.launch" />
     <include file="$(find state_server)/launch/state_server.launch" />
     <include file="$(find velocity_control)/launch/velocityController.launch" />
+    <node pkg="joy" name="joystick" type="joy_node" >
+        <param name="autorepeat_rate" value="30" />
+    </node>
+    <node pkg="controller" name="joy_stick_node" type="joy_controller.py" />
 </launch>

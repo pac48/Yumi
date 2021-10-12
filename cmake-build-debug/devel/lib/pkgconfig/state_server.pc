@@ -1,8 +1,0 @@
-prefix=/home/paul/Yumi_WS/src/cmake-build-debug/devel
-
-Name: state_server
-Description: Description of state_server
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

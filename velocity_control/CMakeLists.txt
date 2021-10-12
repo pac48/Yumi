@@ -1,13 +1,16 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(velocity_control)
 
+set(abb_libegm_DIR /usr/local/share/abb_libegm)
+
 find_package(catkin REQUIRED COMPONENTS roscpp abb_libegm)
 
 ###################################
 ## catkin specific configuration ##
 ###################################
 catkin_package(
-  CATKIN_DEPENDS roscpp abb_libegm
+  CATKIN_DEPENDS roscpp
+        DEPENDS abb_libegm
 )
 
 ###########

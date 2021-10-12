@@ -11,8 +11,8 @@
   </node>
   <node pkg="state_server" type="client_node_motion_L" name="client_node_motion_L" output="screen" args="192.168.1.13">
   </node>
-  <node pkg="state_server" type="joint_state" name="joint_state" output="screen" args="192.168.1.13">
-    </node>
+  <node pkg="state_server" type="joint_state" name="joint_state_node" output="screen">
+   </node>
 
 
 
