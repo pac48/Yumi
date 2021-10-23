@@ -45,7 +45,7 @@ class BlenderBridge:
         try:
             resp = self.serv(self.joints_R)
             #resp2 = self.serv2(self.joints_R)
-        except rospy.ServiceException, e:
+        except:
             print("Service call failed: %s"%e)
             return
         i = 0

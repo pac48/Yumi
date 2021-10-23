@@ -34,8 +34,8 @@
         this->J = rl::math::Matrix(6*numEE, numDof);
         this->M = rl::math::Matrix(numDof,numDof);
         for (int n=0;n<numEE;n++){
-            this->Ji.push_back(rl::math::Matrix(6, numDof));
-            this->invJi.push_back(rl::math::Matrix(6, numDof));
+            this->Ji.push_back(rl::math::Matrix(6, numDof/2));
+            this->invJi.push_back(rl::math::Matrix(6, numDof/2));
             this->xdi.push_back(rl::math::Vector(6));
         }
         this->tau0 = rl::math::Vector::Zero(numDof);
@@ -109,11 +109,14 @@
         int numEE = this->dynamics->getOperationalDof();
         int numDof = this->dynamics->getDof();
         int offseti = EE*6;
+        int offsetj = EE*(numDof/2);
         for (int i =0;i<6;i++){
-            for (int j=0;j<J.cols();j++){
-                Ji(i,j) = J(i+offseti,j);
+            for (int j = 0; j < numDof/2; j++){
+                Ji(i,j) = J(i+offseti,j+offsetj);
             }
         }
+      //  cout << "Ji: "<< Ji << endl;
+     //   cout << "J: "<< J << endl;
         invJi.transposeInPlace();
        this->dynamics->calculateJacobianInverse(Ji,invJi,0.001f, true);
         rl::math::Vector jd = invJi*xd;
@@ -163,10 +166,10 @@
     }
 
     void Robot::loadModel(std::string urdf_file_name){
-        std::ifstream f(urdf_file_name.c_str());
-        if(f.good()){
-            std::remove(urdf_file_name.c_str()) ;
-        }
+        //std::ifstream f(urdf_file_name.c_str());
+       // if(f.good()){
+        //    std::remove(urdf_file_name.c_str()) ;
+       // }
         std::string myRobotstr;
         ros::param::get("robot_description",myRobotstr);
         this->generateURDF(myRobotstr);

@@ -135,9 +135,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 #add_executable(${PROJECT_NAME}_node src/tcp_node.cpp)
 add_executable(client_node_R src/client_node_R.cpp)
-add_executable(client_node_motion_R src/client_node_motion_R.cpp)
-add_executable(client_node_L src/client_node_L.cpp)
-add_executable(client_node_motion_L src/client_node_motion_L.cpp)
+add_executable(client_node_L src/client_node_L.cpp )
 add_executable(joint_state src/joint_state.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -153,15 +151,11 @@ add_executable(joint_state src/joint_state.cpp)
  target_link_libraries(client_node_R
    ${catkin_LIBRARIES}
  )
-target_link_libraries(client_node_motion_R
-        ${catkin_LIBRARIES}
-        )
+
 target_link_libraries(client_node_L
         ${catkin_LIBRARIES}
         )
-target_link_libraries(client_node_motion_L
-        ${catkin_LIBRARIES}
-        )
+
 target_link_libraries(joint_state
         ${catkin_LIBRARIES}
         )

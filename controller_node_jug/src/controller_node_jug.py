@@ -132,8 +132,8 @@ class controller:
         try:
             serv= rospy.ServiceProxy('getLastTransformation', getM)
             resp = serv(self.joints_R)
-        except rospy.ServiceException, e:
-            print("Service call failed: %s"%e)
+        except:
+            print("Service call failed")
             return self.robot_vel
 
         Te = np.matrix(np.zeros((4,4)))

@@ -46,15 +46,14 @@ int main(int argc, char *argv[]) {
     // operational position
     auto [operationalPosPub_L, operationalPosPubMsg_L] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/operational_position_L");
     auto [operationalPosPub_R, operationalPosPubMsg_R] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/operational_position_R");
-    auto operationalPosSubscriber_L = ROSProvider::getSubscriber("/joint_states_L", Yumi::updateOperationalPos_L, "0");
-    auto operationalPosSubscriber_R = ROSProvider::getSubscriber("/joint_states_R", Yumi::updateOperationalPos_R, "0");
+    auto operationalPosSubscriber_L = ROSProvider::getSubscriber("/joint_state_L", Yumi::updateOperationalPos_L, "0");
+    auto operationalPosSubscriber_R = ROSProvider::getSubscriber("/joint_state_R", Yumi::updateOperationalPos_R, "0");
     // operational velocity
     auto [jointVelPub_L, jointVelPubMsg_L] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/joint_velocity_command_L");
     auto [jointVelPub_R, jointVelPubMsg_R] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/joint_velocity_command_R");
     auto operationalVelSubscriber_L = ROSProvider::getSubscriber("/operational_vel_L", Yumi::sendOpJointVelocities_L);
     auto operationalVelSubscriber_R = ROSProvider::getSubscriber("/operational_vel_R", Yumi::sendOpJointVelocities_R);
-    //auto  jointVelSub = ROSProvider::getSubscriber("/joint_velocity_command_L", Yumi::updateVelJoints_L, "0");
-    //auto  jointVelSub = ROSProvider::getSubscriber("/joint_velocity_command_R", Yumi::updateVelJoints_R, "0");
+
     int rate = 100.0;
     double dt = 1.0/rate;
     ros::Rate loop_rate(rate);
@@ -72,7 +71,7 @@ int main(int argc, char *argv[]) {
         }
 
     } else{
-        auto jointStateSubscriber_L = ROSProvider::getSubscriber("/joint_states", Yumi::updateJoints, "0");
+        auto jointStateSubscriber = ROSProvider::getSubscriber("/joint_states", Yumi::updateJoints, "0");
       //  auto jointStateSubscriber_R = ROSProvider::getSubscriber("/robot/joint_states_R", Yumi::updateJoints_R, "0");
         while (ros::ok())
         {

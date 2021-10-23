@@ -7,6 +7,7 @@
 #include "vector"
 #include "string"
 #include "Messenger.h"
+#include "ABBMessages.h"
 
 using namespace boost::asio;
 using ip::tcp;
@@ -14,40 +15,6 @@ using std::string;
 using std::cout;
 using std::endl;
 
-struct ROS_msg_header{
-    int msg_type;
-};
-
-struct ROS_msg{
-    ROS_msg_header header;
-    unsigned char data[];
-};
-
-struct ROS_msg_joint_data{
-    int msg_type;
-    float joints[7];
-};
-
-struct ROS_msg_gripper_position{
-    int msg_type;
-    float position;
-    int endType;
-};
-
-struct ROS_msg_gripper_force{
-    int msg_type;
-    float force;
-};
-
-struct ROS_msgs{
-    ROS_msg_gripper_position gripper_position_msg;
-    int endType;
-};
-
-//void sendData(const std_msgs::Float32& msg){
- //   socket.write_some(boost::asio::buffer(msg.data, ), error);
-
-//}
 
 int main(int argc, char **argv) {
     boost::asio::io_service io_service;
@@ -64,17 +31,17 @@ int main(int argc, char **argv) {
     ros::Rate loop_rate(10);
     boost::asio::streambuf receive_buffer;
     boost::system::error_code error;
-    boost::array<ROS_msg_gripper_position , 1>* buf = new boost::array<ROS_msg_gripper_position , 1>;
+    boost::array<ROS_msg_gripper_force , 1>* buf = new boost::array<ROS_msg_gripper_force , 1>;
     float old_data = messenger.data;
     while (ros::ok()) {
         ros::spinOnce();
         if (old_data != messenger.data){
-            ROS_msg_gripper_position msgs;
-            msgs.position = messenger.data;
-            msgs.msg_type = 3;
-            msgs.endType = 0;
+            ROS_msg_gripper_force msgs;
+            msgs.force = messenger.data;
+           // msgs.msg_type = 3;
+            //msgs.endType = 0;
             buf->assign(msgs);
-            socket.write_some(boost::asio::buffer(buf, 12), error);
+            socket.write_some(boost::asio::buffer(buf, 8), error);
             old_data = messenger.data;
     }
         loop_rate.sleep();

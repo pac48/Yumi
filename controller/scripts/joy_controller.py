@@ -9,12 +9,12 @@
 # Standard imports
 
 import rospy
-from std_msgs.msg import Float32MultiArray, Bool
+from std_msgs.msg import Float32MultiArray, Float32
 from sensor_msgs.msg import Joy
 
 
 pub = rospy.Publisher("/operational_vel_R", Float32MultiArray, queue_size=2)
-pub_gripper = rospy.Publisher("/gripper_command", Bool, queue_size=2)
+pub_gripper = rospy.Publisher("/gripper_command_R", Float32, queue_size=2)
 grip_state = False
 cartesian = True
 cartisian = True
@@ -57,8 +57,9 @@ def callback(msg):
             if (b==0): # gripper
                 grip_state = not grip_state
                 print(grip_state)
-                msgB = Bool()
-                msgB.data = grip_state
+                msgB = Float32()
+                # msgB.data = grip_state*15+.1
+                msgB.data = 10*2*(.5-grip_state)
                 pub_gripper.publish(msgB)
             elif (b==1):
                 cartisian = not cartisian

@@ -37,6 +37,7 @@ public:
         auto q = robot->dynamics->getPosition();
         for (int i = 0; i < msg->position.size(); i++)
         {
+            if (robot->jointNames2Ind.find(msg->name[i]) == robot->jointNames2Ind.end()) continue;
             int ind = robot->jointNames2Ind[msg->name[i]];
             q[ind] = msg->position[i];
         }
@@ -44,33 +45,37 @@ public:
         robot->dynamics->forwardPosition();
     }
 
-    static void updateOperationalPos_L(const std_msgs::Float32MultiArray::ConstPtr &msg)
+    static void updateOperationalPos_L(const sensor_msgs::JointState::ConstPtr &msg)
     { // set joints to new config from message
         auto [operationalPosPub_L, operationalPosPubMsg_L] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/operational_position_L");
         Yumi* robot = RobotFactory::getRobot<Yumi>();
         auto q = robot->dynamics->getPosition();
-        for (int i = 0; i < msg->data.size(); i++)
+        for (int i = 0; i < msg->position.size(); i++)
         {
-            q[i] = msg->data[i];
+            if (robot->jointNames2Ind.find(msg->name[i]) == robot->jointNames2Ind.end()) continue;
+            int ind = robot->jointNames2Ind[msg->name[i]];
+            q[ind] = msg->position[i];
         }
         robot->dynamics->setPosition(q);
         robot->dynamics->forwardPosition();
-        operationalPosPubMsg_L.data = robot->getOperationalPosition(0);
+        operationalPosPubMsg_L.data = robot->getOperationalPosition(1);
         operationalPosPub_L.publish(operationalPosPubMsg_L);
     }
 
-    static void updateOperationalPos_R(const std_msgs::Float32MultiArray::ConstPtr &msg)
+    static void updateOperationalPos_R(const sensor_msgs::JointState::ConstPtr &msg)
     { // set joints to new config from message
         auto [operationalPosPub_R, operationalPosPubMsg_R] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/operational_position_R");
         Yumi* robot = RobotFactory::getRobot<Yumi>();
         auto q = robot->dynamics->getPosition();
-        for (int i = 0; i < msg->data.size(); i++)
+        for (int i = 0; i < msg->position.size(); i++)
         {
-            q[i] = msg->data[i];
+            if (robot->jointNames2Ind.find(msg->name[i]) == robot->jointNames2Ind.end()) continue;
+            int ind = robot->jointNames2Ind[msg->name[i]];
+            q[ind] = msg->position[i];
         }
         robot->dynamics->setPosition(q);
         robot->dynamics->forwardPosition();
-        operationalPosPubMsg_R.data = robot->getOperationalPosition(1); // still need to check 2 and 1;
+        operationalPosPubMsg_R.data = robot->getOperationalPosition(0);
         operationalPosPub_R.publish(operationalPosPubMsg_R);
     }
 

@@ -6,6 +6,8 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "vector"
 #include "string"
+#include "ABBMessages.h"
+
 
 using namespace boost::asio;
 using ip::tcp;
@@ -13,49 +15,16 @@ using std::string;
 using std::cout;
 using std::endl;
 
-struct ROS_msg_header{
-    int msg_type;
-};
-
-struct ROS_msg{
-    ROS_msg_header header;
-    unsigned char data[];
-};
-
-struct ROS_msg_joint_data{
-    int msg_type;
-    float joints[7];
-};
-
-struct ROS_msg_gripper_position{
-    int msg_type;
-    float position;
-};
-
-struct ROS_msg_gripper_force{
-    int msg_type;
-    float force;
-};
-
-struct ROS_msgs{
-    int msgType;
-    ROS_msg_joint_data joint_position_msg;
-    ROS_msg_gripper_position gripper_position_msg;
-    ROS_msg_gripper_force gripper_force_msg;
-    ROS_msg_joint_data joint_torque_msg;
-};
-
-
 
 int main(int argc, char **argv) {
     std::vector<string> jointNames = {
             "yumi_joint_1_r",
             "yumi_joint_2_r",
+            "yumi_joint_7_r",
             "yumi_joint_3_r",
             "yumi_joint_4_r",
             "yumi_joint_5_r",
             "yumi_joint_6_r",
-            "yumi_joint_7_r",
             "gripper_r_joint"};
 
     boost::asio::io_service io_service;
