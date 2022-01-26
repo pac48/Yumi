@@ -14,15 +14,42 @@ class Yumi : public Robot
 
 public:
     Yumi():Robot("Yumi")  {
-        auto q = this->dynamics->getPosition();
-        q[0] = (46.0 / 180.0) * 3.14;
-        q[1] = (-121.0 / 180.0) * 3.14;
-        q[2] = (-87.0 / 180.0) * 3.14;
-        q[3] = (4.0 / 180.0) * 3.14;
-        q[4] = (44.0 / 180.0) * 3.14;
-        q[5] = (54.0 / 180.0) * 3.14;
-        q[6] = (-3.0 / 180.0) * 3.14;
+//        auto q = this->dynamics->getPosition();
+//        q[0] = (46.0 / 180.0) * 3.14;
+//        q[1] = (-121.0 / 180.0) * 3.14;
+//        q[2] = (-87.0 / 180.0) * 3.14;
+//        q[3] = (4.0 / 180.0) * 3.14;
+//        q[4] = (44.0 / 180.0) * 3.14;
+//        q[5] = (54.0 / 180.0) * 3.14;
+//        q[6] = (-3.0 / 180.0) * 3.14;
+//
+//        q[0] = (46.0 / 180.0) * 3.14;
+//        q[1] = (-121.0 / 180.0) * 3.14;
+//        q[2] = (-87.0 / 180.0) * 3.14;
+//        q[3] = (4.0 / 180.0) * 3.14;
+//        q[4] = (44.0 / 180.0) * 3.14;
+//        q[5] = (54.0 / 180.0) * 3.14;
+//        q[6] = (-3.0 / 180.0) * 3.14;
+
+        vector<float> qVec = {(46.0 / 180.0) * 3.14,
+        (-121.0 / 180.0) * 3.14,
+        (-87.0 / 180.0) * 3.14,
+        (4.0 / 180.0) * 3.14,
+        (44.0 / 180.0) * 3.14*0,
+        (54.0 / 180.0) * 3.14*0,
+        (-3.0 / 180.0) * 3.14*0,
+        -(46.0 / 180.0) * 3.14,
+        (-121.0 / 180.0) * 3.14,
+        -(-87.0 / 180.0) * 3.14,
+        (4.0 / 180.0) * 3.14,
+        -(44.0 / 180.0) * 3.14*0,
+        (54.0 / 180.0) * 3.14*0,
+        (-3.0 / 180.0) * 3.14*0};
+
+        auto q = this->floatVec2MathVec(qVec);
         this->dynamics->setPosition(q);
+        this->dynamics->setVelocity(0*q);
+        this->dynamics->forwardDynamics();
     }
 
     static void updateJoints(const sensor_msgs::JointState::ConstPtr &msg)
@@ -36,6 +63,38 @@ public:
             q[ind] = msg->position[i];
         }
         robot->dynamics->setPosition(q);
+        robot->dynamics->forwardPosition();
+    }
+
+    static void updateJointVels_R(const std_msgs::Float32MultiArray::ConstPtr &msg)
+    { // set joints to new config from message
+        Yumi* robot = RobotFactory::getRobot<Yumi>();
+        auto qd = robot->dynamics->getVelocity();
+        int ind = 0;
+        for (int i = 0; i < robot->jointNames.size(); i++)
+        {
+            if (robot->jointNames[i].find("_r") != string::npos){
+                qd[i] = msg->data[ind];
+                ind++;
+            }
+        }
+        robot->dynamics->setVelocity(qd);
+        robot->dynamics->forwardPosition();
+    }
+
+    static void updateJointVels_L(const std_msgs::Float32MultiArray::ConstPtr &msg)
+    { // set joints to new config from message
+        Yumi* robot = RobotFactory::getRobot<Yumi>();
+        auto qd = robot->dynamics->getVelocity();
+        int ind = 0;
+        for (int i = 0; i < robot->jointNames.size(); i++)
+        {
+            if (robot->jointNames[i].find("_l") != string::npos){
+                qd[i] = msg->data[ind];
+                ind++;
+            }
+        }
+        robot->dynamics->setVelocity(qd);
         robot->dynamics->forwardPosition();
     }
 

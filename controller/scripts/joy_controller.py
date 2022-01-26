@@ -1,12 +1,4 @@
 #!/usr/bin/env python 
-# Aran Sena 2018
-#
-# Code example only, provided without guarantees
-#
-# Example for how to get both cameras streaming together
-#
-####
-# Standard imports
 
 import rospy
 from std_msgs.msg import Float32MultiArray, Float32

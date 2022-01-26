@@ -7,15 +7,20 @@
     <include file="$(find dynamics)/launch/dynamics.launch" >
         <arg name="useSim" value="$(arg useSim)"/>
     </include>
-    <include file="$(find state_server)/launch/state_server.launch">
-        <arg name="yumi_ip" value="$(arg ip)"/>
-    </include>
-    <include file="$(find motion_server)/launch/motion_server.launch">
-        <arg name="yumi_ip" value="$(arg ip)"/>
-    </include>
-    <include file="$(find velocity_control)/launch/velocityController.launch" />
+
+    <group unless="$(arg useSim)">
+        <include file="$(find state_server)/launch/state_server.launch">
+            <arg name="yumi_ip" value="$(arg ip)"/>
+        </include>
+        <include file="$(find motion_server)/launch/motion_server.launch">
+            <arg name="yumi_ip" value="$(arg ip)"/>
+        </include>
+        <include file="$(find velocity_control)/launch/velocityController.launch" />
+    </group>
+
     <node pkg="joy" name="joystick" type="joy_node" >
         <param name="autorepeat_rate" value="30" />
     </node>
     <node pkg="controller" name="joy_stick_node" type="joy_controller.py" />
+
 </launch>
