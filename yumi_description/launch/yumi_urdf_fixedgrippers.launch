@@ -4,10 +4,12 @@
 
   <arg name="hardware_interface" default="PositionJointInterface"/>
  <!-- Load the URDF with the given hardware interface into the ROS Parameter Server  $(find xacro)/xacro.py -->
-  <param name="robot_description"
-	 command="rosrun xacro xacro '$(find yumi_description)/urdf/yumi_fixedgrippers.urdf.xacro' prefix:=$(arg hardware_interface)" />
-	 
-  <include file="$(find yumi_description)/launch/yumi_rviz.launch" /> 
+<!--  <param name="robot_description"-->
+<!--	 command="'rosrun xacro xacro C:/Users/paulg/Downloads/catkin/src/yumi_description/urdf/yumi_fixedgrippers.urdf.xacro prefix:=PositionJointInterface'" />-->
+
+    <param name="robot_description" textfile="$(find yumi_description)/urdf/model.urdf"/>
+
+  <include file="$(find yumi_description)/launch/yumi_rviz.launch" />
 
 
 </launch>

@@ -1,0 +1,8 @@
+prefix=C:/Program Files (x86)/Project
+
+Name: velocity_control
+Description: Description of velocity_control
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib C:/Program Files (x86)/abb_libegm/lib/abb_libegm.lib
+Requires: roscpp

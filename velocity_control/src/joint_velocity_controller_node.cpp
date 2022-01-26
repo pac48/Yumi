@@ -80,7 +80,7 @@ int main(int argc, char** argv)
   ros::Subscriber sub = n.subscribe("joint_velocity_command"+LR,10,&Messenger<std::vector<float> ,const std_msgs::Float32MultiArray::ConstPtr>::callback, &messenger);
     std::vector <ros::Subscriber> velocitySubscribers;
     ros::Subscriber velocitySubscriber;
-    int JOINT_NUMBER=7;
+    const int JOINT_NUMBER=7;
     Messenger<double ,const std_msgs::Float64::ConstPtr> *messengers [JOINT_NUMBER];
     for(int i = 0;i < JOINT_NUMBER;i++){
         Messenger<double ,const std_msgs::Float64::ConstPtr>* mi = new Messenger<double ,const std_msgs::Float64::ConstPtr>;

@@ -1,0 +1,8 @@
+prefix=C:/Program Files (x86)/Project
+
+Name: dynamics
+Description: Description of dynamics
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp std_msgs message_runtime

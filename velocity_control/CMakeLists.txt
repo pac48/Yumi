@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(velocity_control)
 
-set(abb_libegm_DIR /usr/local/share/abb_libegm)
+ set(abb_libegm_DIR "$ENV{abb_libegm}")
 
 find_package(catkin REQUIRED COMPONENTS roscpp abb_libegm)
 
