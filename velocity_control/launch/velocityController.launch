@@ -1,8 +1,5 @@
 <launch>
-  <!-- FIXME: do not use the timestamps from the bag file,
-    it makes the tracker hang for some reason. -->
   <param name="use_sim_time" value="false" />
-
 
   <node pkg="velocity_control" type="joint_velocity_controller_node" name="joint_velocity_controller_node_L" output="screen" args="_L 6511">
   </node>

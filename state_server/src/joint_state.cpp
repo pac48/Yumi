@@ -1,11 +1,5 @@
-#include <iostream>
-#include <boost/asio.hpp>
 #include <sensor_msgs/JointState.h>
-#include <std_msgs/Float32.h>
 #include "ros/ros.h"
-#include "std_msgs/Float32MultiArray.h"
-#include "vector"
-#include "string"
 #include "Messenger.h"
 
 class MessageHandler{

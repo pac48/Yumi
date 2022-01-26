@@ -24,13 +24,7 @@ public:
         q[6] = (-3.0 / 180.0) * 3.14;
         this->dynamics->setPosition(q);
     }
-//    std::vector<std::string> jointNames = {"yumi_joint_1_r", "yumi_joint_2_r",
-  //                                         "yumi_joint_7_r", "yumi_joint_3_r",
-    //                                       "yumi_joint_4_r", "yumi_joint_5_r",
-      //                                     "yumi_joint_6_r", "yumi_joint_1_l",
-        //                                   "yumi_joint_2_l", "yumi_joint_7_l",
-          //                                 "yumi_joint_3_l","yumi_joint_4_l",
-            //                               "yumi_joint_5_l", "yumi_joint_6_l"};
+
     static void updateJoints(const sensor_msgs::JointState::ConstPtr &msg)
     { // set joints to new config from message
         Yumi* robot = RobotFactory::getRobot<Yumi>();
@@ -80,11 +74,11 @@ public:
     }
 
     static void rvizUpdateJoints(const sensor_msgs::JointState::ConstPtr &msg)
-    { //maybe broken
+    {
         auto [jointRvizPub, jointRvizMsg] = ROSProvider::getPublisher<sensor_msgs::JointState>("rviz/joint_states");
         jointRvizMsg.position = msg->position;
         jointRvizMsg.name = msg->name;
-        ROSProvider::setTimeStampNow(jointRvizMsg);
+        jointRvizMsg.header.stamp = msg->header.stamp;
         jointRvizPub.publish(jointRvizMsg);
     }
 
@@ -97,8 +91,6 @@ public:
         for (int i = 0; i < qd.size(); i++)
         {
             string name = robot->jointNames[i];
-          //  if (name== "head_pan" || name == "right_gripper_l_finger_joint" || name == "right_gripper_r_finger_joint")
-           //     continue;
            int ind = robot->jointNames2Ind[name];
             jointVelMsg_L.data.push_back(qd[ind]);
         }
@@ -114,8 +106,6 @@ public:
         for (int i = 0; i < qd.size(); i++)
         {
             string name = robot->jointNames[i];
-            //  if (name== "head_pan" || name == "right_gripper_l_finger_joint" || name == "right_gripper_r_finger_joint")
-            //     continue;
             int ind = robot->jointNames2Ind[name];
             jointVelMsg_R.data.push_back(qd[ind]);
         }

@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-
-    <include file="$(find yumi_description)/launch/yumi_urdf_fixedgrippers.launch" />
-    <include file="$(find dynamics)/launch/vis_sim_dynamics.launch" />
-
-</launch>

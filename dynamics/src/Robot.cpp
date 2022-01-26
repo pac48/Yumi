@@ -115,8 +115,6 @@
                 Ji(i,j) = J(i+offseti,j+offsetj);
             }
         }
-      //  cout << "Ji: "<< Ji << endl;
-     //   cout << "J: "<< J << endl;
         invJi.transposeInPlace();
        this->dynamics->calculateJacobianInverse(Ji,invJi,0.001f, true);
         rl::math::Vector jd = invJi*xd;
@@ -166,10 +164,6 @@
     }
 
     void Robot::loadModel(std::string urdf_file_name){
-        //std::ifstream f(urdf_file_name.c_str());
-       // if(f.good()){
-        //    std::remove(urdf_file_name.c_str()) ;
-       // }
         std::string myRobotstr;
         ros::param::get("robot_description",myRobotstr);
         this->generateURDF(myRobotstr);

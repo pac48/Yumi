@@ -22,7 +22,6 @@ struct ROS_msg_joint_data{
 struct ROS_msg_gripper_position{
     int msg_type = 2;
     float position;
-//    int endType;
 };
 
 struct ROS_msg_gripper_force{

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="useSim" value="$(arg useSim)"/>
+    <node pkg="dynamics" type="yumi_node" name="yumi_node" output="screen" args="$(arg useSim)"/>
+</launch>

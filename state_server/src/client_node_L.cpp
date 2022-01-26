@@ -3,7 +3,6 @@
 #include <sensor_msgs/JointState.h>
 #include <std_msgs/Float32.h>
 #include "ros/ros.h"
-#include "std_msgs/Float32MultiArray.h"
 #include "vector"
 #include "string"
 #include "ABBMessages.h"
@@ -31,7 +30,6 @@ int main(int argc, char **argv) {
     tcp::socket socket(io_service);
 //connection
     std::string IP = argv[1];
-    //std::string IP = "192.168.1.13";
     socket.connect(tcp::endpoint(boost::asio::ip::address::from_string(IP), 12002));
     ros::init(argc, argv, "state_server_L");
     ros::NodeHandle n;
@@ -47,7 +45,6 @@ int main(int argc, char **argv) {
         sensor_msgs::JointState msg_joints;
         int msg_size = 21*4;
         boost::asio::read(socket, receive_buffer,boost::asio::transfer_exactly(msg_size), error);
-        //boost::asio::read(socket, receive_buffer,boost::asio::transfer_all(), error);
         if( error && error != boost::asio::error::eof ) {
             cout << "receive failed: " << error.message() << endl;
         }else {
@@ -61,7 +58,6 @@ int main(int argc, char **argv) {
             gripper_force = data->gripper_force_msg.force;
             joints_pos.push_back(gripper_pos);
             joints_torque.push_back(gripper_force);
-
         }
         for (int i = 0; i < joints_pos.size(); i++){
             msg_joints.name.push_back(jointNames[i]);
@@ -74,7 +70,6 @@ int main(int argc, char **argv) {
 
         pub_joints_L.publish(msg_joints);;
         receive_buffer.consume(msg_size);
-        //ros::spinOnce();
     }
     socket.close();
     return 0;

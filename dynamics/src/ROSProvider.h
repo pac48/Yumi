@@ -153,20 +153,12 @@ public:
         }
         if (topic2Pub<T>)
         {
-            //for (auto it = topic2Pub<T>->begin(); it != topic2Pub<T>->end(); it++)
-           // {
-             //   auto [pub_ptr, msg_ptr] = it->second;
-             //   delete msg_ptr;
-              //  delete it->second; //tuple
-            //}
-
             delete topic2Pub<T>;
             topic2Pub<T> = nullptr;
             cout << "cleaned publishers " << typeid(T).name() << endl;
         }
     }
 
-    //private:
     struct PublisherPair
     {
         ros::Publisher publisher;

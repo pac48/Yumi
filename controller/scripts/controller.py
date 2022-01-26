@@ -3,9 +3,7 @@
 import sys
 import rospy
 import numpy as np
-from std_msgs.msg import String, Int32MultiArray, Float32MultiArray
-from sensor_msgs.msg import Image
-from cv_bridge import CvBridge, CvBridgeError
+from std_msgs.msg import Float32MultiArray
 np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -23,7 +21,7 @@ class controller:
     self.operational_sub = rospy.Subscriber("/operational_position_R",Float32MultiArray,self.callback_operational_R,buff_size=1)
     self.operational_sub = rospy.Subscriber("/operational_position_L",Float32MultiArray,self.callback_operational_L,buff_size=1)
     self.operational_sub = rospy.Subscriber("/goal_position",Float32MultiArray,self.callback_goal,buff_size=1)
-    self.operational_pub = rospy.Publisher("/operational_velocity_command",Float32MultiArray,queue_size=10)
+    self.operational_pub = rospy.Publisher("/operational_velocity_command_R",Float32MultiArray,queue_size=10)
     self.moving=True
 
   def getVelMsg(self):

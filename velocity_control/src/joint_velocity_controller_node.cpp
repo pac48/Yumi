@@ -44,15 +44,7 @@
 
 #define _USE_MATH_DEFINES
 
-std::string velocityTopicNames[] = {
 
-        "/yumi/joint_1_r_velocity_controller/command",
-        "/yumi/joint_2_r_velocity_controller/command",
-        "/yumi/joint_7_r_velocity_controller/command",
-        "/yumi/joint_3_r_velocity_controller/command",
-        "/yumi/joint_4_r_velocity_controller/command",
-        "/yumi/joint_5_r_velocity_controller/command",
-        "/yumi/joint_6_r_velocity_controller/command"};
 
 int main(int argc, char** argv)
 {
@@ -61,6 +53,17 @@ int main(int argc, char** argv)
   //----------------------------------------------------------
   // Initialize the node.
   std::string LR = argv[1];
+
+  std::string velocityTopicNames[] = {
+
+            "/yumi/joint_1_r_velocity_controller/command",
+            "/yumi/joint_2_r_velocity_controller/command",
+            "/yumi/joint_7_r_velocity_controller/command",
+            "/yumi/joint_3_r_velocity_controller/command",
+            "/yumi/joint_4_r_velocity_controller/command",
+            "/yumi/joint_5_r_velocity_controller/command",
+            "/yumi/joint_6_r_velocity_controller/command"};
+
   if (LR=="_L"){
       velocityTopicNames[0]="/yumi/joint_1_l_velocity_controller/command";
       velocityTopicNames[1]="/yumi/joint_2_l_velocity_controller/command";
@@ -81,7 +84,7 @@ int main(int argc, char** argv)
     Messenger<double ,const std_msgs::Float64::ConstPtr> *messengers [JOINT_NUMBER];
     for(int i = 0;i < JOINT_NUMBER;i++){
         Messenger<double ,const std_msgs::Float64::ConstPtr>* mi = new Messenger<double ,const std_msgs::Float64::ConstPtr>;
-        messengers[i]=mi;
+        messengers[i] = mi;
         velocitySubscriber = n.subscribe(velocityTopicNames[i], 10,&Messenger<double ,const std_msgs::Float64::ConstPtr>::callback,mi);
         velocitySubscribers.push_back(velocitySubscriber);
     }
@@ -148,14 +151,13 @@ int main(int argc, char** argv)
       else
       {
         reference = messenger.data;
-        ROS_INFO_STREAM("References: Joint 1 = " << reference[0] << " [rad/s]");
-        ROS_INFO_STREAM(output.mutable_external()->mutable_joints()->mutable_velocity()->values_size());
-        ROS_INFO_STREAM(output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size());
+//        ROS_INFO_STREAM("References: Joint 1 = " << reference[0] << " [rad/s]");
+//        ROS_INFO_STREAM(output.mutable_external()->mutable_joints()->mutable_velocity()->values_size());
+//        ROS_INFO_STREAM(output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size());
         if(output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() > 5 &&
             output.mutable_external()->mutable_joints()->mutable_velocity()->values_size() > 0) {
             for (int i = 0; i < 7; i++) {
                 double r = reference[i]*180/M_PI;
-                //r = messengers[i]->data*180/M_PI;
                 if (i < 2) {
                     output.mutable_robot()->mutable_joints()->mutable_velocity()->set_values(i, r);
                 } else if (i > 2) {

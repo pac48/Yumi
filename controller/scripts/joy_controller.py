@@ -13,7 +13,7 @@ from std_msgs.msg import Float32MultiArray, Float32
 from sensor_msgs.msg import Joy
 
 
-pub = rospy.Publisher("/operational_vel_R", Float32MultiArray, queue_size=2)
+pub = rospy.Publisher("/operational_velocity_command_R", Float32MultiArray, queue_size=2)
 pub_gripper = rospy.Publisher("/gripper_command_R", Float32, queue_size=2)
 grip_state = False
 cartesian = True

@@ -1,23 +1,19 @@
 //
 // Created by paul on 7/26/19.
 //
-#include <iostream>
+
 #include "ros/ros.h"
 #include "Yumi.h"
-#include <iostream>
 #include "std_msgs/Float32MultiArray.h"
 #include "sensor_msgs/JointState.h"
 #include "RobotFactory.h"
 #include "ROSProvider.h"
 
 void simulateYumi(Yumi* yumi, ros::Publisher &jointStatePub, sensor_msgs::JointState &jointStateMsg, double dt){
-    //  sawyer->step(dt,100);
     auto q = yumi->dynamics->getPosition();
     auto qd = yumi->dynamics->getVelocity();
     if (qd[6] == 1.0)
         qd[6] = 0;
-    //cout << qd << endl << endl;
-    //qd *= .99;
     q += qd*dt;
     jointStateMsg = sensor_msgs::JointState();
     for (int i =0 ; i < q.size(); i++){
@@ -25,15 +21,15 @@ void simulateYumi(Yumi* yumi, ros::Publisher &jointStatePub, sensor_msgs::JointS
         jointStateMsg.name.push_back(yumi->jointNames[i]);
     }
     yumi->dynamics->setPosition(q);
-    // sawyer->dynamics->setVelocity(qd*0);
     yumi->dynamics->forwardPosition();
-    //sawyer->dynamics->forwardVelocity();
     jointStatePub.publish(jointStateMsg);
 
 }
 
 
 int main(int argc, char *argv[]) {
+    std::string useSim = argv[1];
+    cout << "should I use the sim: "<< useSim << endl;
     ros::init(argc, argv, "yumi_node");
     ros::NodeHandle n;
     ROSProvider::init(&n);
@@ -51,8 +47,8 @@ int main(int argc, char *argv[]) {
     // operational velocity
     auto [jointVelPub_L, jointVelPubMsg_L] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/joint_velocity_command_L");
     auto [jointVelPub_R, jointVelPubMsg_R] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/joint_velocity_command_R");
-    auto operationalVelSubscriber_L = ROSProvider::getSubscriber("/operational_vel_L", Yumi::sendOpJointVelocities_L);
-    auto operationalVelSubscriber_R = ROSProvider::getSubscriber("/operational_vel_R", Yumi::sendOpJointVelocities_R);
+    auto operationalVelSubscriber_L = ROSProvider::getSubscriber("/operational_velocity_command_L", Yumi::sendOpJointVelocities_L);
+    auto operationalVelSubscriber_R = ROSProvider::getSubscriber("/operational_velocity_command_R", Yumi::sendOpJointVelocities_R);
 
     int rate = 100.0;
     double dt = 1.0/rate;
@@ -72,13 +68,11 @@ int main(int argc, char *argv[]) {
 
     } else{
         auto jointStateSubscriber = ROSProvider::getSubscriber("/joint_states", Yumi::updateJoints, "0");
-      //  auto jointStateSubscriber_R = ROSProvider::getSubscriber("/robot/joint_states_R", Yumi::updateJoints_R, "0");
         while (ros::ok())
         {
             ros::spinOnce();
             loop_rate.sleep();
         }
-
     }
 
     return 0;
