@@ -1,8 +1,0 @@
-prefix=C:/Program Files (x86)/Project
-
-Name: state_server
-Description: Description of state_server
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

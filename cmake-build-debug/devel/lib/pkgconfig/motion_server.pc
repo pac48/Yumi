@@ -1,8 +1,0 @@
-prefix=C:/Users/paulg/Downloads/catkin/src/cmake-build-debug/devel
-
-Name: motion_server
-Description: Description of motion_server
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

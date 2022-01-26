@@ -1,8 +1,0 @@
-prefix=C:/Users/paulg/Downloads/catkin/src/cmake-build-debug/devel
-
-Name: dynamics
-Description: Description of dynamics
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: roscpp std_msgs message_runtime
