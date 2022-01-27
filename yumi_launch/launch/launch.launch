@@ -2,7 +2,7 @@
 <launch>
     <arg name="ip" default="192.168.1.13" />
     <arg name="useSim" default="false" />
-
+    <arg name="usePygame" default="false" />
     <include file="$(find yumi_description)/launch/yumi_urdf_fixedgrippers.launch" />
     <include file="$(find dynamics)/launch/dynamics.launch" >
         <arg name="useSim" value="$(arg useSim)"/>
@@ -18,7 +18,11 @@
         <include file="$(find velocity_control)/launch/velocityController.launch" />
     </group>
 
-    <node pkg="joy" name="joystick" type="joy_node" >
+
+    <node pkg="joy" name="joystick" type="joy_node" unless="$(arg usePygame)">
+        <param name="autorepeat_rate" value="30" />
+    </node>
+    <node pkg="joy_pygame" name="joystick" type="joy_pygame.py" if="$(arg usePygame)">
         <param name="autorepeat_rate" value="30" />
     </node>
     <node pkg="controller" name="joy_stick_node" type="joy_controller.py" />
