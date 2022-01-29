@@ -61,6 +61,8 @@ public:
             if (robot->jointNames2Ind.find(msg->name[i]) == robot->jointNames2Ind.end()) continue;
             int ind = robot->jointNames2Ind[msg->name[i]];
             q[ind] = msg->position[i];
+            q[ind] = max(q[ind], robot->dynamics->getJoint(ind)->getMinimum()[0]);
+            q[ind] = min(q[ind], robot->dynamics->getJoint(ind)->getMaximum()[0]);
         }
         robot->dynamics->setPosition(q);
         robot->dynamics->forwardPosition();
@@ -108,6 +110,8 @@ public:
             if (robot->jointNames2Ind.find(msg->name[i]) == robot->jointNames2Ind.end()) continue;
             int ind = robot->jointNames2Ind[msg->name[i]];
             q[ind] = msg->position[i];
+            q[ind] = max(q[ind], robot->dynamics->getJoint(ind)->getMinimum()[0]);
+            q[ind] = min(q[ind], robot->dynamics->getJoint(ind)->getMaximum()[0]);
         }
         robot->dynamics->setPosition(q);
         robot->dynamics->forwardPosition();
@@ -125,6 +129,8 @@ public:
             if (robot->jointNames2Ind.find(msg->name[i]) == robot->jointNames2Ind.end()) continue;
             int ind = robot->jointNames2Ind[msg->name[i]];
             q[ind] = msg->position[i];
+            q[ind] = max(q[ind], robot->dynamics->getJoint(ind)->getMinimum()[0]);
+            q[ind] = min(q[ind], robot->dynamics->getJoint(ind)->getMaximum()[0]);
         }
         robot->dynamics->setPosition(q);
         robot->dynamics->forwardPosition();
