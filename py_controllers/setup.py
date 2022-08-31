@@ -18,7 +18,7 @@ setup(
     description='TODO: Package description',
     license='TODO: License declaration',
     entry_points={
-        'console_scripts': ['joy_controller_node = py_controllers.joy_controller:main'
+        'console_scripts': ['joy_controller_node = joy_pygame.joy_controller:main'
         ],
     },
 )

@@ -18,8 +18,8 @@
 #include <iostream>
 #include <string>
 #include "rl/mdl/UrdfFactory.h"
-#include <ros/ros.h>
-#include "std_msgs/Float32.h"
+#include <rclcpp/rclcpp.hpp>
+#include "std_msgs/msg/float32.hpp"
 #include "rl/mdl/Joint.h"
 #include <boost/function.hpp>
 

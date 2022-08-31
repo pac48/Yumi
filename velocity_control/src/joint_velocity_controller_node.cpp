@@ -34,13 +34,13 @@
  ***********************************************************************************************************************
  */
 
-#include <ros/ros.h>
-#include "std_msgs/Float32MultiArray.h"
+#include <rclcpp/rclcpp.hpp>
+#include "std_msgs/msg/float32_multi_array.hpp"
 #include <abb_libegm/egm_controller_interface.h>
 #include "Messenger.h"
 #include "stdlib.h"
 #include <string>
-#include <std_msgs/Float64.h>
+#include <std_msgs/msg/float64.h>
 
 #define _USE_MATH_DEFINES
 
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
   }
   // Spin up a thread to run the io_service.
   thread_group.create_thread(boost::bind(&boost::asio::io_service::run, &io_service));
-  ROS_INFO("========== Joint velocity py_controllers (open-loop) sample ==========");
+  ROS_INFO("========== Joint velocity joy_pygame (open-loop) sample ==========");
   bool wait = true;
   abb::egm::wrapper::Input input;
   abb::egm::wrapper::Joints initial_velocity;
@@ -119,7 +119,7 @@ int main(int argc, char** argv)
     {
       if(egm_interface.getStatus().rapid_execution_state() == abb::egm::wrapper::Status_RAPIDExecutionState_RAPID_UNDEFINED)
       {
-        ROS_WARN("RAPID execution state is UNDEFINED (might happen first time after py_controllers start/restart). Try to restart the RAPID program.");
+        ROS_WARN("RAPID execution state is UNDEFINED (might happen first time after joy_pygame start/restart). Try to restart the RAPID program.");
       }
       else
       {

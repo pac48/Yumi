@@ -5,9 +5,10 @@
   <description>ROS 2 port of egm</description>
 
   <maintainer email="paul@todo.todo">paul</maintainer>
+  <license>TODO</license>
 
   <depend>rclcpp</depend>
-  <depend>abb_libegm</depend>
+  <depend>std_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

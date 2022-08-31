@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'py_controllers'
+package_name = 'joy_pygame'
 
 setup(
     name=package_name,
@@ -19,7 +19,7 @@ setup(
     license='TODO: License declaration',
     entry_points={
         'console_scripts': [
-            'joy_pygame_node = py_controllers.py_controllers:main'
+            'joy_pygame_node = joy_pygame.joy_pygame:main'
         ],
     },
 )

@@ -4,10 +4,11 @@
   <version>0.0.0</version>
   <description>The state server package</description>
 
-  <maintainer email="robot@todo.todo">robot</maintainer>
-
-  <build>rclcpp</build>
-  <build>std_msgs</build>
+  <maintainer email="paul@todo.todo">paul</maintainer>
+  <license>TODO</license>
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

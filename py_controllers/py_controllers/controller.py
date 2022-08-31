@@ -55,7 +55,7 @@ class controller:
     self.moving=True
 
 if __name__ == '__main__':
-  rospy.init_node('py_controllers', anonymous=True)
+  rospy.init_node('joy_pygame', anonymous=True)
   ic = controller()
   try:
     rospy.spin()

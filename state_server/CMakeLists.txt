@@ -11,17 +11,7 @@ endif()
 set(THIS_PACKAGE_INCLUDE_DEPENDS
         rclcpp
         std_msgs
-        )
-
-find_package(ament_cmake REQUIRED)
-foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
- find_package(${Dependency} REQUIRED)
-endforeach()
-
-# find dependencies
-set(THIS_PACKAGE_INCLUDE_DEPENDS
-        rclcpp
-        std_msgs
+        sensor_msgs
         )
 
 find_package(ament_cmake REQUIRED)
@@ -42,7 +32,19 @@ install(DIRECTORY include/
         DESTINATION include
         )
 
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS client_node_R
+        RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        )
+
+install(TARGETS client_node_L
+        RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        )
+
+install(TARGETS joint_state
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib

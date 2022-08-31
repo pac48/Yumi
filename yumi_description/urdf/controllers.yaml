@@ -56,7 +56,7 @@ joint_trajectory_vel_controller:
     yumi_joint_5_r: {p: 1.5,  d: 0, i: 0.002, i_clamp: 0.1}
     yumi_joint_6_r: {p: 1.5,  d: 0, i: 0.002, i_clamp: 0.1}
 
-# hiqp joint velocity py_controllers ----------------------------------------
+# hiqp joint velocity joy_pygame ----------------------------------------
   hiqp_joint_velocity_controller:
     type: hiqp_ros/HiQPJointVelocityController
     sampling_time: 500.0
