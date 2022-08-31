@@ -11,6 +11,7 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
         rclcpp
         std_msgs
         sensor_msgs
+        yumi_packets
         )
 foreach (Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
     find_package(${Dependency} REQUIRED)
@@ -21,7 +22,7 @@ generate_parameter_library(motion_client_node_parameters
         )
 
 
-#add_executable(motion_node_R src/client_node_motion_R.cpp)
+#add_executable(motion_node_R include/client_node_motion_R.cpp)
 add_executable(motion_client_node src/motion_client_node.cpp)
 
 target_link_libraries(motion_client_node

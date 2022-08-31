@@ -3,8 +3,7 @@
 #include <std_msgs/msg/float32.hpp>
 #include "rclcpp/rclcpp.hpp"
 #include "string"
-#include "Messenger.h"
-#include "ABBMessages.h"
+#include "yumi_packets/yumi_packets.hpp"
 #include "motion_client_node_parameters.hpp"
 
 
@@ -35,7 +34,7 @@ public:
     }
 
     void write_command(){
-        ROS_msg_gripper_force msgs;
+        yumi_packets::ROS_msg_gripper_force msgs;
         msgs.force = get_latest_msg().data;
         buffer_.assign(msgs);
         boost::asio::streambuf receive_buffer;
@@ -52,7 +51,7 @@ private:
 
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr subscription_;
     std_msgs::msg::Float32 latest_msg_;
-    boost::array<ROS_msg_gripper_force , 1> buffer_;
+    boost::array<yumi_packets::ROS_msg_gripper_force , 1> buffer_;
     boost::asio::ip::tcp::socket* socket_;
     std::shared_ptr<motion_client::ParamListener> param_listener;
     motion_client::Params params_;

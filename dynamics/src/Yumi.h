@@ -119,7 +119,7 @@ public:
         operationalPosPub_L.publish(operationalPosPubMsg_L);
     }
 
-    static void updateOperationalPos_R(const sensor_msgs::JointState::ConstPtr &msg)
+    static void (const sensor_msgs::JointState::ConstPtr &msg)
     { // set joints to new config from message
         auto [operationalPosPub_R, operationalPosPubMsg_R] = ROSProvider::getPublisher<std_msgs::Float32MultiArray>("/operational_position_R");
         Yumi* robot = RobotFactory::getRobot<Yumi>();
