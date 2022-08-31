@@ -2,14 +2,11 @@
 <package format="2">
   <name>yumi_launch</name>
   <version>0.0.1</version>
-  <description>The abb yumi description package</description>
+  <description>Launch package to bring up yumi</description>
 
-  <maintainer email="jjhu1993@gmail.com">jjhu</maintainer>
-  <license>BSD</license>
+  <maintainer email="paul@todo.todo">paul</maintainer>
+  <license>TODO</license>
 
-  <author email="jjhu1993@gmail.com">jjhu</author>
-
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>yumi_description</build_depend>
-  <exec_depend>xacro</exec_depend>
+  <depend>yumi_description</depend>
+  <depend>xacro</depend>
 </package>

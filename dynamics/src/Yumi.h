@@ -4,8 +4,8 @@
 #ifndef YUMI_WS_YUMI_H
 #define YUMI_WS_YUMI_H
 
-#include <sensor_msgs/JointState.h>
-#include <std_msgs/Float32MultiArray.h>
+#include <sensor_msgs/msg/joint_state.hpp>
+#include <std_msgs/msg/float32_multi_array.hpp>
 #include "Robot.cpp"
 #include "ROSProvider.h"
 

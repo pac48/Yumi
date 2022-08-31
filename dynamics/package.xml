@@ -1,26 +1,18 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>dynamics</name>
   <version>0.0.1</version>
-  <description>The abb yumi description package</description>
+  <description>The yumi kinematics and dynamics package</description>
 
-  <maintainer email="jjhu1993@gmail.com">jjhu</maintainer>
-  <license>BSD</license>
+  <maintainer email="paul@todo.todo">paul</maintainer>
+  <license>TODO</license>
 
-  <author email="jjhu1993@gmail.com">jjhu</author>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>rclcpp</depend>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>roscpp</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>message_generation</build_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <build_export_depend>std_msgs</build_export_depend>
-  <exec_depend>xacro</exec_depend>
-  <exec_depend>roscpp</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
-  <exec_depend>message_runtime</exec_depend>
-
-
-
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 
 </package>

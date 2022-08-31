@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>velocity_control</name>
   <version>0.0.0</version>
-  <description>The abb_egm_samples package, containing several C++ samples of how to use the abb_libegm C++ communication library to communicate with ABB robot controllers via Externally Guided Motion (EGM)</description>
+  <description>ROS 2 port of egm</description>
 
-  <maintainer email="jon.tjerngren@se.abb.com">Jon Tjerngren</maintainer>
+  <maintainer email="paul@todo.todo">paul</maintainer>
 
-  <license>BSD 3-Clause</license>
-
-  <author email="jon.tjerngren@se.abb.com">Jon Tjerngren</author>
-
-  <buildtool_depend>catkin</buildtool_depend>
-  <depend>roscpp</depend>
+  <depend>rclcpp</depend>
   <depend>abb_libegm</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+
 </package>
