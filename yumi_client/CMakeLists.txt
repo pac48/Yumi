@@ -42,7 +42,7 @@ install(TARGETS yumi_client
         LIBRARY DESTINATION lib
         )
 
-install(TARGETS yumi_client
+install(TARGETS yumi_client_node
         RUNTIME DESTINATION lib/yumi_client
         ARCHIVE DESTINATION lib/yumi_client
         LIBRARY DESTINATION lib/yumi_client
@@ -51,6 +51,10 @@ install(TARGETS yumi_client
 install(DIRECTORY include/
         DESTINATION include
         )
+install(
+        DIRECTORY launch
+        DESTINATION share/yumi_client
+)
 
 ament_export_include_directories(
         include

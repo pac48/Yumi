@@ -3,10 +3,15 @@ yumi_client:
     type: string,
     description: "IP address of the yumi robot",
   }
-  port_number: {
+  read_port: {
     type: int,
     default_value: 0, # should be removed once fix is merged
-    description: "Port number for the yumi robot",
+    description: "Port number used to read from the yumi robot",
+  }
+  write_port: {
+    type: int,
+    default_value: 0, # should be removed once fix is merged
+    description: "Port number used to write to the yumi robot",
   }
   gripper_force_command_topic: {
     type: string,

@@ -35,7 +35,8 @@ namespace yumi_client {
 
         // tcp connection
         boost::asio::io_service io_service;
-        boost::asio::ip::tcp::socket socket_ = boost::asio::ip::tcp::socket(io_service);
+        boost::asio::ip::tcp::socket read_socket_ = boost::asio::ip::tcp::socket(io_service);
+        boost::asio::ip::tcp::socket write_socket_ = boost::asio::ip::tcp::socket(io_service);
         boost::array<yumi_packets::ROS_msg_gripper_force, 1> write_buffer_;
         boost::asio::streambuf receive_buffer_;
         boost::system::error_code error_;

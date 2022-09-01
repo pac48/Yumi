@@ -56,20 +56,27 @@ namespace yumi_client {
         joint_state_publisher_ = this->create_publisher<sensor_msgs::msg::JointState>(params_.joint_state_topic, 10);
 
         //socket creation
-        RCLCPP_INFO(get_logger(), "attempting to connect to %s:%d", params_.ip_address.c_str(),
-                    params_.port_number);
-        socket_.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(params_.ip_address),
-                                                       params_.port_number));
-        RCLCPP_INFO(get_logger(), "Connected!");
+        RCLCPP_INFO(get_logger(), "attempting to connect to state server %s:%d", params_.ip_address.c_str(),
+                    params_.read_port);
+        read_socket_.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(params_.ip_address),
+                                                       params_.read_port));
+        RCLCPP_INFO(get_logger(), "Connected to state server!");
+
+        RCLCPP_INFO(get_logger(), "attempting to connect to motion server %s:%d", params_.ip_address.c_str(),
+                    params_.write_port);
+        write_socket_.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(params_.ip_address),
+                                                       params_.write_port));
+        RCLCPP_INFO(get_logger(), "Connected to motion server!");
     }
 
     YumiClientNode::~YumiClientNode() {
-        socket_.close();
+        read_socket_.close();
+        write_socket_.close();
     }
 
     AllROSMessages YumiClientNode::get_latest_msgs() {
         int packet_size = sizeof(yumi_packets::ROS_msgs);
-        boost::asio::read(socket_, receive_buffer_, boost::asio::transfer_exactly(packet_size), error_);
+        boost::asio::read(read_socket_, receive_buffer_, boost::asio::transfer_exactly(packet_size), error_);
         if (error_ && error_ != boost::asio::error::eof) {
             RCLCPP_ERROR(get_logger(), "receive failed: %s", error_.message().c_str());
         } else {
@@ -106,7 +113,7 @@ namespace yumi_client {
         data_packet.force = msg->data;
         write_buffer_.assign(data_packet);
         boost::system::error_code error;
-        socket_.write_some(boost::asio::buffer(&write_buffer_, sizeof(yumi_packets::ROS_msg_gripper_force)), error);
+        write_socket_.write_some(boost::asio::buffer(&write_buffer_, sizeof(yumi_packets::ROS_msg_gripper_force)), error);
     }
 
 
