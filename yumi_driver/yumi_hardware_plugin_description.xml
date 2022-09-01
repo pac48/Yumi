@@ -1,0 +1,9 @@
+<library path="yumi_hardware">
+  <class name="yumi_hardware/YumiSystem"
+         type="yumi_hardware::YumiSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Robot hardware plugin for yumi robot
+    </description>
+  </class>
+</library>

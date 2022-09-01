@@ -6,9 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /TF1
         - /TF1/Frames1
-        - /RobotModel1
       Splitter Ratio: 0.5
     Tree Height: 631
   - Class: rviz_common/Selection
@@ -36,7 +34,7 @@ Visualization Manager:
       Cell Size: 1
       Class: rviz_default_plugins/Grid
       Color: 160; 160; 164
-      Enabled: false
+      Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
         Value: Lines
@@ -49,51 +47,21 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
-      Value: false
+      Value: true
     - Class: rviz_default_plugins/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_link:
-          Value: true
-        ft_frame:
-          Value: true
-        link_1:
-          Value: true
-        link_2:
-          Value: true
-        link_3:
-          Value: true
-        link_4:
-          Value: true
-        link_5:
-          Value: true
-        link_6:
-          Value: true
-        tool0:
-          Value: true
-        world:
-          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: false
       Show Axes: true
       Show Names: false
       Tree:
-        world:
-          base_link:
-            link_1:
-              link_2:
-                link_3:
-                  link_4:
-                    link_5:
-                      link_6:
-                        ft_frame:
-                          tool0:
-                            {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
       Collision Enabled: false
@@ -112,53 +80,105 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_link:
+        gripper_l_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        ft_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        link_1:
+        gripper_l_finger_r:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_2:
+        gripper_r_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_3:
+        gripper_r_finger_r:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        link_4:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link_5:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        link_6:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        tool0:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         world:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        yumi_body:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_1_l:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_1_r:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_2_l:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_2_r:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_3_l:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_3_r:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_4_l:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_4_r:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_5_l:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_5_r:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_6_l:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_6_r:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_7_l:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        yumi_link_7_r:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
       Mass Properties:
         Inertia: false
         Mass: false
@@ -170,7 +190,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
-    Fixed Frame: base_link
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
@@ -220,18 +240,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.3431778848171234
-        Y: 0.6169372200965881
-        Z: 0.4080313444137573
+        X: -0.2505943477153778
+        Y: -0.03875402361154556
+        Z: 0.2466031163930893
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.17479799687862396
+      Pitch: 0.23979797959327698
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.8921666145324707
+      Yaw: 0.5571671724319458
     Saved: ~
 Window Geometry:
   Displays:

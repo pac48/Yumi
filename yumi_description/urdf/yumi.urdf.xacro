@@ -588,7 +588,7 @@
     <child link="gripper_r_base"/>
   </joint>
 
-  <joint name="gripper_r_joint" type="fixed">
+  <joint name="gripper_r_joint" type="prismatic">
     <parent link="gripper_r_base"/>
     <child link="gripper_r_finger_r"/>
     <origin rpy="0 0 0" xyz="0 -0.0065 0.0837"/>
@@ -603,7 +603,7 @@
     <child link="gripper_l_base"/>
   </joint>
 
-  <joint name="gripper_l_joint" type="fixed">
+  <joint name="gripper_l_joint" type="prismatic">
     <parent link="gripper_l_base"/>
     <child link="gripper_l_finger_r"/>
     <origin rpy="0 0 0" xyz="0 -0.0065 0.0837"/>
@@ -612,5 +612,198 @@
     <dynamics damping="0.5"/>
   </joint>
 
+
+  <!-- ros2 control tag -->
+  <ros2_control name="yumi" type="system">
+    <hardware>
+      <plugin>yumi_hardware/YumiSystem</plugin>
+      <param name="robot_ip">${robot_ip}</param>
+      <param name="state_server_port_l">${state_server_port_l}</param>
+      <param name="state_server_port_r">${state_server_port_r}</param>
+      <param name="motion_server_port_l">${motion_server_port_l}</param>
+      <param name="motion_server_port_r">${motion_server_port_r}</param>
+      <param name="egm_port_l">${egm_port_l}</param>
+      <param name="egm_port_r">${egm_port_r}</param>
+    </hardware>
+
+    <joint name="yumi_joint_1_r">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_2_r">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_7_r">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_3_r">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_4_r">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_5_r">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_6_r">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_1_l">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_2_l">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_7_l">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_3_l">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_4_l">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_5_l">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="yumi_joint_6_l">
+      <command_interface name="velocity">
+        <param name="min">-3.15</param>
+        <param name="max">3.15</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="gripper_r_joint">
+      <command_interface name="effort">
+        <param name="min">-20.0</param>
+        <param name="max">20.0</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="gripper_l_joint">
+      <command_interface name="effort">
+        <param name="min">-20.0</param>
+        <param name="max">20.0</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+    </joint>
+
+
+
+  </ros2_control>
 
 </robot>
