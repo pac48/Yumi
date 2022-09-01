@@ -12,15 +12,15 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
         std_msgs
         sensor_msgs
         yumi_packets
+        generate_parameter_library
         )
 foreach (Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
     find_package(${Dependency} REQUIRED)
 endforeach ()
-find_package(generate_parameter_library REQUIRED)
+
 generate_parameter_library(motion_client_node_parameters
         src/motion_client_parameters.yaml
         )
-
 
 #add_executable(motion_node_R include/client_node_motion_R.cpp)
 add_executable(motion_client_node src/motion_client_node.cpp)

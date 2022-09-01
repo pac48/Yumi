@@ -9,6 +9,8 @@
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>generate_parameter_library</depend>
+  <depend>yumi_packets</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

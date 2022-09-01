@@ -5,14 +5,10 @@
 #include "rclcpp/rclcpp.hpp"
 #include "vector"
 #include "string"
-#include "ABBMessages.h"
+#include "yumi_packets/yumi_packets.hpp"
 
 
-using namespace boost::asio;
-using ip::tcp;
-using std::string;
-using std::cout;
-using std::endl;
+
 
 
 int main(int argc, char **argv) {
