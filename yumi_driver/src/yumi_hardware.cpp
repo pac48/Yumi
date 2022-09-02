@@ -15,7 +15,7 @@ namespace yumi_hardware {
         thread_group.create_thread(boost::bind(&boost::asio::io_service::run, &io_service));
 
         RCLCPP_INFO(rclcpp::get_logger("YumiHardwareInterface"),
-                    "Wait for an left EGM communication session to start...");
+                    "Wait for an  EGM communication session to start...");
         bool wait = true;
         while (wait) {
             if (egm_interface->isConnected()) {
@@ -199,11 +199,10 @@ namespace yumi_hardware {
         receive_buffer_.consume(packet_size);
 
 
-
         double dt = period.seconds();
         for (int i = 0; i < 7; i++) {
             auto joint = info_.joints[i];
-            double joint_pos = (M_PI/180.0)*packets_r.joint_position_msg.joints[i];
+            double joint_pos = (M_PI / 180.0) * packets_r.joint_position_msg.joints[i];
             joint_velocities_[i] = (joint_pos - joint_position_[i]) / dt;
             joint_position_[i] = joint_pos;
             joint_effort_[i] = packets_r.joint_torque_msg.joints[i];
@@ -211,14 +210,14 @@ namespace yumi_hardware {
 
         for (int i = 7; i < 7 + 7; i++) {
             auto joint = info_.joints[i];
-            double joint_pos = (M_PI/180.0)*packets_l.joint_position_msg.joints[i - 7];
+            double joint_pos = (M_PI / 180.0) * packets_l.joint_position_msg.joints[i - 7];
             joint_velocities_[i] = (joint_pos - joint_position_[i - 7]) / dt;
             joint_position_[i] = joint_pos;
             joint_effort_[i] = packets_l.joint_torque_msg.joints[i - 7];
         }
-        joint_position_[14] = (1.0/1000.0)*packets_r.gripper_position_msg.position;
+        joint_position_[14] = (1.0 / 1000.0) * packets_r.gripper_position_msg.position;
         joint_effort_[14] = packets_r.gripper_force_msg.force;
-        joint_position_[15] = (1.0/1000.0)*packets_l.gripper_position_msg.position;
+        joint_position_[15] = (1.0 / 1000.0) * packets_l.gripper_position_msg.position;
         joint_effort_[15] = packets_l.gripper_force_msg.force;
 
         return return_type::OK;
@@ -233,31 +232,40 @@ namespace yumi_hardware {
         if (egm_interface->waitForMessage(50)) {
             // Read the message received from the EGM client.
             egm_interface->read(&input);
-            int sequence_number = input.header().sequence_number();
+//            int sequence_number = input.header().sequence_number();
 
-            if (sequence_number == 0) {
-                // Reset all references, if it is the first message.
+//            if (sequence_number == 0) {
+//                // Reset all references, if it is the first message.
+            if (output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() != 6) {
                 output.Clear();
                 initial_velocity.CopyFrom(input.feedback().robot().joints().velocity());
                 output.mutable_robot()->mutable_joints()->mutable_velocity()->CopyFrom(initial_velocity);
                 initial_velocity2.CopyFrom(input.feedback().external().joints().velocity());
                 output.mutable_external()->mutable_joints()->mutable_velocity()->CopyFrom(initial_velocity2);
-            } else {
-                if (output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() > 5 &&
-                    output.mutable_external()->mutable_joints()->mutable_velocity()->values_size() > 0) {
-                    for (int i = 0; i < 7; i++) {
-                        double r = reference[i] * 180.0 / M_PI;
-                        output.mutable_robot()->mutable_joints()->mutable_velocity()->set_values(i, r);
-                    }
-                }
             }
-            // Write references back to the EGM client.
-            egm_interface->write(output);
+//            } else {
+//            std::cout << "size::::::" << output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() <<std::endl;
+            if (output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() == 6) {
+                for (int i = 0; i < 7; i++) {
+                    double r = reference[i] * 180.0 / M_PI;
+                    if (i < 2) {
+                        output.mutable_robot()->mutable_joints()->mutable_velocity()->set_values(i, r);
+                    } else if (i > 2) {
+                        output.mutable_robot()->mutable_joints()->mutable_velocity()->set_values(i - 1, r); \
+
+                    } else {
+                        output.mutable_external()->mutable_joints()->mutable_velocity()->set_values(0, r);
+                    }                }
+                // Write references back to the EGM client.
+                egm_interface->write(output);
+            }
+//            }
+
         }
     }
 
     void write_gripper_force_command(double value, boost::array<yumi_packets::ROS_msg_gripper_force, 1> write_buffer,
-                                        boost::asio::ip::tcp::socket &socket) {
+                                     boost::asio::ip::tcp::socket &socket) {
         yumi_packets::ROS_msg_gripper_force data_packet;
         data_packet.force = value;
         write_buffer.assign(data_packet);
@@ -282,6 +290,7 @@ namespace yumi_hardware {
             double joint_vel = joint_velocities_command_[i];
             reference[i - 7] = joint_vel;
         }
+        reference[5] = 0.05;
         write_egm(reference, egm_interface_r_, input_,
                   initial_velocity_,
                   initial_velocity2_,
