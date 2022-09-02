@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
-project(r6bot_controller)
+project(yumi_control)
 
 find_package(ament_cmake REQUIRED)
 
 install(
     DIRECTORY config launch
-    DESTINATION share/r6bot_controller
+    DESTINATION share/yumi_control
 )
 
 ament_package()

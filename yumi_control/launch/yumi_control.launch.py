@@ -20,6 +20,27 @@ def generate_launch_description():
                     "yumi.urdf.xacro",
                 ]
             ),
+            " ",
+            "robot_ip:=",
+            '192.168.1.13',
+            " ",
+            "state_server_port_l:=",
+            '12002',
+            " ",
+            "state_server_port_r:=",
+            '11002',
+            " ",
+            "motion_server_port_l:=",
+            '12000',
+            " ",
+            "motion_server_port_r:=",
+            '11000',
+            " ",
+            "egm_port_l:=",
+            '6511',
+            " ",
+            "egm_port_r:=",
+            '6512',
         ]
     )
     robot_description = {"robot_description": robot_description_content}
@@ -32,19 +53,13 @@ def generate_launch_description():
         ]
     )
     rviz_config_file = PathJoinSubstitution(
-        [FindPackageShare("yumi_description"), "rviz", "view_robot.rviz"]
+        [FindPackageShare("yumi_description"), "rviz", "yumi.rviz"]
     )
 
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
         parameters=[robot_description, robot_controllers],
-        remappings=[
-            (
-                "/forward_position_controller/commands",
-                "/position_commands",
-            ),
-        ],
         output="both",
     )
     robot_state_pub_node = Node(
@@ -70,7 +85,7 @@ def generate_launch_description():
     robot_controller_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_trajectory_controller", "-c", "/controller_manager"],
+        arguments=["velocity_controller", "-c", "/controller_manager"],
     )
 
     # Delay rviz start after `joint_state_broadcaster`

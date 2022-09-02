@@ -18,15 +18,14 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
 foreach (Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
     find_package(${Dependency} REQUIRED)
 endforeach ()
+find_package(Boost COMPONENTS thread)
+find_package(abb_libegm)
 
 add_library(
         yumi_hardware
         SHARED
         src/yumi_hardware.cpp
 )
-target_link_libraries(yumi_hardware
-        yumi_hardware_parameters
-        )
 
 target_include_directories(
         yumi_hardware
@@ -40,6 +39,9 @@ ament_target_dependencies(
         rcpputils
         hardware_interface
 )
+target_link_libraries(yumi_hardware
+        Boost::thread
+        abb_libegm)
 
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
@@ -54,7 +56,7 @@ install(
 
 install(
         TARGETS yumi_hardware
-        RUNTIME DESTINATION bin
+        RUNTIME DESTINATION lib
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
 )

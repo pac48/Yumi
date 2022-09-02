@@ -58,8 +58,8 @@ protected:
   std::vector<double> joint_velocities_;
   std::vector<double> joint_effort_;
 
-  std::unordered_map<std::string, std::vector<std::string>> joint_interfaces = {
-    {"position", {}}, {"velocity", {}}};
+  std::unordered_map<std::string, std::vector<std::string>> joint_state_interfaces_;
+  std::unordered_map<std::string, std::vector<std::string>> joint_command_interfaces_;
 
 
     // tcp connection

@@ -50,13 +50,16 @@ namespace yumi_hardware {
 
         for (const auto &joint: info_.joints) {
             for (const auto &interface: joint.state_interfaces) {
-                joint_interfaces[interface.name].push_back(joint.name);
+                joint_state_interfaces_[interface.name].push_back(joint.name);
+            }
+            for (const auto &interface: joint.command_interfaces) {
+                joint_command_interfaces_[interface.name].push_back(joint.name);
             }
         }
 
-        if (joint_interfaces["position"].size() != joint_interfaces["velocity"].size()) {
+        if (joint_state_interfaces_["position"].size() != joint_state_interfaces_["velocity"].size()) {
             RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"),
-                         "All joints must have a position and velocity interface defined in the URDF");
+                         "All joints must have a position and velocity state interface defined in the URDF");
             return CallbackReturn::ERROR;
         }
 
@@ -136,17 +139,17 @@ namespace yumi_hardware {
         std::vector<hardware_interface::StateInterface> state_interfaces;
 
         int ind = 0;
-        for (const auto &joint_name: joint_interfaces["position"]) {
+        for (const auto &joint_name: joint_state_interfaces_["position"]) {
             state_interfaces.emplace_back(joint_name, "position", &joint_position_[ind++]);
         }
 
         ind = 0;
-        for (const auto &joint_name: joint_interfaces["velocity"]) {
+        for (const auto &joint_name: joint_state_interfaces_["velocity"]) {
             state_interfaces.emplace_back(joint_name, "velocity", &joint_velocities_[ind++]);
         }
 
         ind = 0;
-        for (const auto &joint_name: joint_interfaces["effort"]) {
+        for (const auto &joint_name: joint_state_interfaces_["effort"]) {
             state_interfaces.emplace_back(joint_name, "effort", &joint_effort_[ind++]);
         }
 
@@ -157,17 +160,17 @@ namespace yumi_hardware {
         std::vector<hardware_interface::CommandInterface> command_interfaces;
 
         int ind = 0;
-        for (const auto &joint_name: joint_interfaces["position"]) {
+        for (const auto &joint_name: joint_command_interfaces_["position"]) {
             command_interfaces.emplace_back(joint_name, "position", &joint_position_command_[ind++]);
         }
 
         ind = 0;
-        for (const auto &joint_name: joint_interfaces["velocity"]) {
+        for (const auto &joint_name: joint_command_interfaces_["velocity"]) {
             command_interfaces.emplace_back(joint_name, "velocity", &joint_velocities_command_[ind++]);
         }
 
         ind = 0;
-        for (const auto &joint_name: joint_interfaces["effort"]) {
+        for (const auto &joint_name: joint_command_interfaces_["effort"]) {
             command_interfaces.emplace_back(joint_name, "effort", &joint_effort_command_[ind++]);
         }
 
@@ -176,15 +179,6 @@ namespace yumi_hardware {
 
     return_type YumiSystem::read(const rclcpp::Time & /*time*/, const rclcpp::Duration &period) {
         int packet_size = sizeof(yumi_packets::ROS_msgs);
-
-        boost::asio::read(state_socket_l_, receive_buffer_, boost::asio::transfer_exactly(packet_size), error_);
-        if (error_ && error_ != boost::asio::error::eof) {
-            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "receive failed: %s", error_.message().c_str());
-            return return_type::ERROR;
-        }
-        yumi_packets::ROS_msgs packets_l = *boost::asio::buffer_cast<yumi_packets::ROS_msgs const *>(
-                receive_buffer_.data());
-        receive_buffer_.consume(packet_size);
 
         boost::asio::read(state_socket_r_, receive_buffer_, boost::asio::transfer_exactly(packet_size), error_);
         if (error_ && error_ != boost::asio::error::eof) {
@@ -195,25 +189,36 @@ namespace yumi_hardware {
                 receive_buffer_.data());
         receive_buffer_.consume(packet_size);
 
+        boost::asio::read(state_socket_l_, receive_buffer_, boost::asio::transfer_exactly(packet_size), error_);
+        if (error_ && error_ != boost::asio::error::eof) {
+            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "receive failed: %s", error_.message().c_str());
+            return return_type::ERROR;
+        }
+        yumi_packets::ROS_msgs packets_l = *boost::asio::buffer_cast<yumi_packets::ROS_msgs const *>(
+                receive_buffer_.data());
+        receive_buffer_.consume(packet_size);
+
+
+
         double dt = period.seconds();
         for (int i = 0; i < 7; i++) {
             auto joint = info_.joints[i];
-            double joint_pos = packets_l.joint_position_msg.joints[i];
+            double joint_pos = (M_PI/180.0)*packets_r.joint_position_msg.joints[i];
             joint_velocities_[i] = (joint_pos - joint_position_[i]) / dt;
             joint_position_[i] = joint_pos;
-            joint_effort_[i] = packets_l.joint_torque_msg.joints[i];
+            joint_effort_[i] = packets_r.joint_torque_msg.joints[i];
         }
 
         for (int i = 7; i < 7 + 7; i++) {
             auto joint = info_.joints[i];
-            double joint_pos = packets_r.joint_position_msg.joints[i - 7];
+            double joint_pos = (M_PI/180.0)*packets_l.joint_position_msg.joints[i - 7];
             joint_velocities_[i] = (joint_pos - joint_position_[i - 7]) / dt;
             joint_position_[i] = joint_pos;
-            joint_effort_[i] = packets_r.joint_torque_msg.joints[i - 7];
+            joint_effort_[i] = packets_l.joint_torque_msg.joints[i - 7];
         }
-        joint_position_[14] = packets_l.gripper_position_msg.position;
-        joint_effort_[14] = packets_l.gripper_force_msg.force;
-        joint_position_[15] = packets_l.gripper_position_msg.position;
+        joint_position_[14] = (1.0/1000.0)*packets_r.gripper_position_msg.position;
+        joint_effort_[14] = packets_r.gripper_force_msg.force;
+        joint_position_[15] = (1.0/1000.0)*packets_l.gripper_position_msg.position;
         joint_effort_[15] = packets_l.gripper_force_msg.force;
 
         return return_type::OK;
@@ -241,7 +246,7 @@ namespace yumi_hardware {
                 if (output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() > 5 &&
                     output.mutable_external()->mutable_joints()->mutable_velocity()->values_size() > 0) {
                     for (int i = 0; i < 7; i++) {
-                        double r = reference[i] * 180 / M_PI;
+                        double r = reference[i] * 180.0 / M_PI;
                         output.mutable_robot()->mutable_joints()->mutable_velocity()->set_values(i, r);
                     }
                 }
