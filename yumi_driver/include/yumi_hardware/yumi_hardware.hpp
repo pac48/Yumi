@@ -2,14 +2,15 @@
 
 #include "string"
 #include "unordered_map"
-#include "vector"
+#include <thread>
 
+#include "vector"
 #include "hardware_interface/handle.hpp"
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/system_interface.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
-#include "hardware_interface/types/hardware_interface_type_values.hpp"
 
+#include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include <abb_libegm/egm_controller_interface.h>
 #include "yumi_packets/yumi_packets.hpp"
 #include <boost/array.hpp>
@@ -27,6 +28,17 @@ using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface
 class HARDWARE_INTERFACE_PUBLIC YumiSystem : public hardware_interface::SystemInterface
 {
 public:
+    ~YumiSystem(){
+        io_service_state_socket_l_.stop();
+        io_service_state_socket_r_.stop();
+        io_service_motion_socket_l_.stop();
+        io_service_motion_socket_r_.stop();
+        io_service_egm_l_.stop();
+        io_service_egm_r_.stop();
+        thread_group_l_.join_all();
+        thread_group_r_.join_all();
+    }
+
   CallbackReturn on_init(const hardware_interface::HardwareInfo & info) override;
 
   std::vector<hardware_interface::StateInterface> export_state_interfaces() override;
@@ -67,8 +79,18 @@ protected:
     boost::system::error_code error_;
 
     //EGM interface
-    std::shared_ptr<abb::egm::EGMControllerInterface> egm_interface_l;
-    std::shared_ptr<abb::egm::EGMControllerInterface> egm_interface_r;
+    std::shared_ptr<abb::egm::EGMControllerInterface> egm_interface_l_;
+    std::shared_ptr<abb::egm::EGMControllerInterface> egm_interface_r_;
+    abb::egm::BaseConfiguration configuration_;
+    abb::egm::wrapper::Input input_;
+    abb::egm::wrapper::Joints initial_velocity_;
+    abb::egm::wrapper::Joints initial_velocity2_;
+    abb::egm::wrapper::Output output_;
+
+
+    // Boost components for managing asynchronous UDP socket(s).
+    boost::thread_group thread_group_l_;
+    boost::thread_group thread_group_r_;
 
 };
 

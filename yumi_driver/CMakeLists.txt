@@ -14,16 +14,10 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
         rclcpp
         rcpputils
         hardware_interface
-        generate_parameter_library
         )
 foreach (Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
     find_package(${Dependency} REQUIRED)
 endforeach ()
-
-generate_parameter_library(yumi_hardware_parameters
-        src/yumi_hardware_parameters.yaml
-        )
-
 
 add_library(
         yumi_hardware

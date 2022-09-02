@@ -4,6 +4,36 @@
 
 namespace yumi_hardware {
 
+    bool connect_egm(std::shared_ptr<abb::egm::EGMControllerInterface> egm_interface, boost::thread_group &thread_group,
+                     boost::asio::io_service &io_service) {
+        if (!egm_interface->isInitialized()) {
+            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"),
+                         "EGM interface failed to initialize (e.g. due to port already bound)");
+            return false;
+        }
+        // Spin up a thread to run the io_service.
+        thread_group.create_thread(boost::bind(&boost::asio::io_service::run, &io_service));
+
+        RCLCPP_INFO(rclcpp::get_logger("YumiHardwareInterface"),
+                    "Wait for an left EGM communication session to start...");
+        bool wait = true;
+        while (wait) {
+            if (egm_interface->isConnected()) {
+                if (egm_interface->getStatus().rapid_execution_state() ==
+                    abb::egm::wrapper::Status_RAPIDExecutionState_RAPID_UNDEFINED) {
+                    RCLCPP_WARN(rclcpp::get_logger("YumiHardwareInterface"),
+                                "RAPID execution state is UNDEFINED (might happen first time after joy_pygame start/restart). Try to restart the RAPID program.");
+                } else {
+                    wait = egm_interface->getStatus().rapid_execution_state() !=
+                           abb::egm::wrapper::Status_RAPIDExecutionState_RAPID_RUNNING;
+                }
+            }
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            RCLCPP_WARN(rclcpp::get_logger("YumiHardwareInterface"), "waiting");
+        }
+        return true;
+    }
+
 
     CallbackReturn YumiSystem::on_init(const hardware_interface::HardwareInfo &info) {
         if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS) {
@@ -24,8 +54,9 @@ namespace yumi_hardware {
             }
         }
 
-        if (joint_interfaces["position"].size() != joint_interfaces["velocity"].size()){
-            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "All joints must have a position and velocity interface defined in the URDF");
+        if (joint_interfaces["position"].size() != joint_interfaces["velocity"].size()) {
+            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"),
+                         "All joints must have a position and velocity interface defined in the URDF");
             return CallbackReturn::ERROR;
         }
 
@@ -74,37 +105,29 @@ namespace yumi_hardware {
                     boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(robot_ip),
                                                    motion_server_port_r));
             RCLCPP_INFO(rclcpp::get_logger("YumiHardwareInterface"), "Connected to right motion server!");
-        } catch (boost::system::system_error& error){
-            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "Failed to connect with error message: %s", error.what());
+        } catch (boost::system::system_error &error) {
+            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "Failed to connect with error message: %s",
+                         error.what());
             return CallbackReturn::ERROR;
         }
 
-
-        // Boost components for managing asynchronous UDP socket(s).
-        boost::thread_group thread_group_l;
-        boost::thread_group thread_group_r;
 
         // Create EGM configurations.
-        abb::egm::BaseConfiguration configuration;
-        configuration.use_velocity_outputs = true;
+        configuration_.use_velocity_outputs = true;
 
-        egm_interface_l = std::make_shared<abb::egm::EGMControllerInterface>(io_service_egm_l_, egm_port_l, configuration);
-        if(!egm_interface_l->isInitialized())
-        {
-            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "EGM interface failed to initialize (e.g. due to port already bound)");
+        egm_interface_l_ = std::make_shared<abb::egm::EGMControllerInterface>(io_service_egm_l_, egm_port_l,
+                                                                              configuration_);
+        if (!connect_egm(egm_interface_l_, thread_group_l_, io_service_egm_l_)) {
+            return CallbackReturn::ERROR;
+
+        }
+
+        egm_interface_r_ = std::make_shared<abb::egm::EGMControllerInterface>(io_service_egm_r_, egm_port_r,
+                                                                              configuration_);
+
+        if (!connect_egm(egm_interface_r_, thread_group_r_, io_service_egm_r_)) {
             return CallbackReturn::ERROR;
         }
-        // Spin up a thread to run the io_service.
-        thread_group_l.create_thread(boost::bind(&boost::asio::io_service::run, &io_service_egm_l_));
-
-        egm_interface_r = std::make_shared<abb::egm::EGMControllerInterface>(io_service_egm_r_, egm_port_r, configuration);
-        if(!egm_interface_r->isInitialized())
-        {
-            RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "EGM interface failed to initialize (e.g. due to port already bound)");
-            return CallbackReturn::ERROR;
-        }
-        // Spin up a thread to run the io_service.
-        thread_group_r.create_thread(boost::bind(&boost::asio::io_service::run, &io_service_egm_r_));
 
         return CallbackReturn::SUCCESS;
     }
@@ -160,7 +183,7 @@ namespace yumi_hardware {
             return return_type::ERROR;
         }
         yumi_packets::ROS_msgs packets_l = *boost::asio::buffer_cast<yumi_packets::ROS_msgs const *>(
-                    receive_buffer_.data());
+                receive_buffer_.data());
         receive_buffer_.consume(packet_size);
 
         boost::asio::read(state_socket_r_, receive_buffer_, boost::asio::transfer_exactly(packet_size), error_);
@@ -176,27 +199,96 @@ namespace yumi_hardware {
         for (int i = 0; i < 7; i++) {
             auto joint = info_.joints[i];
             double joint_pos = packets_l.joint_position_msg.joints[i];
-            joint_velocities_[i] = (joint_pos-joint_position_[i])/dt;
+            joint_velocities_[i] = (joint_pos - joint_position_[i]) / dt;
             joint_position_[i] = joint_pos;
             joint_effort_[i] = packets_l.joint_torque_msg.joints[i];
         }
-        joint_position_[7] = packets_l.gripper_position_msg.position;
-        joint_effort_[7] = packets_l.gripper_force_msg.force;
 
-        for (int i = 8; i < 8+7; i++) {
+        for (int i = 7; i < 7 + 7; i++) {
             auto joint = info_.joints[i];
-            double joint_pos = packets_r.joint_position_msg.joints[i-8];
-            joint_velocities_[i] = (joint_pos-joint_position_[i-8])/dt;
+            double joint_pos = packets_r.joint_position_msg.joints[i - 7];
+            joint_velocities_[i] = (joint_pos - joint_position_[i - 7]) / dt;
             joint_position_[i] = joint_pos;
-            joint_effort_[i] = packets_r.joint_torque_msg.joints[i-8];
+            joint_effort_[i] = packets_r.joint_torque_msg.joints[i - 7];
         }
+        joint_position_[14] = packets_l.gripper_position_msg.position;
+        joint_effort_[14] = packets_l.gripper_force_msg.force;
         joint_position_[15] = packets_l.gripper_position_msg.position;
         joint_effort_[15] = packets_l.gripper_force_msg.force;
 
         return return_type::OK;
     }
 
+    void write_egm(const double reference[7],
+                   std::shared_ptr<abb::egm::EGMControllerInterface> egm_interface, abb::egm::wrapper::Input input,
+                   abb::egm::wrapper::Joints initial_velocity,
+                   abb::egm::wrapper::Joints initial_velocity2,
+                   abb::egm::wrapper::Output output) {
+        // Wait for a new EGM message from the EGM client (with a timeout of 500 ms).
+        if (egm_interface->waitForMessage(50)) {
+            // Read the message received from the EGM client.
+            egm_interface->read(&input);
+            int sequence_number = input.header().sequence_number();
+
+            if (sequence_number == 0) {
+                // Reset all references, if it is the first message.
+                output.Clear();
+                initial_velocity.CopyFrom(input.feedback().robot().joints().velocity());
+                output.mutable_robot()->mutable_joints()->mutable_velocity()->CopyFrom(initial_velocity);
+                initial_velocity2.CopyFrom(input.feedback().external().joints().velocity());
+                output.mutable_external()->mutable_joints()->mutable_velocity()->CopyFrom(initial_velocity2);
+            } else {
+                if (output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() > 5 &&
+                    output.mutable_external()->mutable_joints()->mutable_velocity()->values_size() > 0) {
+                    for (int i = 0; i < 7; i++) {
+                        double r = reference[i] * 180 / M_PI;
+                        output.mutable_robot()->mutable_joints()->mutable_velocity()->set_values(i, r);
+                    }
+                }
+            }
+            // Write references back to the EGM client.
+            egm_interface->write(output);
+        }
+    }
+
+    void write_gripper_force_command(double value, boost::array<yumi_packets::ROS_msg_gripper_force, 1> write_buffer,
+                                        boost::asio::ip::tcp::socket &socket) {
+        yumi_packets::ROS_msg_gripper_force data_packet;
+        data_packet.force = value;
+        write_buffer.assign(data_packet);
+        boost::system::error_code error;
+        socket.write_some(boost::asio::buffer(&write_buffer, sizeof(yumi_packets::ROS_msg_gripper_force)), error);
+    }
+
     return_type YumiSystem::write(const rclcpp::Time &, const rclcpp::Duration &) {
+        double reference[7];
+        for (int i = 0; i < 7; i++) {
+            auto joint = info_.joints[i];
+            double joint_vel = joint_velocities_command_[i];
+            reference[i] = joint_vel;
+        }
+        write_egm(reference, egm_interface_l_, input_,
+                  initial_velocity_,
+                  initial_velocity2_,
+                  output_);
+
+        for (int i = 7; i < 7 + 7; i++) {
+            auto joint = info_.joints[i];
+            double joint_vel = joint_velocities_command_[i];
+            reference[i - 7] = joint_vel;
+        }
+        write_egm(reference, egm_interface_r_, input_,
+                  initial_velocity_,
+                  initial_velocity2_,
+                  output_);
+
+        double gripper_effort_l = joint_effort_command_[0];
+        write_gripper_force_command(gripper_effort_l, write_buffer_, motion_socket_l_);
+
+        double gripper_effort_r = joint_effort_command_[1];
+        write_gripper_force_command(gripper_effort_r, write_buffer_, motion_socket_r_);
+
+
         return return_type::OK;
     }
 

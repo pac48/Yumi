@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>yumi_driver</name>
+  <name>r6bot_controller</name>
   <version>0.0.0</version>
   <description>
-    Hardware driver for yumi robot
+    Demo for 6 DOF robot
   </description>
   <author>Paul Gesel</author>
   <maintainer email="paul.gesel@picknik.ai">Paul Gesel</maintainer>
@@ -12,15 +12,13 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>hardware_interface</depend>
-  <depend>pluginlib</depend>
-  <depend>rclcpp</depend>
-  <depend>rclcpp_lifecycle</depend>
-  <depend>rcpputils</depend>
+  <depend>joint_trajectory_controller</depend>
+  <depend>trajectory_msgs</depend>
 
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz2</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
 
