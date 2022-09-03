@@ -12,9 +12,12 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <depend>controller_manager</depend>
+  <depend>gripper_controllers</depend>
+  <depend>joint_state_broadcaster</depend>
   <depend>joint_trajectory_controller</depend>
   <depend>trajectory_msgs</depend>
-  <depend>gripper_controllers</depend>
+  <depend>velocity_controllers</depend>
 
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
