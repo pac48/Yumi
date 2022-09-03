@@ -182,14 +182,14 @@ namespace yumi_hardware {
     }
 
     return_type YumiSystem::read(const rclcpp::Time & /*time*/, const rclcpp::Duration &period) {
-        int packet_size = sizeof(yumi_packets::ROS_msgs);
+        int packet_size = sizeof(yumi_packets::receive_ROS_msgs);
 
         boost::asio::read(state_socket_r_, receive_buffer_, boost::asio::transfer_exactly(packet_size), error_);
         if (error_ && error_ != boost::asio::error::eof) {
             RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "receive failed: %s", error_.message().c_str());
             return return_type::ERROR;
         }
-        yumi_packets::ROS_msgs packets_r = *boost::asio::buffer_cast<yumi_packets::ROS_msgs const *>(
+        yumi_packets::receive_ROS_msgs packets_r = *boost::asio::buffer_cast<yumi_packets::receive_ROS_msgs const *>(
                 receive_buffer_.data());
         receive_buffer_.consume(packet_size);
 
@@ -198,7 +198,7 @@ namespace yumi_hardware {
             RCLCPP_ERROR(rclcpp::get_logger("YumiHardwareInterface"), "receive failed: %s", error_.message().c_str());
             return return_type::ERROR;
         }
-        yumi_packets::ROS_msgs packets_l = *boost::asio::buffer_cast<yumi_packets::ROS_msgs const *>(
+        yumi_packets::receive_ROS_msgs packets_l = *boost::asio::buffer_cast<yumi_packets::receive_ROS_msgs const *>(
                 receive_buffer_.data());
         receive_buffer_.consume(packet_size);
 
@@ -269,16 +269,16 @@ namespace yumi_hardware {
         socket.write_some(boost::asio::buffer(&write_buffer, sizeof(yumi_packets::ROS_msg_gripper_force)), error);
     }
 
-    void write_gripper_position_command(double value, boost::array<yumi_packets::ROS_msg_gripper_position, 1> write_buffer,
+    void write_gripper_position_command(double value, boost::array<yumi_packets::send_ROS_msgs, 1>& write_buffer,
                                      boost::asio::ip::tcp::socket &socket) {
-        yumi_packets::ROS_msg_gripper_position data_packet;
-        data_packet.position = 1000*value; //mm
+        yumi_packets::send_ROS_msgs data_packet;
+        data_packet.gripper_position_msg.position = 1000*value; //mm
         write_buffer.assign(data_packet);
         boost::system::error_code error;
-        socket.write_some(boost::asio::buffer(&write_buffer, sizeof(yumi_packets::ROS_msg_gripper_position)), error);
+        socket.write_some(boost::asio::buffer(&write_buffer, sizeof(yumi_packets::send_ROS_msgs)), error);
     }
 
-    return_type YumiSystem::write(const rclcpp::Time &, const rclcpp::Duration &) {
+    return_type YumiSystem::write(const rclcpp::Time & time, const rclcpp::Duration &) {
         double reference[7];
         for (int i = 0; i < 7; i++) {
             auto joint = info_.joints[i];
@@ -300,22 +300,19 @@ namespace yumi_hardware {
                   initial_velocity2_,
                   output_);
 
-//        double gripper_effort_l = joint_effort_command_[0];
-//        write_gripper_force_command(gripper_effort_l, write_buffer_, motion_socket_l_);
-
-
-//        double gripper_effort_r = joint_effort_command_[1];
-//        write_gripper_force_command(gripper_effort_r, write_buffer_, motion_socket_r_);
         double gripper_position_r = joint_position_command_[0];
-        if (abs(gripper_position_r - joint_position_[14]) > 0.001) {
+        if (time.seconds() - gripper_last_update_ > 1.0 && gripper_position_r != gripper_position_r_old_) {
             write_gripper_position_command(gripper_position_r, write_buffer_, motion_socket_r_);
+            gripper_last_update_ = time.seconds();
+            gripper_position_r_old_ = gripper_position_r;
         }
 
         double gripper_position_l = joint_position_command_[1];
-        if (abs(gripper_position_l - joint_position_[15]) > 0.001){
+        if (time.seconds() - gripper_last_update_ > 1.0 && gripper_position_l != gripper_position_l_old_) {
             write_gripper_position_command(gripper_position_l, write_buffer_, motion_socket_l_);
+            gripper_last_update_ = time.seconds();
+            gripper_position_l_old_ = gripper_position_l;
         }
-
 
 
         return return_type::OK;
