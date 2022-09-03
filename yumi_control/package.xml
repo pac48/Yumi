@@ -14,7 +14,7 @@
 
   <depend>joint_trajectory_controller</depend>
   <depend>trajectory_msgs</depend>
-  <depend>gripper-controllers</depend>
+  <depend>gripper_controllers</depend>
 
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
