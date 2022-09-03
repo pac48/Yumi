@@ -88,6 +88,12 @@ def generate_launch_description():
         arguments=["velocity_controller", "-c", "/controller_manager"],
     )
 
+    gripper_controller_r_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["gripper_controller_r", "-c", "/controller_manager"],
+    )
+
     # Delay rviz start after `joint_state_broadcaster`
     delay_rviz_after_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessExit(
@@ -104,12 +110,21 @@ def generate_launch_description():
         )
     )
 
+    # Delay start of robot_controller after `joint_state_broadcaster`
+    delay_gripper_controller_r_spawner_after_joint_state_broadcaster_spawner = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[gripper_controller_r_spawner],
+        )
+    )
+
     nodes = [
-        # control_node,
+        control_node,
         robot_state_pub_node,
         joint_state_broadcaster_spawner,
         delay_rviz_after_joint_state_broadcaster_spawner,
         delay_robot_controller_spawner_after_joint_state_broadcaster_spawner,
+        delay_gripper_controller_r_spawner_after_joint_state_broadcaster_spawner,
     ]
 
     return LaunchDescription(nodes)

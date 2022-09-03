@@ -57,6 +57,8 @@ protected:
   std::vector<double> joint_position_;
   std::vector<double> joint_velocities_;
   std::vector<double> joint_effort_;
+  double gripper_position_l_old_ = 0.0;
+  double gripper_position_r_old_ = 0.0;
 
   std::unordered_map<std::string, std::vector<std::string>> joint_state_interfaces_;
   std::unordered_map<std::string, std::vector<std::string>> joint_command_interfaces_;
@@ -74,7 +76,7 @@ protected:
     boost::asio::ip::tcp::socket state_socket_r_ = boost::asio::ip::tcp::socket(io_service_state_socket_r_);
     boost::asio::ip::tcp::socket motion_socket_l_ = boost::asio::ip::tcp::socket(io_service_motion_socket_l_);
     boost::asio::ip::tcp::socket motion_socket_r_ = boost::asio::ip::tcp::socket(io_service_motion_socket_r_);
-    boost::array<yumi_packets::ROS_msg_gripper_force, 1> write_buffer_;
+    boost::array<yumi_packets::ROS_msg_gripper_position, 1> write_buffer_;
     boost::asio::streambuf receive_buffer_;
     boost::system::error_code error_;
 

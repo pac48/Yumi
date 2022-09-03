@@ -8,6 +8,12 @@ controller_manager:
     velocity_controller:
       type: velocity_controllers/JointGroupVelocityController
 
+    gripper_controller_l:
+      type: position_controllers/GripperActionController
+
+    gripper_controller_r:
+      type: position_controllers/GripperActionController
+
 
 velocity_controller:
   ros__parameters:
@@ -18,7 +24,7 @@ velocity_controller:
       - yumi_joint_3_r
       - yumi_joint_4_r
       - yumi_joint_5_r
-      - yumi_joint_6_l
+      - yumi_joint_6_r
       - yumi_joint_1_l
       - yumi_joint_2_l
       - yumi_joint_7_l
@@ -35,3 +41,15 @@ velocity_controller:
     state_interfaces:
       - position
       - velocity
+
+gripper_controller_r:
+  ros__parameters:
+    default: true
+    joint: gripper_r_joint
+    allow_stalling: true
+
+gripper_controller_l:
+  ros__parameters:
+    default: true
+    joint: gripper_l_joint
+    allow_stalling: true

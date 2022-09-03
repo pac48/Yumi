@@ -201,7 +201,6 @@ namespace yumi_hardware {
 
         double dt = period.seconds();
         for (int i = 0; i < 7; i++) {
-            auto joint = info_.joints[i];
             double joint_pos = (M_PI / 180.0) * packets_r.joint_position_msg.joints[i];
             joint_velocities_[i] = (joint_pos - joint_position_[i]) / dt;
             joint_position_[i] = joint_pos;
@@ -209,9 +208,8 @@ namespace yumi_hardware {
         }
 
         for (int i = 7; i < 7 + 7; i++) {
-            auto joint = info_.joints[i];
             double joint_pos = (M_PI / 180.0) * packets_l.joint_position_msg.joints[i - 7];
-            joint_velocities_[i] = (joint_pos - joint_position_[i - 7]) / dt;
+            joint_velocities_[i] = (joint_pos - joint_position_[i]) / dt;
             joint_position_[i] = joint_pos;
             joint_effort_[i] = packets_l.joint_torque_msg.joints[i - 7];
         }
@@ -232,10 +230,6 @@ namespace yumi_hardware {
         if (egm_interface->waitForMessage(50)) {
             // Read the message received from the EGM client.
             egm_interface->read(&input);
-//            int sequence_number = input.header().sequence_number();
-
-//            if (sequence_number == 0) {
-//                // Reset all references, if it is the first message.
             if (output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() != 6) {
                 output.Clear();
                 initial_velocity.CopyFrom(input.feedback().robot().joints().velocity());
@@ -243,8 +237,7 @@ namespace yumi_hardware {
                 initial_velocity2.CopyFrom(input.feedback().external().joints().velocity());
                 output.mutable_external()->mutable_joints()->mutable_velocity()->CopyFrom(initial_velocity2);
             }
-//            } else {
-//            std::cout << "size::::::" << output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() <<std::endl;
+
             if (output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() == 6) {
                 for (int i = 0; i < 7; i++) {
                     double r = reference[i] * 180.0 / M_PI;
@@ -259,7 +252,6 @@ namespace yumi_hardware {
                 // Write references back to the EGM client.
                 egm_interface->write(output);
             }
-//            }
 
         }
     }
@@ -271,6 +263,15 @@ namespace yumi_hardware {
         write_buffer.assign(data_packet);
         boost::system::error_code error;
         socket.write_some(boost::asio::buffer(&write_buffer, sizeof(yumi_packets::ROS_msg_gripper_force)), error);
+    }
+
+    void write_gripper_position_command(double value, boost::array<yumi_packets::ROS_msg_gripper_position, 1> write_buffer,
+                                     boost::asio::ip::tcp::socket &socket) {
+        yumi_packets::ROS_msg_gripper_position data_packet;
+        data_packet.position = value;
+        write_buffer.assign(data_packet);
+        boost::system::error_code error;
+        socket.write_some(boost::asio::buffer(&write_buffer, sizeof(yumi_packets::ROS_msg_gripper_position)), error);
     }
 
     return_type YumiSystem::write(const rclcpp::Time &, const rclcpp::Duration &) {
@@ -290,17 +291,29 @@ namespace yumi_hardware {
             double joint_vel = joint_velocities_command_[i];
             reference[i - 7] = joint_vel;
         }
-        reference[5] = 0.05;
         write_egm(reference, egm_interface_r_, input_,
                   initial_velocity_,
                   initial_velocity2_,
                   output_);
 
-        double gripper_effort_l = joint_effort_command_[0];
-        write_gripper_force_command(gripper_effort_l, write_buffer_, motion_socket_l_);
+//        double gripper_effort_l = joint_effort_command_[0];
+//        write_gripper_force_command(gripper_effort_l, write_buffer_, motion_socket_l_);
 
-        double gripper_effort_r = joint_effort_command_[1];
-        write_gripper_force_command(gripper_effort_r, write_buffer_, motion_socket_r_);
+
+//        double gripper_effort_r = joint_effort_command_[1];
+//        write_gripper_force_command(gripper_effort_r, write_buffer_, motion_socket_r_);
+        double gripper_position_r = joint_position_command_[0];
+        if (gripper_position_r != gripper_position_r_old_) {
+            write_gripper_position_command(gripper_position_r, write_buffer_, motion_socket_r_);
+            gripper_position_r_old_ = gripper_position_r;
+        }
+
+        double gripper_position_l = joint_position_command_[1];
+        if (gripper_position_l != gripper_position_l_old_){
+            write_gripper_position_command(gripper_position_l, write_buffer_, motion_socket_l_);
+            gripper_position_l_old_ = gripper_position_l;
+        }
+
 
 
         return return_type::OK;
