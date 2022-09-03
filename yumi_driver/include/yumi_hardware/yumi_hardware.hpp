@@ -57,8 +57,6 @@ protected:
   std::vector<double> joint_position_;
   std::vector<double> joint_velocities_;
   std::vector<double> joint_effort_;
-  double gripper_position_l_old_ = 0.0;
-  double gripper_position_r_old_ = 0.0;
 
   std::unordered_map<std::string, std::vector<std::string>> joint_state_interfaces_;
   std::unordered_map<std::string, std::vector<std::string>> joint_command_interfaces_;

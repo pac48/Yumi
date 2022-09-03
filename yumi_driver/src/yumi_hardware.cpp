@@ -48,6 +48,10 @@ namespace yumi_hardware {
         joint_velocities_command_.assign(info_.joints.size(), 0);
         joint_effort_command_.assign(info_.joints.size(), 0);
 
+        // set initial values
+        joint_position_command_[0] = 0.01; // mm
+        joint_position_command_[1] = 0.01; // mm
+
         for (const auto &joint: info_.joints) {
             for (const auto &interface: joint.state_interfaces) {
                 joint_state_interfaces_[interface.name].push_back(joint.name);
@@ -268,7 +272,7 @@ namespace yumi_hardware {
     void write_gripper_position_command(double value, boost::array<yumi_packets::ROS_msg_gripper_position, 1> write_buffer,
                                      boost::asio::ip::tcp::socket &socket) {
         yumi_packets::ROS_msg_gripper_position data_packet;
-        data_packet.position = value;
+        data_packet.position = 1000*value; //mm
         write_buffer.assign(data_packet);
         boost::system::error_code error;
         socket.write_some(boost::asio::buffer(&write_buffer, sizeof(yumi_packets::ROS_msg_gripper_position)), error);
@@ -303,15 +307,13 @@ namespace yumi_hardware {
 //        double gripper_effort_r = joint_effort_command_[1];
 //        write_gripper_force_command(gripper_effort_r, write_buffer_, motion_socket_r_);
         double gripper_position_r = joint_position_command_[0];
-        if (gripper_position_r != gripper_position_r_old_) {
+        if (abs(gripper_position_r - joint_position_[14]) > 0.001) {
             write_gripper_position_command(gripper_position_r, write_buffer_, motion_socket_r_);
-            gripper_position_r_old_ = gripper_position_r;
         }
 
         double gripper_position_l = joint_position_command_[1];
-        if (gripper_position_l != gripper_position_l_old_){
+        if (abs(gripper_position_l - joint_position_[15]) > 0.001){
             write_gripper_position_command(gripper_position_l, write_buffer_, motion_socket_l_);
-            gripper_position_l_old_ = gripper_position_l;
         }
 
 

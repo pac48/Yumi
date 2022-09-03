@@ -13,7 +13,7 @@ class GripperActionClient(Node):
 
     def send_goal(self):
         goal_msg = GripperCommand.Goal()
-        goal_msg.command.position = (0.018)*1000
+        goal_msg.command.position = 0.018
         goal_msg.command.max_effort = 20.0
 
         self._action_client.wait_for_server()
