@@ -58,6 +58,7 @@ namespace yumi_hardware {
         double gripper_last_update_;
         double gripper_position_r_old_ = 0;
         double gripper_position_l_old_ = 0;
+        bool disable_egm_ = false;
 
         std::unordered_map<std::string, std::vector<std::string>> joint_state_interfaces_;
         std::unordered_map<std::string, std::vector<std::string>> joint_command_interfaces_;

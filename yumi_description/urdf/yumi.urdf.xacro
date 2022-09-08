@@ -681,6 +681,7 @@
   <xacro:arg  name="motion_server_port_r" default=""/>
   <xacro:arg  name="egm_port_l" default=""/>
   <xacro:arg  name="egm_port_r" default=""/>
+  <xacro:arg  name="disable_egm" default="false"/>
   <!-- ros2 control tag -->
   <ros2_control name="yumi" type="system">
     <hardware>
@@ -692,6 +693,7 @@
       <param name="motion_server_port_r">$(arg motion_server_port_r)</param>
       <param name="egm_port_l">$(arg egm_port_l)</param>
       <param name="egm_port_r">$(arg egm_port_r)</param>
+      <param name="disable_egm">$(arg disable_egm)</param>
     </hardware>
 
     <joint name="yumi_joint_1_r">

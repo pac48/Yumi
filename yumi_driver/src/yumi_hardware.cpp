@@ -75,6 +75,7 @@ namespace yumi_hardware {
         int motion_server_port_r = std::stoi(info_.hardware_parameters["motion_server_port_r"]);
         int egm_port_l = std::stoi(info_.hardware_parameters["egm_port_l"]);
         int egm_port_r = std::stoi(info_.hardware_parameters["egm_port_r"]);
+        disable_egm_ = info_.hardware_parameters["disable_egm"] == "true";
 
         //socket creation
         try {
@@ -122,19 +123,22 @@ namespace yumi_hardware {
         // Create EGM configurations.
         configuration_.use_velocity_outputs = true;
 
-        egm_interface_l_ = std::make_shared<abb::egm::EGMControllerInterface>(io_service_egm_l_, egm_port_l,
-                                                                              configuration_);
-        if (!connect_egm(egm_interface_l_, thread_group_l_, io_service_egm_l_)) {
-            return CallbackReturn::ERROR;
+        if (!disable_egm_){
+            egm_interface_l_ = std::make_shared<abb::egm::EGMControllerInterface>(io_service_egm_l_, egm_port_l,
+                                                                                  configuration_);
+            if (!connect_egm(egm_interface_l_, thread_group_l_, io_service_egm_l_)) {
+                return CallbackReturn::ERROR;
 
+            }
+
+            egm_interface_r_ = std::make_shared<abb::egm::EGMControllerInterface>(io_service_egm_r_, egm_port_r,
+                                                                                  configuration_);
+
+            if (!connect_egm(egm_interface_r_, thread_group_r_, io_service_egm_r_)) {
+                return CallbackReturn::ERROR;
+            }
         }
 
-        egm_interface_r_ = std::make_shared<abb::egm::EGMControllerInterface>(io_service_egm_r_, egm_port_r,
-                                                                              configuration_);
-
-        if (!connect_egm(egm_interface_r_, thread_group_r_, io_service_egm_r_)) {
-            return CallbackReturn::ERROR;
-        }
 
         return CallbackReturn::SUCCESS;
     }
@@ -279,26 +283,28 @@ namespace yumi_hardware {
     }
 
     return_type YumiSystem::write(const rclcpp::Time & time, const rclcpp::Duration &) {
-        double reference[7];
-        for (int i = 0; i < 7; i++) {
-            auto joint = info_.joints[i];
-            double joint_vel = joint_velocities_command_[i];
-            reference[i] = joint_vel;
-        }
-        write_egm(reference, egm_interface_l_, input_,
-                  initial_velocity_,
-                  initial_velocity2_,
-                  output_);
+        if (!disable_egm_){
+            double reference[7];
+            for (int i = 0; i < 7; i++) {
+                auto joint = info_.joints[i];
+                double joint_vel = joint_velocities_command_[i];
+                reference[i] = joint_vel;
+            }
+            write_egm(reference, egm_interface_l_, input_,
+                      initial_velocity_,
+                      initial_velocity2_,
+                      output_);
 
-        for (int i = 7; i < 7 + 7; i++) {
-            auto joint = info_.joints[i];
-            double joint_vel = joint_velocities_command_[i];
-            reference[i - 7] = joint_vel;
+            for (int i = 7; i < 7 + 7; i++) {
+                auto joint = info_.joints[i];
+                double joint_vel = joint_velocities_command_[i];
+                reference[i - 7] = joint_vel;
+            }
+            write_egm(reference, egm_interface_r_, input_,
+                      initial_velocity_,
+                      initial_velocity2_,
+                      output_);
         }
-        write_egm(reference, egm_interface_r_, input_,
-                  initial_velocity_,
-                  initial_velocity2_,
-                  output_);
 
         double gripper_position_r = joint_position_command_[0];
         if (time.seconds() - gripper_last_update_ > 1.0 && gripper_position_r != gripper_position_r_old_) {

@@ -41,6 +41,9 @@ def generate_launch_description():
             " ",
             "egm_port_r:=",
             '6512',
+            " ",
+            "disable_egm:=",
+            'false',
         ]
     )
     robot_description = {"robot_description": robot_description_content}
