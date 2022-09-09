@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(yumi_driver)
 
-find_package(hardware_interface REQUIRED)
-
 
 if (NOT CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
@@ -14,12 +12,12 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
         rclcpp
         rcpputils
         hardware_interface
+        abb_libegm
         )
 foreach (Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
     find_package(${Dependency} REQUIRED)
 endforeach ()
-find_package(Boost COMPONENTS thread)
-find_package(abb_libegm)
+find_package(Boost COMPONENTS thread REQUIRED)
 
 add_library(
         yumi_hardware
@@ -35,13 +33,11 @@ target_include_directories(
 
 ament_target_dependencies(
         yumi_hardware
-        pluginlib
-        rcpputils
-        hardware_interface
+        ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 target_link_libraries(yumi_hardware
         Boost::thread
-        abb_libegm)
+    )
 
 # Causes the visibility macros to use dllexport rather than dllimport,
 # which is appropriate when building the dll but not consuming it.
