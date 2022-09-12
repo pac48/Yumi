@@ -230,11 +230,12 @@ namespace yumi_hardware {
     }
 
     void write_egm(const double reference[7],
-                   std::shared_ptr<abb::egm::EGMControllerInterface> egm_interface, abb::egm::wrapper::Input input,
-                   abb::egm::wrapper::Joints initial_velocity,
-                   abb::egm::wrapper::Joints initial_velocity2,
-                   abb::egm::wrapper::Output output) {
+                   std::shared_ptr<abb::egm::EGMControllerInterface>& egm_interface, abb::egm::wrapper::Input& input,
+                   abb::egm::wrapper::Joints& initial_velocity,
+                   abb::egm::wrapper::Joints& initial_velocity2,
+                   abb::egm::wrapper::Output& output) {
         // Wait for a new EGM message from the EGM client (with a timeout of 500 ms).
+
         if (egm_interface->waitForMessage(50)) {
             // Read the message received from the EGM client.
             egm_interface->read(&input);
@@ -245,7 +246,8 @@ namespace yumi_hardware {
                 initial_velocity2.CopyFrom(input.feedback().external().joints().velocity());
                 output.mutable_external()->mutable_joints()->mutable_velocity()->CopyFrom(initial_velocity2);
             }
-
+          output.mutable_robot()->mutable_joints()->mutable_position()->CopyFrom(input.feedback().robot().joints().position());
+          output.mutable_external()->mutable_joints()->mutable_position()->CopyFrom(input.feedback().external().joints().position());
             if (output.mutable_robot()->mutable_joints()->mutable_velocity()->values_size() == 6) {
                 for (int i = 0; i < 7; i++) {
                     double r = reference[i] * 180.0 / M_PI;
@@ -290,20 +292,20 @@ namespace yumi_hardware {
                 double joint_vel = joint_velocities_command_[i];
                 reference[i] = joint_vel;
             }
-            write_egm(reference, egm_interface_l_, input_,
-                      initial_velocity_,
-                      initial_velocity2_,
-                      output_);
+            write_egm(reference, egm_interface_l_, input_l_,
+                      initial_velocity_l_,
+                      initial_velocity2_l_,
+                      output_l_);
 
             for (int i = 7; i < 7 + 7; i++) {
                 auto joint = info_.joints[i];
                 double joint_vel = joint_velocities_command_[i];
                 reference[i - 7] = joint_vel;
             }
-            write_egm(reference, egm_interface_r_, input_,
-                      initial_velocity_,
-                      initial_velocity2_,
-                      output_);
+            write_egm(reference, egm_interface_r_, input_r_,
+                      initial_velocity_r_,
+                      initial_velocity2_r_,
+                      output_r_);
         }
 
         double gripper_position_r = joint_position_command_[0];
